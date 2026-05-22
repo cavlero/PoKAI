@@ -3,12 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 const STEPS = [
-  { label: "Scanning visual features...",                  progress: 12 },
-  { label: "Detecting architectural elements...",          progress: 28 },
-  { label: "Comparing with Bulgarian heritage database...", progress: 48 },
-  { label: "Searching historical archives...",             progress: 66 },
-  { label: "Matching with local Svishtov heritage...",     progress: 83 },
-  { label: "Generating historical interpretation...",      progress: 95 },
+  { label: "Scanning visual features...",         progress: 14 },
+  { label: "Detecting architectural elements...", progress: 32 },
+  { label: "Comparing with heritage database...", progress: 54 },
+  { label: "Searching historical archives...",    progress: 76 },
+  { label: "Generating historical interpretation...", progress: 94 },
 ];
 
 const STEP_DURATION = 800;

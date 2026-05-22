@@ -99,12 +99,6 @@ export default function Explore() {
         {analyzing && <ScanningOverlay previewUrl={uploadedImage} />}
       </AnimatePresence>
 
-      {/* Prototype disclaimer */}
-      <div className="flex items-center justify-center gap-2 px-4 py-1.5 bg-amber-500/8 border-b border-amber-500/20 text-xs text-amber-400/60 tracking-wide">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60 shrink-0" />
-        Prototype demo · Simulated AI recognition for presentation purposes
-      </div>
-
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <Link href="/">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
