@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle } from "lucide-react";
 
 const STEPS = [
-  { label: "Scanning visual features...", progress: 28 },
-  { label: "Comparing with heritage database...", progress: 64 },
-  { label: "Generating historical interpretation...", progress: 91 },
+  { label: "Scanning monument...",                   progress: 15 },
+  { label: "Detecting architectural features...",    progress: 32 },
+  { label: "Comparing with heritage database...",    progress: 54 },
+  { label: "Searching historical archives...",       progress: 74 },
+  { label: "Generating historical reconstruction...", progress: 92 },
 ];
+
+const STEP_DURATION = 900;
+const COMPLETE_DELAY = STEPS.length * STEP_DURATION;
 
 interface ScanningOverlayProps {
   previewUrl?: string | null;
@@ -13,127 +19,191 @@ interface ScanningOverlayProps {
 
 export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
   const [stepIndex, setStepIndex] = useState(0);
+  const [complete, setComplete] = useState(false);
 
   useEffect(() => {
-    if (stepIndex >= STEPS.length - 1) return;
-    const t = setTimeout(() => setStepIndex((s) => s + 1), 1000);
+    if (complete) return;
+    if (stepIndex < STEPS.length - 1) {
+      const t = setTimeout(() => setStepIndex((s) => s + 1), STEP_DURATION);
+      return () => clearTimeout(t);
+    }
+  }, [stepIndex, complete]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setComplete(true), COMPLETE_DELAY);
     return () => clearTimeout(t);
-  }, [stepIndex]);
+  }, []);
 
   const step = STEPS[stepIndex];
+  const displayProgress = complete ? 100 : step.progress;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-background/97 backdrop-blur-xl flex flex-col items-center justify-center overflow-hidden px-6"
+      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+      className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center overflow-hidden px-6"
     >
-      {/* Background glow */}
+      {/* Background atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-primary/6 blur-[160px]" />
+        <motion.div
+          animate={{ opacity: complete ? 0.18 : 0.08 }}
+          transition={{ duration: 1.2 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] rounded-full bg-primary blur-[180px]"
+        />
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(201,162,39,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,0.4) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
       </div>
 
       <div className="relative w-full max-w-lg flex flex-col items-center gap-8">
-        {/* Image preview with scanning effect */}
-        <div className="relative w-72 h-52 md:w-96 md:h-64 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_40px_rgba(201,162,39,0.2)]">
+
+        {/* Image with scan overlay */}
+        <div className="relative w-72 h-52 md:w-96 md:h-64 rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_60px_rgba(201,162,39,0.25)]">
           {previewUrl ? (
-            <img
+            <motion.img
               src={previewUrl}
               alt="Analyzing"
-              className="w-full h-full object-cover brightness-75"
+              animate={{ filter: complete ? "brightness(0.5) sepia(0.6)" : "brightness(0.65)" }}
+              transition={{ duration: 1.5 }}
+              className="w-full h-full object-cover"
             />
           ) : (
             <div className="w-full h-full bg-card/60" />
           )}
 
-          {/* Scan beam */}
-          <motion.div
-            animate={{ top: ["0%", "100%", "0%"] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
-            className="absolute left-0 right-0 h-0.5 bg-primary/90 shadow-[0_0_16px_4px_rgba(201,162,39,0.5)] z-20"
-          />
-
-          {/* Corner markers */}
-          {["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 right-2"].map((pos, i) => (
-            <div
-              key={i}
-              className={`absolute ${pos} w-5 h-5 border-primary/80 ${
-                i === 0 ? "border-t-2 border-l-2 rounded-tl" :
-                i === 1 ? "border-t-2 border-r-2 rounded-tr" :
-                i === 2 ? "border-b-2 border-l-2 rounded-bl" :
-                           "border-b-2 border-r-2 rounded-br"
-              }`}
-            />
-          ))}
-
-          {/* Overlay grid lines */}
-          <div className="absolute inset-0 opacity-10"
+          {/* Grid overlay */}
+          <div
+            className="absolute inset-0 opacity-10"
             style={{
-              backgroundImage: "linear-gradient(rgba(201,162,39,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,0.5) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
+              backgroundImage:
+                "linear-gradient(rgba(201,162,39,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(201,162,39,0.6) 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
             }}
           />
+
+          {/* Scan beam — only while scanning */}
+          {!complete && (
+            <motion.div
+              animate={{ top: ["0%", "100%", "0%"] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+              className="absolute left-0 right-0 h-0.5 bg-primary shadow-[0_0_18px_5px_rgba(201,162,39,0.55)] z-20"
+            />
+          )}
+
+          {/* Corner brackets */}
+          {(["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 right-2"] as const).map(
+            (pos, i) => (
+              <div
+                key={i}
+                className={`absolute ${pos} w-5 h-5 border-primary/80 ${
+                  i === 0 ? "border-t-2 border-l-2" :
+                  i === 1 ? "border-t-2 border-r-2" :
+                  i === 2 ? "border-b-2 border-l-2" :
+                             "border-b-2 border-r-2"
+                }`}
+              />
+            )
+          )}
+
+          {/* Completion flash */}
+          <AnimatePresence>
+            {complete && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute inset-0 flex items-center justify-center bg-black/40"
+              >
+                <motion.div
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                >
+                  <CheckCircle className="w-16 h-16 text-primary drop-shadow-[0_0_20px_rgba(201,162,39,0.9)]" />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Step label */}
-        <div className="text-center">
+        {/* Status text */}
+        <div className="text-center min-h-[3.5rem] flex flex-col items-center justify-center">
           <AnimatePresence mode="wait">
-            <motion.p
-              key={stepIndex}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3 }}
-              className="text-lg md:text-xl font-serif text-primary mb-1"
-            >
-              {step.label}
-            </motion.p>
+            {complete ? (
+              <motion.div
+                key="complete"
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="flex flex-col items-center gap-1"
+              >
+                <p className="text-xl md:text-2xl font-serif text-primary">
+                  Historical reconstruction complete.
+                </p>
+                <p className="text-xs text-primary/60 uppercase tracking-widest">
+                  Opening Time Machine...
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={stepIndex}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25 }}
+                className="flex flex-col items-center gap-1"
+              >
+                <p className="text-lg md:text-xl font-serif text-primary">{step.label}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest">
+                  AI Visual Recognition Engine
+                </p>
+              </motion.div>
+            )}
           </AnimatePresence>
-          <p className="text-xs text-muted-foreground uppercase tracking-widest">
-            AI Visual Recognition Engine
-          </p>
         </div>
 
         {/* Progress bar */}
-        <div className="w-full">
-          <div className="flex justify-between text-xs text-muted-foreground/60 mb-2">
-            <span>Analysis progress</span>
+        <div className="w-full space-y-2">
+          <div className="flex justify-between text-xs text-muted-foreground/50">
+            <span>Reconstruction progress</span>
             <motion.span
-              key={step.progress}
-              initial={{ opacity: 0 }}
+              key={displayProgress}
+              initial={{ opacity: 0.5 }}
               animate={{ opacity: 1 }}
             >
-              {step.progress}%
+              {displayProgress}%
             </motion.span>
           </div>
-          <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+          <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full shadow-[0_0_8px_rgba(201,162,39,0.6)]"
-              animate={{ width: `${step.progress}%` }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              animate={{ width: `${displayProgress}%` }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary shadow-[0_0_10px_rgba(201,162,39,0.7)]"
             />
           </div>
         </div>
 
-        {/* Step indicators */}
-        <div className="flex items-center gap-6">
-          {STEPS.map((s, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <motion.div
-                animate={{
-                  backgroundColor: i <= stepIndex ? "hsl(var(--primary))" : "rgba(255,255,255,0.08)",
-                  borderColor: i <= stepIndex ? "hsl(var(--primary))" : "rgba(255,255,255,0.15)",
-                }}
-                className="w-2.5 h-2.5 rounded-full border"
-              />
-              {i < STEPS.length - 1 && (
-                <motion.div
-                  animate={{ backgroundColor: i < stepIndex ? "hsl(var(--primary)/0.4)" : "rgba(255,255,255,0.08)" }}
-                  className="w-8 h-0.5 rounded-full"
-                />
-              )}
-            </div>
+        {/* Step dots */}
+        <div className="flex items-center gap-2">
+          {STEPS.map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                width: i === stepIndex && !complete ? 20 : 8,
+                backgroundColor:
+                  complete || i < stepIndex
+                    ? "hsl(var(--primary))"
+                    : i === stepIndex
+                    ? "hsl(var(--primary) / 0.8)"
+                    : "rgba(255,255,255,0.1)",
+              }}
+              transition={{ duration: 0.3 }}
+              className="h-1.5 rounded-full"
+            />
           ))}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Presentation, BookOpen } from "lucide-react";
@@ -15,6 +15,9 @@ import { PresentationMode } from "@/components/PresentationMode";
 import { MONUMENTS, Monument } from "@/data/monuments";
 import { saveToGallery } from "@/pages/Gallery";
 
+// Total overlay duration: 5 steps × 900 ms + 1500 ms completion display
+const ANALYSIS_DURATION = 5 * 900 + 1500;
+
 type RecognitionResult = {
   monument: Monument;
   confidence: number;
@@ -22,11 +25,11 @@ type RecognitionResult = {
 };
 
 const FILENAME_RULES: { keywords: string[]; id: string; confidence: number }[] = [
-  { keywords: ["tsarevets", "tsarevec"], id: "tsarevets", confidence: 94 },
-  { keywords: ["rila"],                  id: "rila",       confidence: 96 },
-  { keywords: ["nessebar", "nesebar", "messembria"], id: "nessebar", confidence: 91 },
-  { keywords: ["madara"],                id: "madara",     confidence: 98 },
-  { keywords: ["buzludzha", "buzludja"], id: "buzludzha",  confidence: 93 },
+  { keywords: ["tsarevets", "tsarevec"],               id: "tsarevets", confidence: 94 },
+  { keywords: ["rila"],                                 id: "rila",      confidence: 96 },
+  { keywords: ["nessebar", "nesebar", "messembria"],    id: "nessebar",  confidence: 91 },
+  { keywords: ["madara"],                               id: "madara",    confidence: 98 },
+  { keywords: ["buzludzha", "buzludja"],                id: "buzludzha", confidence: 93 },
 ];
 
 function recognize(fileName: string): RecognitionResult {
@@ -37,12 +40,7 @@ function recognize(fileName: string): RecognitionResult {
       return { monument, confidence: rule.confidence, isPossibleMatch: false };
     }
   }
-  // Default fallback: Tsarevets with 87% confidence
-  return {
-    monument: MONUMENTS[0],
-    confidence: 87,
-    isPossibleMatch: true,
-  };
+  return { monument: MONUMENTS[0], confidence: 87, isPossibleMatch: true };
 }
 
 export default function Explore() {
@@ -50,6 +48,18 @@ export default function Explore() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [result, setResult] = useState<RecognitionResult | null>(null);
   const [presentationOpen, setPresentationOpen] = useState(false);
+
+  const timeMachineRef = useRef<HTMLDivElement>(null);
+  const guideRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to Time Machine after result appears
+  useEffect(() => {
+    if (!result) return;
+    const t = setTimeout(() => {
+      timeMachineRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 400);
+    return () => clearTimeout(t);
+  }, [result]);
 
   const handleAnalyze = (imageUrl: string, fileName: string) => {
     setUploadedImage(imageUrl);
@@ -70,13 +80,17 @@ export default function Explore() {
         imageDataUrl: imageUrl,
         analyzedAt: new Date().toISOString(),
       });
-    }, 3000);
+    }, ANALYSIS_DURATION);
   };
 
   const handleReset = () => {
     setResult(null);
     setUploadedImage(null);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const scrollToGuide = () => {
+    guideRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -124,15 +138,26 @@ export default function Explore() {
               key="analysis"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-4 py-8"
+              transition={{ duration: 0.8 }}
+              className="space-y-6 py-8"
             >
-              {/* Top bar */}
+              {/* Top action bar */}
               <div className="flex flex-wrap gap-3 justify-between items-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium">
-                  Recognition Complete
-                </div>
-                <div className="flex gap-2">
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  Reconstruction Complete
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="flex gap-2"
+                >
                   <Button
                     onClick={() => setPresentationOpen(true)}
                     className="bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 rounded-full text-sm gap-2"
@@ -146,24 +171,34 @@ export default function Explore() {
                     onClick={handleReset}
                     className="border-white/20 hover:bg-white/5 rounded-full text-sm"
                   >
-                    Analyze New Image
+                    New Analysis
                   </Button>
-                </div>
+                </motion.div>
               </div>
 
+              {/* Analysis panel */}
               <AnalysisPanel
                 monument={result.monument}
                 confidence={result.confidence}
                 isPossibleMatch={result.isPossibleMatch}
               />
 
-              {uploadedImage && (
-                <TimeMachine monument={result.monument} currentImage={uploadedImage} />
-              )}
+              {/* Time Machine — auto-scrolled to on reveal */}
+              <div ref={timeMachineRef} className="scroll-mt-20">
+                {uploadedImage && (
+                  <TimeMachine
+                    monument={result.monument}
+                    currentImage={uploadedImage}
+                    onTalkToGuide={scrollToGuide}
+                  />
+                )}
+              </div>
 
+              {/* Interactive Map */}
               <MonumentMap monument={result.monument} />
 
-              <div className="pt-8 border-t border-white/5">
+              {/* AI Historical Guide */}
+              <div ref={guideRef} className="pt-8 border-t border-white/5 scroll-mt-20">
                 <div className="text-center mb-10">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
                     AI Guide
