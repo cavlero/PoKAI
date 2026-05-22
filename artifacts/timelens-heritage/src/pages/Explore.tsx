@@ -23,12 +23,15 @@ type RecognitionResult = {
 };
 
 const FILENAME_RULES: { keywords: string[]; id: string; confidence: number }[] = [
-  { keywords: ["tsarevets", "tsarevec"],            id: "tsarevets", confidence: 94 },
+  { keywords: ["novae", "roman", "svishtov"],        id: "novae",     confidence: 94 },
+  { keywords: ["tsarevets", "tsarevec"],             id: "tsarevets", confidence: 94 },
   { keywords: ["rila"],                              id: "rila",      confidence: 96 },
   { keywords: ["nessebar", "nesebar", "messembria"], id: "nessebar",  confidence: 91 },
   { keywords: ["madara"],                            id: "madara",    confidence: 98 },
   { keywords: ["buzludzha", "buzludja"],             id: "buzludzha", confidence: 93 },
 ];
+
+const NOVAE = MONUMENTS.find((m) => m.id === "novae")!;
 
 function recognize(fileName: string): RecognitionResult {
   const lower = fileName.toLowerCase();
@@ -38,7 +41,8 @@ function recognize(fileName: string): RecognitionResult {
       return { monument, confidence: rule.confidence, isPossibleMatch: false };
     }
   }
-  return { monument: MONUMENTS[0], confidence: 87, isPossibleMatch: true };
+  // Default fallback: suggest Novae as a possible match
+  return { monument: NOVAE, confidence: 87, isPossibleMatch: true };
 }
 
 export default function Explore() {
@@ -124,6 +128,12 @@ export default function Explore() {
       <AnimatePresence>
         {analyzing && <ScanningOverlay previewUrl={uploadedImage} />}
       </AnimatePresence>
+
+      {/* Prototype disclaimer */}
+      <div className="flex items-center justify-center gap-2 px-4 py-1.5 bg-amber-500/8 border-b border-amber-500/20 text-xs text-amber-400/60 tracking-wide">
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60 shrink-0" />
+        Prototype demo · Simulated AI recognition for presentation purposes
+      </div>
 
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
         <Link href="/">

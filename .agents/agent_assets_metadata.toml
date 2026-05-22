@@ -84,3 +84,21 @@ id = "2SwBEEoclIKLbKS_qyLap"
 uri = "file://artifacts/timelens-heritage/public/images/buzludzha_today.png"
 type = "image"
 title = "buzludzha monument modern abandoned"
+
+[[generated]]
+id = "j4ugcRP3fca2A2McwcQD6"
+uri = "file://artifacts/timelens-heritage/public/images/novae_past.png"
+type = "image"
+title = "Novae Roman fortress ancient reconstruction"
+
+[[generated]]
+id = "i_adIiiJdhe6wndZgodZM"
+uri = "file://artifacts/timelens-heritage/public/images/novae_today.png"
+type = "image"
+title = "Novae Roman fortress modern archaeological ruins"
+
+[[generated]]
+id = "KjuVkDa8OfiWFodSvpPId"
+uri = "file://artifacts/timelens-heritage/public/portraits/roman_soldier.png"
+type = "image"
+title = "Roman soldier portrait for Novae"

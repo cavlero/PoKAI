@@ -14,6 +14,33 @@ export type HistoricalFigure = {
 
 export const HISTORICAL_FIGURES: HistoricalFigure[] = [
   {
+    id: "roman_soldier",
+    name: "Marcus, Roman Legionary",
+    title: "Soldier of Legio I Italica · Novae, 2nd Century AD",
+    period: "Roman Empire · 2nd Century AD",
+    recommendedFor: ["novae"],
+    avatarInitials: "MR",
+    avatarGradient: "from-[#5c2e0a] to-[#b5651d]",
+    portraitUrl: "/portraits/roman_soldier.png",
+    intro:
+      "Salve, traveler. I am Marcus, a legionary soldier stationed at Novae on the Danube frontier. I have guarded this river for the glory of Rome and the safety of the province of Moesia. Many centuries have passed since my time — yet these stones still remember the footsteps of our legion.",
+    suggestedQuestions: [
+      "Why was Novae important?",
+      "What was daily life like for Roman soldiers?",
+      "How did Novae protect the Danube frontier?",
+    ],
+    responses: {
+      "Why was Novae important?":
+        "Novae was important because it protected the northern border of the Roman Empire along the Danube. Our fortress was the home of Legio I Italica — an entire legion of six thousand soldiers. We controlled the river crossings, repelled barbarian raids, and kept the Pax Romana — the Roman peace — in this corner of the empire. Without Novae, the province of Moesia could have fallen to the Goths or the Sarmatians long before it did.",
+      "What was daily life like for Roman soldiers?":
+        "Daily life was disciplined, but not without its pleasures. We trained every morning — sword drills, formation marching, equipment maintenance. We guarded the camp walls in rotation. But we also visited the bathhouse, worshipped at the temples, wrote letters home to our families across the empire, and traded with the local Thracian and Moesian people in the civilian settlement outside our walls. A soldier's life was one of order, hardship, and — when lucky — long stretches of peace.",
+      "How did Novae protect the Danube frontier?":
+        "The fortress helped control all movement across the Danube and protected Roman territories from invasions. We built watchtowers along the riverbank, maintained a river fleet of patrol boats, and kept cavalry ready to respond to any crossing. When the Goths pressed south in the 3rd century, Novae was one of the last lines of defense. The Danube was not just a river — it was the boundary between the Roman world and the lands beyond civilization, as we saw it.",
+      "default":
+        "You ask wise questions about our frontier life on the Danube! I have stood guard at these walls through bitter winters and blazing summers, watched the river flow north to unknown lands, and felt the weight of the empire's fate on our shoulders. Ask me anything about Novae, Roman military life, or the history of this Danube frontier — I have seen it all.",
+    },
+  },
+  {
     id: "ivan_asen",
     name: "Tsar Ivan Asen II",
     title: "Tsar of Bulgaria · 1218–1241",

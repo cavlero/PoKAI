@@ -17,6 +17,41 @@ export type Monument = {
 
 export const MONUMENTS: Monument[] = [
   {
+    id: "novae",
+    name: "Novae Roman Fortress",
+    city: "Svishtov",
+    country: "Bulgaria",
+    coordinates: { lat: 43.6167, lng: 25.3833 },
+    period: "Roman Empire (1st–6th Century AD)",
+    description:
+      "Novae was an important Roman military camp and settlement located near present-day Svishtov, on the southern bank of the Danube River. Founded in the 1st century AD as a legionary fortress, it served as one of the key strongholds defending the northern frontier — the Limes Moesiae — of the Roman Empire. The legion stationed here patrolled the Danube, conducted campaigns across the river, and protected the province of Moesia Inferior.",
+    importance:
+      "Today, Novae connects local Bulgarian heritage with wider European Roman history. The site is one of the best-preserved Roman legionary fortresses in the Lower Danube region, and ongoing Bulgarian-Polish archaeological excavations continue to uncover remarkable finds — from military equipment and inscriptions to public buildings and private homes.",
+    funFact:
+      "The famous physician Galen, considered the father of modern medicine, spent time near Novae during his service to the Roman army. Inscriptions discovered at the site mention the names of soldiers from across the Roman Empire — from Syria to Britain — who served and died on the Danube frontier.",
+    pastImageDescription:
+      "Novae in the 2nd century AD — a fully operational Roman legionary fortress with stone walls, the headquarters building, barracks, bathhouses, and the Danube visible to the north",
+    pastImageUrl: "/images/novae_past.png",
+    modernImageUrl: "/images/novae_today.png",
+    quickFacts: [
+      "Founded in the 1st century AD as a legionary fortress on the Danube",
+      "Served as base for Legio I Italica and later other Roman legions",
+      "Located near present-day Svishtov in northern Bulgaria",
+      "One of the best-preserved Roman sites on the Lower Danube",
+      "Excavated by joint Bulgarian-Polish archaeological teams since 1960",
+    ],
+    chatResponses: {
+      "Why was Novae important?":
+        "Novae was important because it protected the northern border of the Roman Empire along the Danube. Our fortress was the home of Legio I Italica — an entire legion of six thousand soldiers. We controlled the river crossings, repelled barbarian raids, and kept the Pax Romana — the Roman peace — in this corner of the empire. Without Novae, the province of Moesia could have fallen to the Goths or the Sarmatians long before it did.",
+      "What was daily life like for Roman soldiers?":
+        "Daily life was disciplined, but not without its pleasures. We trained every morning — sword drills, formation marching, equipment maintenance. We guarded the camp walls in rotation. But we also visited the bathhouse, worshipped at the temples, wrote letters home to our families across the empire, and traded with the local Thracian and Moesian people in the civilian settlement outside our walls. A soldier's life was one of order, hardship, and — when lucky — long stretches of peace.",
+      "How did Novae protect the Danube frontier?":
+        "The fortress helped control all movement across the Danube and protected Roman territories from invasions. We built watchtowers along the riverbank, maintained a river fleet of patrol boats, and kept cavalry ready to respond to any crossing. When the Goths pressed south in the 3rd century, Novae was one of the last lines of defense. The Danube was not just a river — it was the boundary between the Roman world and the lands beyond civilization, as we saw it.",
+      "default":
+        "You ask wise questions about our frontier life on the Danube! I have stood guard at these walls through bitter winters and blazing summers, watched the river flow north to unknown lands, and felt the weight of the empire's fate on our shoulders. Ask me anything about Novae, Roman military life, or the history of this Danube frontier — I have seen it all.",
+    },
+  },
+  {
     id: "tsarevets",
     name: "Tsarevets Fortress",
     city: "Veliko Tarnovo",
