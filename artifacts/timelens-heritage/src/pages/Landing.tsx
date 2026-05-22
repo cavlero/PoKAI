@@ -91,8 +91,8 @@ export default function Landing() {
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#ffdf73] to-primary mb-6 leading-tight">
-              TimeLens Heritage
+            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#ffdf73] to-primary mb-6 leading-none whitespace-nowrap">
+              TimeLens
             </h1>
             <p className="text-2xl md:text-3xl text-muted-foreground mb-4 font-serif">
               See the Past. Talk to History.
