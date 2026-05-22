@@ -1,17 +1,56 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 
-const VOICE_SETTINGS: Record<string, { pitch: number; rate: number }> = {
-  ivan_asen:            { pitch: 0.75, rate: 0.82 },
-  khan_asparuh:         { pitch: 0.65, rate: 0.90 },
-  saint_ivan:           { pitch: 1.10, rate: 0.70 },
-  paisii:               { pitch: 0.90, rate: 0.83 },
-  byzantine_chronicler: { pitch: 0.95, rate: 0.78 },
+export type VoiceProfile = {
+  pitch:  number;
+  rate:   number;
+  volume: number;
+  label:  string;
 };
 
+export const VOICE_PROFILES: Record<string, VoiceProfile> = {
+  ivan_asen: {
+    pitch:  0.70,
+    rate:   0.78,
+    volume: 1.0,
+    label:  "Royal & Commanding",
+  },
+  khan_asparuh: {
+    pitch:  0.60,
+    rate:   0.93,
+    volume: 1.0,
+    label:  "Strong & Energetic",
+  },
+  saint_ivan: {
+    pitch:  1.15,
+    rate:   0.65,
+    volume: 0.85,
+    label:  "Calm & Soft",
+  },
+  paisii: {
+    pitch:  0.85,
+    rate:   0.80,
+    volume: 1.0,
+    label:  "Wise Storyteller",
+  },
+  byzantine_chronicler: {
+    pitch:  1.00,
+    rate:   0.76,
+    volume: 0.90,
+    label:  "Scholarly & Measured",
+  },
+};
+
+export interface SpeakOptions {
+  pitchMultiplier?: number;
+  rateMultiplier?:  number;
+  volume?:          number;
+  onEnd?:           () => void;
+}
+
 export function useSpeechVoice(figureId: string) {
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isPaused, setIsPaused]     = useState(false);
+  const [isListening,      setIsListening]      = useState(false);
+  const [isSpeaking,       setIsSpeaking]       = useState(false);
+  const [isPaused,         setIsPaused]         = useState(false);
   const [interimTranscript, setInterimTranscript] = useState("");
 
   const recognitionRef = useRef<any>(null);
@@ -43,11 +82,19 @@ export function useSpeechVoice(figureId: string) {
     if (!voices.length) return null;
     const enGB = voices.filter((v) => v.lang === "en-GB");
     const enAny = voices.filter((v) => v.lang.startsWith("en"));
-    const pool = enGB.length ? enGB : enAny.length ? enAny : voices;
-    const settings = VOICE_SETTINGS[figureId];
-    if (settings && settings.pitch < 0.85) {
+    const pool  = enGB.length ? enGB : enAny.length ? enAny : voices;
+
+    const profile = VOICE_PROFILES[figureId];
+    if (profile && profile.pitch < 0.85) {
       const deepNames = ["Daniel", "George", "Alex", "Tom", "David", "Arthur", "Oliver", "Fred", "Brian", "Rishi"];
       for (const n of deepNames) {
+        const match = pool.find((v) => v.name.includes(n));
+        if (match) return match;
+      }
+    }
+    if (profile && profile.pitch >= 1.1) {
+      const softNames = ["Samantha", "Karen", "Victoria", "Moira", "Fiona", "Tessa", "Serena"];
+      for (const n of softNames) {
         const match = pool.find((v) => v.name.includes(n));
         if (match) return match;
       }
@@ -56,16 +103,20 @@ export function useSpeechVoice(figureId: string) {
   }, [figureId]);
 
   const speak = useCallback(
-    (text: string, onEnd?: () => void) => {
+    (text: string, options?: SpeakOptions) => {
+      const { pitchMultiplier = 1, rateMultiplier = 1, volume, onEnd } = options ?? {};
       if (!isSynSupported) { onEnd?.(); return; }
       window.speechSynthesis.cancel();
-      const settings = VOICE_SETTINGS[figureId] ?? { pitch: 1, rate: 0.85 };
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.pitch  = settings.pitch;
-      utterance.rate   = settings.rate;
-      utterance.volume = 1;
+
+      const profile = VOICE_PROFILES[figureId] ?? { pitch: 1, rate: 0.85, volume: 1 };
+      const utterance    = new SpeechSynthesisUtterance(text);
+      utterance.pitch    = Math.max(0.1, Math.min(2,  profile.pitch  * pitchMultiplier));
+      utterance.rate     = Math.max(0.1, Math.min(10, profile.rate   * rateMultiplier));
+      utterance.volume   = volume ?? profile.volume;
+
       const voice = selectVoice();
       if (voice) utterance.voice = voice;
+
       utterance.onstart = () => { setIsSpeaking(true);  setIsPaused(false); };
       utterance.onend   = () => { setIsSpeaking(false); setIsPaused(false); onEnd?.(); };
       utterance.onerror = () => { setIsSpeaking(false); setIsPaused(false); onEnd?.(); };
@@ -99,7 +150,7 @@ export function useSpeechVoice(figureId: string) {
       recognitionRef.current?.stop();
       const SpeechRec =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      const rec = new SpeechRec();
+      const rec          = new SpeechRec();
       rec.continuous     = continuous;
       rec.interimResults = true;
       rec.lang           = "en-US";
