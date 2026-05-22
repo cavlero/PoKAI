@@ -16,16 +16,42 @@ interface Message {
 function FigureAvatar({
   figure,
   size = "md",
+  glow = false,
 }: {
   figure: HistoricalFigure;
   size?: "sm" | "md" | "lg";
+  glow?: boolean;
 }) {
-  const sizes = { sm: "w-9 h-9 text-sm", md: "w-12 h-12 text-base", lg: "w-20 h-20 text-2xl" };
+  const sizes = {
+    sm: "w-9 h-9",
+    md: "w-12 h-12",
+    lg: "w-20 h-20",
+  };
+  const ringThickness = {
+    sm: "p-[2px]",
+    md: "p-[2.5px]",
+    lg: "p-[3px]",
+  };
+
   return (
     <div
-      className={`${sizes[size]} rounded-full bg-gradient-to-br ${figure.avatarGradient} flex items-center justify-center font-serif font-bold text-white border-2 border-white/10 shrink-0 shadow-lg`}
+      className={`${sizes[size]} ${ringThickness[size]} rounded-full shrink-0 transition-all duration-300 ${
+        glow
+          ? "shadow-[0_0_20px_rgba(201,162,39,0.7)] ring-2 ring-primary/60"
+          : "shadow-[0_0_8px_rgba(201,162,39,0.3)] ring-1 ring-primary/30"
+      }`}
+      style={{
+        background: "linear-gradient(135deg, #c9a227 0%, #f0d060 35%, #8b6914 65%, #c9a227 100%)",
+      }}
     >
-      {figure.avatarInitials}
+      <div className="w-full h-full rounded-full overflow-hidden">
+        <img
+          src={figure.portraitUrl}
+          alt={figure.name}
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
+        />
+      </div>
     </div>
   );
 }

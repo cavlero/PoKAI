@@ -1,0 +1,32 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "asjZuY_7qs1CnHSiqMMMt"
+uri = "file://artifacts/timelens-heritage/public/portraits/ivan_asen.png"
+type = "image"
+title = "tsar ivan asen II portrait"
+
+[[generated]]
+id = "wYSMRhG6SLifgyC8s1EX3"
+uri = "file://artifacts/timelens-heritage/public/portraits/khan_asparuh.png"
+type = "image"
+title = "khan asparuh bulgar warrior portrait"
+
+[[generated]]
+id = "WUKUm-o4Rg-KaCCKN5uym"
+uri = "file://artifacts/timelens-heritage/public/portraits/saint_ivan.png"
+type = "image"
+title = "saint ivan of rila monk portrait"
+
+[[generated]]
+id = "xvV5zPdKUsZkU-FQkt_lG"
+uri = "file://artifacts/timelens-heritage/public/portraits/paisii.png"
+type = "image"
+title = "paisii hilendarski monk writer portrait"
+
+[[generated]]
+id = "y8nANr7QBlEaOeV9Tq3iM"
+uri = "file://artifacts/timelens-heritage/public/portraits/byzantine_chronicler.png"
+type = "image"
+title = "byzantine scholar chronicler portrait"

@@ -7,6 +7,7 @@ export type HistoricalFigure = {
   intro: string;
   avatarInitials: string;
   avatarGradient: string;
+  portraitUrl: string;
   suggestedQuestions: string[];
   responses: Record<string, string>;
 };
@@ -20,6 +21,7 @@ export const HISTORICAL_FIGURES: HistoricalFigure[] = [
     recommendedFor: ["tsarevets"],
     avatarInitials: "IA",
     avatarGradient: "from-[#7a3c0a] to-[#c9a227]",
+    portraitUrl: "/portraits/ivan_asen.png",
     intro:
       "I am Tsar Ivan Asen II, sovereign of the Second Bulgarian Empire at its greatest height. From my seat at Tsarevets, I commanded armies that stretched from the Black Sea to the Adriatic. My reign brought peace, prosperity, and a Bulgarian empire that rivalled Byzantium itself.",
     suggestedQuestions: [
@@ -46,6 +48,7 @@ export const HISTORICAL_FIGURES: HistoricalFigure[] = [
     recommendedFor: ["madara"],
     avatarInitials: "KA",
     avatarGradient: "from-[#1a3a5c] to-[#4a7fb5]",
+    portraitUrl: "/portraits/khan_asparuh.png",
     intro:
       "I am Khan Asparuh, son of Kubrat, leader of the Bulgars. I crossed the great Danube River and forged an alliance with the seven Slavic tribes. Together we created a new nation — Bulgaria — recognized by Byzantium under the Treaty of 681. The Madara Rider is carved in stone as testament to the eternal triumph of our people.",
     suggestedQuestions: [
@@ -72,6 +75,7 @@ export const HISTORICAL_FIGURES: HistoricalFigure[] = [
     recommendedFor: ["rila"],
     avatarInitials: "SI",
     avatarGradient: "from-[#1a3a1a] to-[#2d6a2d]",
+    portraitUrl: "/portraits/saint_ivan.png",
     intro:
       "I am Ivan of Rila — a humble servant of God who left the world behind to seek truth in the silence of the mountains. I lived as a hermit in the Rila wilderness for many years, sleeping in a cave, eating only roots and herbs. Disciples found me and would not leave. From that small community, the monastery grew — and it has sheltered the soul of Bulgaria ever since.",
     suggestedQuestions: [
@@ -98,6 +102,7 @@ export const HISTORICAL_FIGURES: HistoricalFigure[] = [
     recommendedFor: ["buzludzha"],
     avatarInitials: "PH",
     avatarGradient: "from-[#3a1a5c] to-[#7a3fb5]",
+    portraitUrl: "/portraits/paisii.png",
     intro:
       "I am Paisii Hilendarski — a Bulgarian monk who walked the length of the Balkans, searching the archives of the great monasteries for records of our forgotten history. My 'Slavo-Bulgarian History', written in 1762, was the spark that lit the flame of the Bulgarian National Revival. I wrote it for you — for young Bulgarians who had forgotten who they were.",
     suggestedQuestions: [
@@ -124,6 +129,7 @@ export const HISTORICAL_FIGURES: HistoricalFigure[] = [
     recommendedFor: ["nessebar"],
     avatarInitials: "EC",
     avatarGradient: "from-[#5c3a1a] to-[#b57f3f]",
+    portraitUrl: "/portraits/byzantine_chronicler.png",
     intro:
       "I am Eudokimos, a chronicler of the great city of Messembria — which you call Nessebar. I have spent my life recording the history of this extraordinary peninsula, where Greek colonists, Roman legions, Byzantine emperors, and Bulgarian tsars have all left their mark. Three thousand years of history are compressed into this tiny rocky point reaching into the Black Sea.",
     suggestedQuestions: [
