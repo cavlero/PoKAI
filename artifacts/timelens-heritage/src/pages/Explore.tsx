@@ -1,21 +1,19 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, Presentation, BookOpen } from "lucide-react";
+import { ChevronLeft, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { UploadZone } from "@/components/UploadZone";
 import { ScanningOverlay } from "@/components/ScanningOverlay";
 import { AnalysisPanel } from "@/components/AnalysisPanel";
 import { TimeMachine } from "@/components/TimeMachine";
-import { AIGuide } from "@/components/AIGuide";
+import { TalkToHistory } from "@/components/TalkToHistory";
 import { MonumentMap } from "@/components/MonumentMap";
-import { PresentationMode } from "@/components/PresentationMode";
 
 import { MONUMENTS, Monument } from "@/data/monuments";
 import { saveToGallery } from "@/pages/Gallery";
 
-// Total overlay duration: 5 steps × 900 ms + 1500 ms completion display
 const ANALYSIS_DURATION = 5 * 900 + 1500;
 
 type RecognitionResult = {
@@ -25,11 +23,11 @@ type RecognitionResult = {
 };
 
 const FILENAME_RULES: { keywords: string[]; id: string; confidence: number }[] = [
-  { keywords: ["tsarevets", "tsarevec"],               id: "tsarevets", confidence: 94 },
-  { keywords: ["rila"],                                 id: "rila",      confidence: 96 },
-  { keywords: ["nessebar", "nesebar", "messembria"],    id: "nessebar",  confidence: 91 },
-  { keywords: ["madara"],                               id: "madara",    confidence: 98 },
-  { keywords: ["buzludzha", "buzludja"],                id: "buzludzha", confidence: 93 },
+  { keywords: ["tsarevets", "tsarevec"],            id: "tsarevets", confidence: 94 },
+  { keywords: ["rila"],                              id: "rila",      confidence: 96 },
+  { keywords: ["nessebar", "nesebar", "messembria"], id: "nessebar",  confidence: 91 },
+  { keywords: ["madara"],                            id: "madara",    confidence: 98 },
+  { keywords: ["buzludzha", "buzludja"],             id: "buzludzha", confidence: 93 },
 ];
 
 function recognize(fileName: string): RecognitionResult {
@@ -44,13 +42,42 @@ function recognize(fileName: string): RecognitionResult {
 }
 
 export default function Explore() {
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  const demoId = params.get("demo");
+
   const [analyzing, setAnalyzing] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [result, setResult] = useState<RecognitionResult | null>(null);
-  const [presentationOpen, setPresentationOpen] = useState(false);
+  const [demoTriggered, setDemoTriggered] = useState(false);
 
   const timeMachineRef = useRef<HTMLDivElement>(null);
   const guideRef = useRef<HTMLDivElement>(null);
+
+  // Handle ?demo=<id> mode — auto-trigger without upload
+  useEffect(() => {
+    if (!demoId || demoTriggered || result) return;
+    const monument = MONUMENTS.find((m) => m.id === demoId);
+    if (!monument) return;
+    setDemoTriggered(true);
+    setUploadedImage(null);
+    setAnalyzing(true);
+    setTimeout(() => {
+      const recognition: RecognitionResult = { monument, confidence: 94, isPossibleMatch: false };
+      setResult(recognition);
+      setAnalyzing(false);
+      saveToGallery({
+        id: `demo-${Date.now()}`,
+        monumentId: monument.id,
+        monumentName: monument.name,
+        city: monument.city,
+        country: monument.country,
+        period: monument.period,
+        imageDataUrl: "",
+        analyzedAt: new Date().toISOString(),
+      });
+    }, ANALYSIS_DURATION);
+  }, [demoId, demoTriggered, result]);
 
   // Auto-scroll to Time Machine after result appears
   useEffect(() => {
@@ -64,12 +91,10 @@ export default function Explore() {
   const handleAnalyze = (imageUrl: string, fileName: string) => {
     setUploadedImage(imageUrl);
     setAnalyzing(true);
-
     setTimeout(() => {
       const recognition = recognize(fileName);
       setResult(recognition);
       setAnalyzing(false);
-
       saveToGallery({
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         monumentId: recognition.monument.id,
@@ -86,6 +111,7 @@ export default function Explore() {
   const handleReset = () => {
     setResult(null);
     setUploadedImage(null);
+    setDemoTriggered(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -97,12 +123,6 @@ export default function Explore() {
     <div className="min-h-screen bg-background text-foreground pb-20">
       <AnimatePresence>
         {analyzing && <ScanningOverlay previewUrl={uploadedImage} />}
-        {presentationOpen && result && (
-          <PresentationMode
-            monument={result.monument}
-            onClose={() => setPresentationOpen(false)}
-          />
-        )}
       </AnimatePresence>
 
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
@@ -141,7 +161,6 @@ export default function Explore() {
               transition={{ duration: 0.8 }}
               className="space-y-6 py-8"
             >
-              {/* Top action bar */}
               <div className="flex flex-wrap gap-3 justify-between items-center">
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
@@ -156,16 +175,7 @@ export default function Explore() {
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex gap-2"
                 >
-                  <Button
-                    onClick={() => setPresentationOpen(true)}
-                    className="bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 rounded-full text-sm gap-2"
-                    data-testid="button-presentation-mode"
-                  >
-                    <Presentation className="w-4 h-4" />
-                    Presentation Mode
-                  </Button>
                   <Button
                     variant="outline"
                     onClick={handleReset}
@@ -176,41 +186,24 @@ export default function Explore() {
                 </motion.div>
               </div>
 
-              {/* Analysis panel */}
               <AnalysisPanel
                 monument={result.monument}
                 confidence={result.confidence}
                 isPossibleMatch={result.isPossibleMatch}
               />
 
-              {/* Time Machine — auto-scrolled to on reveal */}
               <div ref={timeMachineRef} className="scroll-mt-20">
-                {uploadedImage && (
-                  <TimeMachine
-                    monument={result.monument}
-                    currentImage={uploadedImage}
-                    onTalkToGuide={scrollToGuide}
-                  />
-                )}
+                <TimeMachine
+                  monument={result.monument}
+                  currentImage={uploadedImage}
+                  onTalkToGuide={scrollToGuide}
+                />
               </div>
 
-              {/* Interactive Map */}
               <MonumentMap monument={result.monument} />
 
-              {/* AI Historical Guide */}
               <div ref={guideRef} className="pt-8 border-t border-white/5 scroll-mt-20">
-                <div className="text-center mb-10">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
-                    AI Guide
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">
-                    AI Historical Guide
-                  </h2>
-                  <p className="text-muted-foreground max-w-2xl mx-auto">
-                    Our AI has synchronized with the historical record of this site. Ask questions to uncover its secrets.
-                  </p>
-                </div>
-                <AIGuide monument={result.monument} />
+                <TalkToHistory monument={result.monument} />
               </div>
             </motion.div>
           )}
