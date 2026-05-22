@@ -228,13 +228,6 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-white/10 text-center text-muted-foreground bg-background">
-        <p className="font-serif text-sm">
-          TimeLens Heritage &copy; {new Date().getFullYear()} — Built for the Future, Inspired by the Past.
-        </p>
-        <p className="text-xs text-muted-foreground/40 mt-1">University Hackathon Prototype · Simulated Historical AI</p>
-      </footer>
     </div>
   );
 }
