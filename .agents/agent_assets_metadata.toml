@@ -30,3 +30,57 @@ id = "y8nANr7QBlEaOeV9Tq3iM"
 uri = "file://artifacts/timelens-heritage/public/portraits/byzantine_chronicler.png"
 type = "image"
 title = "byzantine scholar chronicler portrait"
+
+[[generated]]
+id = "OX0XU68VjLOfO-qskR9t9"
+uri = "file://artifacts/timelens-heritage/public/images/tsarevets_past.png"
+type = "image"
+title = "tsarevets medieval fortress reconstruction"
+
+[[generated]]
+id = "7icHY2TZzyJELAQhOAlfY"
+uri = "file://artifacts/timelens-heritage/public/images/rila_past.png"
+type = "image"
+title = "rila monastery medieval past"
+
+[[generated]]
+id = "oLRx3dRGrTqH9QQy6G2CZ"
+uri = "file://artifacts/timelens-heritage/public/images/nessebar_past.png"
+type = "image"
+title = "ancient nessebar byzantine city"
+
+[[generated]]
+id = "ZpZX16UYllahlJ2WjoJQq"
+uri = "file://artifacts/timelens-heritage/public/images/madara_past.png"
+type = "image"
+title = "madara rider ancient bulgarian monument"
+
+[[generated]]
+id = "0k7gpqYmfi0eIzlCt2cCM"
+uri = "file://artifacts/timelens-heritage/public/images/buzludzha_past.png"
+type = "image"
+title = "buzludzha battle bulgarian history"
+
+[[generated]]
+id = "c3vsb2kFlmy8_vyvGTp_7"
+uri = "file://artifacts/timelens-heritage/public/images/rila_today.png"
+type = "image"
+title = "rila monastery modern photo"
+
+[[generated]]
+id = "9L6meC3QKstb7RpG2kMMe"
+uri = "file://artifacts/timelens-heritage/public/images/nessebar_today.png"
+type = "image"
+title = "nessebar old town modern photo"
+
+[[generated]]
+id = "0M8P-eCGaYjd0DaHHF7Fn"
+uri = "file://artifacts/timelens-heritage/public/images/madara_today.png"
+type = "image"
+title = "madara rider rock relief modern"
+
+[[generated]]
+id = "2SwBEEoclIKLbKS_qyLap"
+uri = "file://artifacts/timelens-heritage/public/images/buzludzha_today.png"
+type = "image"
+title = "buzludzha monument modern abandoned"

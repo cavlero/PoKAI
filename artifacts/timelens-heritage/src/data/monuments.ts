@@ -9,6 +9,8 @@ export type Monument = {
   importance: string;
   funFact: string;
   pastImageDescription: string;
+  pastImageUrl?: string;
+  modernImageUrl?: string;
   quickFacts: string[];
   chatResponses: Record<string, string>;
 };
@@ -29,6 +31,8 @@ export const MONUMENTS: Monument[] = [
       "Every year, Tsarevets hosts a spectacular sound and light show where the fortress walls are illuminated with colored lights while Beethoven's Ninth Symphony plays — drawing thousands of spectators to the surrounding hills.",
     pastImageDescription:
       "12th-century Tsarevets at its peak — a mighty walled citadel gleaming above the Yantra River, banners flying from towers, the royal palace alive with courtly life",
+    pastImageUrl: "/images/tsarevets_past.png",
+    modernImageUrl: "/images/tsarevets_today.jpg",
     quickFacts: [
       "Built in the 12th century as the capital of the Second Bulgarian Empire",
       "Housed the royal palace and Patriarchal Cathedral at its peak",
@@ -64,6 +68,8 @@ export const MONUMENTS: Monument[] = [
       "The monastery's famous frescoes cover over 1,200 square metres of walls and ceilings, painted between 1840 and 1848. They depict over 1,200 biblical scenes — all painted by hand without any scaffolding in the modern sense, using ropes and wooden platforms!",
     pastImageDescription:
       "10th-century Rila Monastery in its earliest form — a humble stone hermitage in dense mountain forest, founded by Saint Ivan of Rila who lived as a hermit in a nearby cave",
+    pastImageUrl: "/images/rila_past.png",
+    modernImageUrl: "/images/rila_today.png",
     quickFacts: [
       "Founded in the 10th century by Saint Ivan of Rila",
       "UNESCO World Heritage Site since 1983",
@@ -99,6 +105,8 @@ export const MONUMENTS: Monument[] = [
       "At its medieval peak, Nessebar had over 40 churches for a population of just a few thousand people — roughly one church for every 100 residents! Today, more than 20 of those ancient churches still stand, many dating back to the 5th century.",
     pastImageDescription:
       "Ancient Messembria at its Byzantine peak — a fortified city on a rocky peninsula, its skyline crowded with domed churches gleaming above the Black Sea",
+    pastImageUrl: "/images/nessebar_past.png",
+    modernImageUrl: "/images/nessebar_today.png",
     quickFacts: [
       "Over 3,200 years of continuous history",
       "UNESCO World Heritage Site since 1983",
@@ -134,6 +142,8 @@ export const MONUMENTS: Monument[] = [
       "The Madara Rider is carved into a cliff face at a height of 23 metres — yet archaeologists still debate who carved it and exactly how, as the medieval tools available would have made such precise high-altitude carving extraordinarily difficult. The image measures approximately 2.6 by 3.1 metres.",
     pastImageDescription:
       "8th-century Bulgaria — a master stonemason suspended on ropes against a towering cliff face, chiseling the triumphant image of a horseman into living rock by torchlight",
+    pastImageUrl: "/images/madara_past.png",
+    modernImageUrl: "/images/madara_today.png",
     quickFacts: [
       "Carved between 705–801 AD during the First Bulgarian Empire",
       "UNESCO World Heritage Site since 1979",
@@ -169,6 +179,8 @@ export const MONUMENTS: Monument[] = [
       "The interior of Buzludzha was decorated with over 7,000 square metres of mosaic artwork depicting scenes from Bulgarian and socialist history. The building required 6,000 workers and volunteers over 7 years to construct — and was then abandoned just a decade after opening, following the fall of communism in 1989.",
     pastImageDescription:
       "1981 — Buzludzha at its ceremonial opening, blazing with light against a mountain sunset, its iconic sickle and hammer insignia gleaming above the clouds",
+    pastImageUrl: "/images/buzludzha_past.png",
+    modernImageUrl: "/images/buzludzha_today.png",
     quickFacts: [
       "Built between 1974 and 1981 on a 1,441m mountain peak",
       "Contains over 7,000 square metres of socialist mosaic murals inside",

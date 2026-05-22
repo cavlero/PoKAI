@@ -15,6 +15,7 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
   const [hasInteracted, setHasInteracted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Cinematic entrance: animate slider 20 → 50 on mount
   useEffect(() => {
     let start: number | null = null;
     const from = 20;
@@ -56,6 +57,11 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
     };
   }, [isDragging]);
 
+  // Resolve which images to show
+  const pastImage = monument.pastImageUrl ?? null;
+  const modernImage = monument.modernImageUrl ?? currentImage ?? null;
+  const hasDedicatedImages = Boolean(monument.pastImageUrl);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -63,16 +69,18 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
       transition={{ duration: 0.7 }}
       className="w-full max-w-5xl mx-auto my-10"
     >
+      {/* Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
           Time Machine · Reconstruction Ready
         </div>
         <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">See the Past</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Move the slider to compare the monument today and its historical appearance.
+          Drag the slider to compare the monument today against its historical reconstruction.
         </p>
       </div>
 
+      {/* Comparison container */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -82,70 +90,89 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
         onMouseDown={(e) => { setIsDragging(true); handleMove(e.clientX); }}
         onTouchStart={(e) => { setIsDragging(true); handleMove(e.touches[0].clientX); }}
       >
-        {/* RIGHT — Present day */}
+        {/* ───── RIGHT SIDE — Present day ───── */}
         <div className="absolute inset-0">
-          {currentImage ? (
+          {modernImage ? (
             <img
-              src={currentImage}
-              alt="Present day"
-              className="w-full h-full object-cover brightness-100 contrast-110 saturate-110"
+              src={modernImage}
+              alt={`${monument.name} today`}
+              className="w-full h-full object-cover"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-[#0a0f2e] via-[#0f1542] to-[#0a0f2e] flex flex-col items-center justify-center gap-4">
               <Landmark className="w-16 h-16 text-primary/30" />
               <div className="text-center">
                 <p className="font-serif text-xl text-foreground/40">{monument.name}</p>
-                <p className="text-xs text-muted-foreground/30 mt-1 uppercase tracking-widest">Present Day Reference</p>
+                <p className="text-xs text-muted-foreground/30 mt-1 uppercase tracking-widest">Present Day</p>
               </div>
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-background/10 pointer-events-none" />
-          <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-foreground/80 font-medium tracking-wide border border-white/10 flex items-center gap-1.5">
+          {/* Today label */}
+          <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-foreground/90 font-medium tracking-wide border border-white/10 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-            Present Day
+            Today
           </div>
         </div>
 
-        {/* LEFT — Historical reconstruction */}
+        {/* ───── LEFT SIDE — Historical reconstruction ───── */}
         <div
           className="absolute inset-0"
           style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
         >
-          <div className="absolute inset-0">
-            {currentImage ? (
+          {hasDedicatedImages && pastImage ? (
+            /* Dedicated historical reconstruction image — no filters */
+            <div className="absolute inset-0">
               <img
-                src={currentImage}
-                alt="Historical reconstruction"
+                src={pastImage}
+                alt={`${monument.name} historical reconstruction`}
                 className="w-full h-full object-cover"
-                style={{ filter: "sepia(0.85) contrast(1.2) brightness(0.72) hue-rotate(-5deg) saturate(0.8)" }}
               />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-[#3d2b1f] via-[#5a3e1a] to-[#2a1e0a]" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#4a2e0a]/55 via-[#8b6914]/30 to-[#c9a227]/15 mix-blend-multiply" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.65)_100%)]" />
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center bg-black/25">
-            <p className="text-white/85 text-center px-8 font-serif text-sm md:text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed max-w-md">
-              {monument.pastImageDescription}
-            </p>
-          </div>
+              {/* Very subtle warm vignette to blend edges */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.35)_100%)] pointer-events-none" />
+            </div>
+          ) : (
+            /* Fallback: sepia-filtered version of current image */
+            <div className="absolute inset-0">
+              {currentImage ? (
+                <img
+                  src={currentImage}
+                  alt="Historical reconstruction"
+                  className="w-full h-full object-cover"
+                  style={{ filter: "sepia(0.85) contrast(1.2) brightness(0.72) hue-rotate(-5deg) saturate(0.8)" }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-[#3d2b1f] via-[#5a3e1a] to-[#2a1e0a]" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#4a2e0a]/55 via-[#8b6914]/30 to-[#c9a227]/15 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.65)_100%)]" />
+              {/* Description text for fallback only */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                <p className="text-white/85 text-center px-8 font-serif text-sm md:text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed max-w-md">
+                  {monument.pastImageDescription}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Period badge — always shown */}
           <div className="absolute bottom-4 left-4 bg-primary/85 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-primary-foreground font-medium tracking-wide border border-primary/30 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-foreground/70" />
             {monument.period}
           </div>
-          <div className="absolute top-4 left-4 px-2.5 py-1 rounded bg-black/50 text-[10px] text-primary/70 uppercase tracking-widest border border-primary/20">
+
+          {/* "AI Reconstruction" badge */}
+          <div className="absolute top-4 left-4 px-2.5 py-1 rounded bg-black/50 backdrop-blur-sm text-[10px] text-primary/80 uppercase tracking-widest border border-primary/20">
             AI Reconstruction
           </div>
         </div>
 
-        {/* Divider */}
+        {/* Divider glow line */}
         <div
-          className="absolute top-0 bottom-0 w-px bg-primary shadow-[0_0_12px_3px_rgba(201,162,39,0.7)] z-10 pointer-events-none"
+          className="absolute top-0 bottom-0 w-px bg-primary shadow-[0_0_14px_4px_rgba(201,162,39,0.8)] z-10 pointer-events-none"
           style={{ left: `${sliderPosition}%` }}
         />
 
-        {/* Handle */}
+        {/* Drag handle */}
         <div
           className="absolute top-0 bottom-0 flex items-center z-20"
           style={{ left: `calc(${sliderPosition}% - 22px)` }}
@@ -158,12 +185,13 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
           </motion.div>
         </div>
 
+        {/* Drag hint */}
         {!hasInteracted && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.8 }}
-            className="absolute bottom-14 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white/60 border border-white/10 pointer-events-none whitespace-nowrap"
+            className="absolute bottom-14 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white/60 border border-white/10 pointer-events-none whitespace-nowrap z-10"
           >
             Drag to compare
           </motion.div>
@@ -174,6 +202,7 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
         Drag slider to travel through time · AI-generated historical reconstruction
       </p>
 
+      {/* Talk to Historical Figure */}
       {onTalkToGuide && (
         <motion.div
           initial={{ opacity: 0, y: 16 }}
