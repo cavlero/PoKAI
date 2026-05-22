@@ -22,11 +22,9 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
   const [complete, setComplete] = useState(false);
 
   useEffect(() => {
-    if (complete) return;
-    if (stepIndex < STEPS.length - 1) {
-      const t = setTimeout(() => setStepIndex((s) => s + 1), STEP_DURATION);
-      return () => clearTimeout(t);
-    }
+    if (complete || stepIndex >= STEPS.length - 1) return;
+    const t = setTimeout(() => setStepIndex((s) => s + 1), STEP_DURATION);
+    return () => clearTimeout(t);
   }, [stepIndex, complete]);
 
   useEffect(() => {
