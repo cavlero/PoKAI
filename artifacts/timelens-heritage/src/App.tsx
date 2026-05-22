@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 
 import Landing from "@/pages/Landing";
 import Explore from "@/pages/Explore";
+import Gallery from "@/pages/Gallery";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/explore" component={Explore} />
+      <Route path="/gallery" component={Gallery} />
       <Route component={NotFound} />
     </Switch>
   );

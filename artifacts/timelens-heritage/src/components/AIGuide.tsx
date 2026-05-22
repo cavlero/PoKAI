@@ -3,7 +3,6 @@ import { Monument } from "@/data/monuments";
 import { Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,8 +17,8 @@ export function AIGuide({ monument }: { monument: Monument }) {
     {
       id: "welcome",
       role: "bot",
-      content: `Welcome to ${monument.name}. I am your temporal guide. Ask me anything about its history, construction, or significance.`
-    }
+      content: `Hello! I am your historical guide. Ask me anything about this monument.`,
+    },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -31,135 +30,157 @@ export function AIGuide({ monument }: { monument: Monument }) {
     }
   }, [messages, isTyping]);
 
-  const handleSend = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!inputValue.trim() || isTyping) return;
+  const getResponse = (query: string): string => {
+    const lowerQuery = query.toLowerCase();
+    const keys = Object.keys(monument.chatResponses).filter((k) => k !== "default");
+    for (const key of keys) {
+      const cleanKey = key.replace(/[^\w\s]/g, "").toLowerCase();
+      const keywords = cleanKey.split(" ").filter((w) => w.length > 3);
+      if (keywords.some((kw) => lowerQuery.includes(kw)) || lowerQuery === cleanKey) {
+        return monument.chatResponses[key];
+      }
+    }
+    return monument.chatResponses["default"];
+  };
 
-    const userQuery = inputValue.trim();
-    const newUserMsg: Message = { id: Date.now().toString(), role: "user", content: userQuery };
-    
-    setMessages(prev => [...prev, newUserMsg]);
+  const handleSend = (e?: React.FormEvent, overrideQuery?: string) => {
+    if (e) e.preventDefault();
+    const query = (overrideQuery ?? inputValue).trim();
+    if (!query || isTyping) return;
+
+    const userMsg: Message = { id: Date.now().toString(), role: "user", content: query };
+    setMessages((prev) => [...prev, userMsg]);
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate AI response
     setTimeout(() => {
-      let botResponse = monument.chatResponses["default"];
-      
-      // Simple keyword matching for demo
-      const lowerQuery = userQuery.toLowerCase();
-      const predefinedKeys = Object.keys(monument.chatResponses).filter(k => k !== "default");
-      
-      for (const key of predefinedKeys) {
-        // Strip punctuation and check if key matches
-        const cleanKey = key.replace(/[^\w\s]/g, '').toLowerCase();
-        const keywords = cleanKey.split(' ').filter(w => w.length > 3); // match significant words
-        
-        if (keywords.some(kw => lowerQuery.includes(kw)) || lowerQuery === cleanKey) {
-          botResponse = monument.chatResponses[key];
-          break;
-        }
-      }
-
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: "bot",
-        content: botResponse
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: (Date.now() + 1).toString(), role: "bot", content: getResponse(query) },
+      ]);
       setIsTyping(false);
     }, 1500);
   };
 
-  return (
-    <Card className="w-full max-w-3xl mx-auto bg-card/60 backdrop-blur border-white/10 shadow-xl overflow-hidden flex flex-col">
-      <div className="bg-card border-b border-white/5 p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-          <Bot className="w-5 h-5 text-primary" />
-        </div>
-        <div>
-          <h3 className="font-serif text-lg text-foreground">AI Historical Guide</h3>
-          <p className="text-xs text-primary/80 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            Online - Temporal Link Active
-          </p>
-        </div>
-      </div>
-      
-      <ScrollArea className="flex-1 p-4 h-[400px]" ref={scrollRef}>
-        <div className="flex flex-col gap-4">
-          <AnimatePresence initial={false}>
-            {messages.map((msg) => (
-              <motion.div
-                key={msg.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex gap-3 max-w-[85%] ${msg.role === "user" ? "self-end flex-row-reverse" : "self-start"}`}
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                  msg.role === "user" ? "bg-secondary text-secondary-foreground" : "bg-primary/20 text-primary border border-primary/30"
-                }`}>
-                  {msg.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                </div>
-                <div className={`p-3 rounded-2xl ${
-                  msg.role === "user" 
-                    ? "bg-secondary text-secondary-foreground rounded-tr-none" 
-                    : "bg-white/5 text-foreground/90 rounded-tl-none border border-white/5"
-                }`}>
-                  <p className="text-sm leading-relaxed">{msg.content}</p>
-                </div>
-              </motion.div>
-            ))}
-            {isTyping && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex gap-3 max-w-[85%] self-start"
-              >
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30">
-                  <Bot className="w-4 h-4 text-primary" />
-                </div>
-                <div className="p-4 rounded-2xl bg-white/5 rounded-tl-none border border-white/5 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></span>
-                  <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></span>
-                  <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </ScrollArea>
+  const quickQuestions = [
+    "Who built this monument?",
+    "When was it built?",
+    "Why is it important?",
+    "What historical events happened here?",
+  ];
 
-      <div className="p-4 bg-card/80 border-t border-white/5">
-        <form onSubmit={handleSend} className="flex gap-2">
-          <Input 
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask about the monument..."
-            className="bg-background border-white/10 focus-visible:ring-primary h-12"
-            disabled={isTyping}
-          />
-          <Button 
-            type="submit" 
-            size="icon" 
-            className="h-12 w-12 bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
-            disabled={!inputValue.trim() || isTyping}
-          >
-            <Send className="w-5 h-5" />
-          </Button>
-        </form>
-        <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
-          {Object.keys(monument.chatResponses).filter(k => k !== "default").map((q) => (
+  return (
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="rounded-2xl border border-white/10 bg-card/60 backdrop-blur shadow-2xl overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="bg-card border-b border-white/5 px-5 py-4 flex items-center gap-4">
+          <div className="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center border border-primary/30 shrink-0">
+            <Bot className="w-5 h-5 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-serif text-lg text-foreground">AI Historical Guide</h3>
+            <p className="text-xs text-primary/80 flex items-center gap-1.5 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              Online — Temporal Link Active
+            </p>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <ScrollArea className="h-[380px] px-4 py-4" ref={scrollRef}>
+          <div className="flex flex-col gap-4">
+            <AnimatePresence initial={false}>
+              {messages.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className={`flex gap-3 ${msg.role === "user" ? "self-end flex-row-reverse max-w-[80%]" : "self-start max-w-[85%]"}`}
+                >
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                      msg.role === "user"
+                        ? "bg-primary/20 text-primary border border-primary/30"
+                        : "bg-white/5 text-muted-foreground border border-white/10"
+                    }`}
+                  >
+                    {msg.role === "user" ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <Bot className="w-4 h-4" />
+                    )}
+                  </div>
+                  <div
+                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === "user"
+                        ? "bg-primary/20 text-foreground rounded-tr-sm border border-primary/20"
+                        : "bg-white/5 text-foreground/90 rounded-tl-sm border border-white/5"
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                </motion.div>
+              ))}
+
+              {isTyping && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex gap-3 self-start"
+                >
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                    <Bot className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="px-4 py-3 rounded-2xl bg-white/5 rounded-tl-sm border border-white/5 flex items-center gap-1.5">
+                    <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </ScrollArea>
+
+        {/* Quick Questions */}
+        <div className="px-4 pt-3 pb-1 flex gap-2 overflow-x-auto">
+          {quickQuestions.map((q) => (
             <button
               key={q}
               type="button"
-              onClick={() => setInputValue(q)}
-              className="text-xs bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-full whitespace-nowrap text-muted-foreground transition-colors"
+              onClick={() => handleSend(undefined, q)}
+              disabled={isTyping}
+              className="text-xs bg-white/5 hover:bg-primary/10 border border-white/10 hover:border-primary/30 px-3 py-1.5 rounded-full whitespace-nowrap text-muted-foreground hover:text-primary transition-colors disabled:opacity-40 shrink-0"
             >
               {q}
             </button>
           ))}
         </div>
+
+        {/* Input */}
+        <div className="p-4 border-t border-white/5">
+          <form onSubmit={handleSend} className="flex gap-2">
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Ask about the monument..."
+              className="bg-background/60 border-white/10 focus-visible:ring-primary h-11 text-sm"
+              disabled={isTyping}
+              data-testid="input-guide-question"
+            />
+            <Button
+              type="submit"
+              size="icon"
+              className="h-11 w-11 bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+              disabled={!inputValue.trim() || isTyping}
+              data-testid="button-guide-send"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </form>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 }
