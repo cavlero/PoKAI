@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useSearch } from "wouter";
+import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,50 +38,21 @@ function recognize(fileName: string): RecognitionResult {
   for (const rule of FILENAME_RULES) {
     if (rule.keywords.some((kw) => lower.includes(kw))) {
       const monument = MONUMENTS.find((m) => m.id === rule.id)!;
-      return { monument, confidence: rule.confidence, isPossibleMatch: false };
+      const confidence = monument.id === "novae" ? 93 : rule.confidence;
+      return { monument, confidence, isPossibleMatch: false };
     }
   }
-  // Default fallback: suggest Novae as a possible match
+  // Default fallback: always suggest Novae as a possible match (prototype demo)
   return { monument: NOVAE, confidence: 87, isPossibleMatch: true };
 }
 
 export default function Explore() {
-  const search = useSearch();
-  const params = new URLSearchParams(search);
-  const demoId = params.get("demo");
-
   const [analyzing, setAnalyzing] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [result, setResult] = useState<RecognitionResult | null>(null);
-  const [demoTriggered, setDemoTriggered] = useState(false);
 
   const timeMachineRef = useRef<HTMLDivElement>(null);
   const guideRef = useRef<HTMLDivElement>(null);
-
-  // Handle ?demo=<id> mode — auto-trigger without upload
-  useEffect(() => {
-    if (!demoId || demoTriggered || result) return;
-    const monument = MONUMENTS.find((m) => m.id === demoId);
-    if (!monument) return;
-    setDemoTriggered(true);
-    setUploadedImage(null);
-    setAnalyzing(true);
-    setTimeout(() => {
-      const recognition: RecognitionResult = { monument, confidence: 94, isPossibleMatch: false };
-      setResult(recognition);
-      setAnalyzing(false);
-      saveToGallery({
-        id: `demo-${Date.now()}`,
-        monumentId: monument.id,
-        monumentName: monument.name,
-        city: monument.city,
-        country: monument.country,
-        period: monument.period,
-        imageDataUrl: "",
-        analyzedAt: new Date().toISOString(),
-      });
-    }, ANALYSIS_DURATION);
-  }, [demoId, demoTriggered, result]);
 
   // Auto-scroll to Time Machine after result appears
   useEffect(() => {
@@ -115,7 +86,6 @@ export default function Explore() {
   const handleReset = () => {
     setResult(null);
     setUploadedImage(null);
-    setDemoTriggered(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

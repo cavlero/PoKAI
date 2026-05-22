@@ -5,6 +5,7 @@ export type Monument = {
   country: string;
   coordinates: { lat: number; lng: number };
   period: string;
+  status?: string;
   description: string;
   importance: string;
   funFact: string;
@@ -19,10 +20,11 @@ export const MONUMENTS: Monument[] = [
   {
     id: "novae",
     name: "Novae Roman Fortress",
-    city: "Svishtov",
+    city: "Near Svishtov",
     country: "Bulgaria",
     coordinates: { lat: 43.6167, lng: 25.3833 },
-    period: "Roman Empire (1st–6th Century AD)",
+    period: "1st–4th Century AD",
+    status: "Roman archaeological site",
     description:
       "Novae was an important Roman military camp and settlement located near present-day Svishtov, on the southern bank of the Danube River. Founded in the 1st century AD as a legionary fortress, it served as one of the key strongholds defending the northern frontier — the Limes Moesiae — of the Roman Empire. The legion stationed here patrolled the Danube, conducted campaigns across the river, and protected the province of Moesia Inferior.",
     importance:

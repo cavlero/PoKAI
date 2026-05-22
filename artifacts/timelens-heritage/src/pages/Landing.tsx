@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, History, Sparkles, ScanEye, BookOpen,
-  Map, MessageSquare, Play, Shield, FlaskConical,
+  Map, MessageSquare, Play, Shield, FlaskConical, UploadCloud,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -119,7 +119,7 @@ function FeaturedNovaCard() {
       viewport={{ once: true }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      onClick={() => navigate(`/explore?demo=${FEATURED_SITE.id}`)}
+      onClick={() => navigate("/explore")}
       className="relative cursor-pointer rounded-2xl overflow-hidden border border-primary/30 bg-card/50 backdrop-blur group"
       data-testid="card-site-novae-featured"
     >
@@ -168,8 +168,8 @@ function FeaturedNovaCard() {
               className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-serif shadow-[0_0_20px_rgba(201,162,39,0.35)] transition-all"
               data-testid="button-demo-novae"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              Launch Demo
+              <UploadCloud className="w-3.5 h-3.5" />
+              Upload a Photo
             </motion.button>
             <span className="text-xs text-muted-foreground/40 flex items-center gap-1.5">
               <MessageSquare className="w-3 h-3" />
@@ -251,7 +251,7 @@ function SiteCard({ site, i }: { site: (typeof BULGARIAN_SITES)[0]; i: number })
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       animate={hovered ? { y: -8, scale: 1.02 } : { y: 0, scale: 1 }}
-      onClick={() => navigate(`/explore?demo=${site.id}`)}
+      onClick={() => navigate("/explore")}
       className={`relative flex flex-col p-5 rounded-xl border cursor-pointer transition-shadow group ${
         hovered
           ? "border-primary/40 bg-card/70 shadow-[0_0_30px_rgba(201,162,39,0.12)]"
@@ -369,13 +369,13 @@ export default function Landing() {
               Focused on local heritage: Novae Roman Fortress near Svishtov — connecting our town with two thousand years of European history.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <Link href="/explore?demo=novae">
+              <Link href="/explore">
                 <Button
                   size="lg"
                   className="h-14 px-10 text-lg rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_40px_rgba(201,162,39,0.3)] hover:shadow-[0_0_60px_rgba(201,162,39,0.5)] font-serif hover:scale-105 transition-all"
                   data-testid="button-start-exploring"
                 >
-                  Explore Novae Demo
+                  Upload a Heritage Photo
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
@@ -521,12 +521,12 @@ export default function Landing() {
             <FlaskConical className="w-3 h-3" />
             Prototype demo · Simulated AI recognition · For hackathon presentation
           </p>
-          <Link href="/explore?demo=novae">
+          <Link href="/explore">
             <Button
               size="lg"
               className="h-14 px-12 text-lg rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_40px_rgba(201,162,39,0.25)] font-serif hover:scale-105 transition-all"
             >
-              Begin Your Journey
+              Upload a Heritage Photo
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>

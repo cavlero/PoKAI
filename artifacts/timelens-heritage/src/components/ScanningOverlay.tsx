@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 const STEPS = [
-  { label: "Scanning monument...",                   progress: 15 },
-  { label: "Detecting architectural features...",    progress: 32 },
-  { label: "Comparing with heritage database...",    progress: 54 },
-  { label: "Searching historical archives...",       progress: 74 },
-  { label: "Generating historical reconstruction...", progress: 92 },
+  { label: "Scanning visual features...",                  progress: 12 },
+  { label: "Detecting architectural elements...",          progress: 28 },
+  { label: "Comparing with Bulgarian heritage database...", progress: 48 },
+  { label: "Searching historical archives...",             progress: 66 },
+  { label: "Matching with local Svishtov heritage...",     progress: 83 },
+  { label: "Generating historical interpretation...",      progress: 95 },
 ];
 
-const STEP_DURATION = 900;
-const COMPLETE_DELAY = STEPS.length * STEP_DURATION;
+const STEP_DURATION = 800;
 
 interface ScanningOverlayProps {
   previewUrl?: string | null;
@@ -19,7 +19,7 @@ interface ScanningOverlayProps {
 
 export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [complete, setComplete] = useState(false);
+  const [complete,  setComplete]  = useState(false);
 
   useEffect(() => {
     if (complete || stepIndex >= STEPS.length - 1) return;
@@ -28,11 +28,12 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
   }, [stepIndex, complete]);
 
   useEffect(() => {
-    const t = setTimeout(() => setComplete(true), COMPLETE_DELAY);
+    const total = STEPS.length * STEP_DURATION + 600;
+    const t = setTimeout(() => setComplete(true), total);
     return () => clearTimeout(t);
   }, []);
 
-  const step = STEPS[stepIndex];
+  const step            = STEPS[stepIndex];
   const displayProgress = complete ? 100 : step.progress;
 
   return (
@@ -85,7 +86,7 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
             }}
           />
 
-          {/* Scan beam — only while scanning */}
+          {/* Scan beam */}
           {!complete && (
             <motion.div
               animate={{ top: ["0%", "100%", "0%"] }}
@@ -95,19 +96,17 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
           )}
 
           {/* Corner brackets */}
-          {(["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 right-2"] as const).map(
-            (pos, i) => (
-              <div
-                key={i}
-                className={`absolute ${pos} w-5 h-5 border-primary/80 ${
-                  i === 0 ? "border-t-2 border-l-2" :
-                  i === 1 ? "border-t-2 border-r-2" :
-                  i === 2 ? "border-b-2 border-l-2" :
-                             "border-b-2 border-r-2"
-                }`}
-              />
-            )
-          )}
+          {(["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 right-2"] as const).map((pos, i) => (
+            <div
+              key={i}
+              className={`absolute ${pos} w-5 h-5 border-primary/80 ${
+                i === 0 ? "border-t-2 border-l-2" :
+                i === 1 ? "border-t-2 border-r-2" :
+                i === 2 ? "border-b-2 border-l-2" :
+                           "border-b-2 border-r-2"
+              }`}
+            />
+          ))}
 
           {/* Completion flash */}
           <AnimatePresence>
@@ -129,8 +128,47 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
           </AnimatePresence>
         </div>
 
-        {/* Status text */}
-        <div className="text-center min-h-[3.5rem] flex flex-col items-center justify-center">
+        {/* Step list — all steps visible, active one highlighted */}
+        <div className="w-full space-y-2">
+          {STEPS.map((s, i) => {
+            const isDone    = complete || i < stepIndex;
+            const isActive  = !complete && i === stepIndex;
+            const isPending = !complete && i > stepIndex;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: isPending ? 0.25 : 1, x: 0 }}
+                transition={{ delay: i * 0.06 }}
+                className={`flex items-center gap-3 text-sm transition-all ${
+                  isActive ? "text-primary font-medium" : isDone ? "text-primary/60" : "text-muted-foreground/30"
+                }`}
+              >
+                <motion.div
+                  animate={{
+                    scale:           isActive ? [1, 1.35, 1] : 1,
+                    backgroundColor: isDone   ? "hsl(var(--primary))" : isActive ? "hsl(var(--primary))" : "rgba(255,255,255,0.12)",
+                  }}
+                  transition={isActive ? { duration: 0.7, repeat: Infinity } : {}}
+                  className="w-2 h-2 rounded-full shrink-0"
+                />
+                <span>{s.label}</span>
+                {isDone && !isActive && (
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="ml-auto text-primary/50 text-xs"
+                  >
+                    done
+                  </motion.span>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Status / completion message */}
+        <div className="text-center min-h-[2.5rem] flex flex-col items-center justify-center">
           <AnimatePresence mode="wait">
             {complete ? (
               <motion.div
@@ -140,26 +178,21 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
                 className="flex flex-col items-center gap-1"
               >
                 <p className="text-xl md:text-2xl font-serif text-primary">
-                  Historical reconstruction complete.
+                  Heritage object identified.
                 </p>
                 <p className="text-xs text-primary/60 uppercase tracking-widest">
-                  Opening Time Machine...
+                  Opening historical record...
                 </p>
               </motion.div>
             ) : (
-              <motion.div
-                key={stepIndex}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.25 }}
-                className="flex flex-col items-center gap-1"
+              <motion.p
+                key="engine"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-xs text-muted-foreground/40 uppercase tracking-widest"
               >
-                <p className="text-lg md:text-xl font-serif text-primary">{step.label}</p>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest">
-                  AI Visual Recognition Engine
-                </p>
-              </motion.div>
+                TimeLens Heritage AI · Visual Recognition Engine
+              </motion.p>
             )}
           </AnimatePresence>
         </div>
@@ -167,12 +200,8 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
         {/* Progress bar */}
         <div className="w-full space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground/50">
-            <span>Reconstruction progress</span>
-            <motion.span
-              key={displayProgress}
-              initial={{ opacity: 0.5 }}
-              animate={{ opacity: 1 }}
-            >
+            <span>Analysis progress</span>
+            <motion.span key={displayProgress} initial={{ opacity: 0.5 }} animate={{ opacity: 1 }}>
               {displayProgress}%
             </motion.span>
           </div>
@@ -183,26 +212,6 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
               className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary shadow-[0_0_10px_rgba(201,162,39,0.7)]"
             />
           </div>
-        </div>
-
-        {/* Step dots */}
-        <div className="flex items-center gap-2">
-          {STEPS.map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                width: i === stepIndex && !complete ? 20 : 8,
-                backgroundColor:
-                  complete || i < stepIndex
-                    ? "hsl(var(--primary))"
-                    : i === stepIndex
-                    ? "hsl(var(--primary) / 0.8)"
-                    : "rgba(255,255,255,0.1)",
-              }}
-              transition={{ duration: 0.3 }}
-              className="h-1.5 rounded-full"
-            />
-          ))}
         </div>
       </div>
     </motion.div>

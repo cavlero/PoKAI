@@ -1,6 +1,6 @@
 import { Monument } from "@/data/monuments";
 import { Card, CardContent } from "@/components/ui/card";
-import { Info, MapPin, Sparkles, Clock, ShieldCheck } from "lucide-react";
+import { Info, MapPin, Sparkles, Clock, ShieldCheck, Layers } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface AnalysisPanelProps {
@@ -37,10 +37,19 @@ export function AnalysisPanel({ monument, confidence, isPossibleMatch }: Analysi
                 {monument.name}
               </h2>
             </div>
-            <div className="flex items-center gap-2 ml-8 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-2 ml-8 text-sm text-muted-foreground">
               <span>{monument.city}, {monument.country}</span>
               <span className="text-white/20">·</span>
               <span>{monument.period}</span>
+              {monument.status && (
+                <>
+                  <span className="text-white/20">·</span>
+                  <span className="flex items-center gap-1 text-primary/70">
+                    <Layers className="w-3.5 h-3.5" />
+                    {monument.status}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 

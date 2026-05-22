@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { UploadCloud, RefreshCw, Cpu } from "lucide-react";
+import { UploadCloud, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -8,9 +8,9 @@ interface UploadZoneProps {
 }
 
 export function UploadZone({ onAnalyze }: UploadZoneProps) {
-  const [dragActive, setDragActive] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string>("");
+  const [dragActive,     setDragActive]     = useState(false);
+  const [selectedImage,  setSelectedImage]  = useState<string | null>(null);
+  const [fileName,       setFileName]       = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -42,12 +42,14 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
     <div className="w-full max-w-2xl mx-auto">
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
-          <Cpu className="w-3.5 h-3.5" />
-          AI Visual Recognition
+          <Search className="w-3.5 h-3.5" />
+          AI Heritage Recognition
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-3">Upload a Monument</h2>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Upload a photo of a Bulgarian historical site and our AI will identify it instantly.
+        <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-3">
+          Upload a Heritage Photo
+        </h2>
+        <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
+          Upload a photo of a monument, ruin, building, or heritage object — and let the AI research its history.
         </p>
       </div>
 
@@ -85,10 +87,10 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               <UploadCloud className="w-10 h-10 text-primary" />
             </motion.div>
             <p className="text-lg font-medium text-foreground mb-1">
-              {dragActive ? "Release to upload" : "Drag and drop your image"}
+              {dragActive ? "Release to upload" : "Drag and drop your image here"}
             </p>
-            <p className="text-sm text-muted-foreground">or click to browse files</p>
-            <p className="text-xs text-muted-foreground/40 mt-4">PNG, JPG, WEBP supported</p>
+            <p className="text-sm text-muted-foreground">or click to browse files from your computer</p>
+            <p className="text-xs text-muted-foreground/40 mt-4">PNG, JPG, WEBP · Any heritage photo works</p>
           </motion.div>
         ) : (
           <motion.div
@@ -102,7 +104,7 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <img
                 src={selectedImage}
-                alt="Selected monument"
+                alt="Uploaded heritage photo"
                 className="w-full h-full object-cover"
                 data-testid="img-upload-preview"
               />
@@ -120,7 +122,7 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
                 data-testid="button-change-image"
               >
                 <RefreshCw className="w-3 h-3" />
-                Change
+                Change photo
               </button>
             </div>
 
@@ -131,12 +133,12 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               onClick={() => onAnalyze(selectedImage, fileName)}
               data-testid="button-analyze"
             >
-              <Cpu className="w-5 h-5 mr-2" />
-              Analyze Monument
+              <Search className="w-5 h-5 mr-2" />
+              Analyze Heritage Object
             </Button>
 
             <p className="text-xs text-muted-foreground/40 text-center">
-              AI recognition powered by TimeLens Visual Engine v2.4
+              The AI will scan the image and search Bulgarian heritage archives
             </p>
           </motion.div>
         )}
