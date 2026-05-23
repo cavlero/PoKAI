@@ -163,7 +163,6 @@ export default function Explore() {
               <AnalysisPanel
                 monument={result.monument}
                 confidence={result.confidence}
-                isPossibleMatch={result.isPossibleMatch}
               />
 
               <div ref={timeMachineRef} className="scroll-mt-20">

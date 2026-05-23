@@ -6,10 +6,9 @@ import { motion } from "framer-motion";
 interface AnalysisPanelProps {
   monument: Monument;
   confidence: number;
-  isPossibleMatch?: boolean;
 }
 
-export function AnalysisPanel({ monument, confidence, isPossibleMatch }: AnalysisPanelProps) {
+export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
   const confidenceColor =
     confidence >= 90 ? "text-green-400" : confidence >= 80 ? "text-yellow-400" : "text-orange-400";
   const confidenceBg =
@@ -26,12 +25,7 @@ export function AnalysisPanel({ monument, confidence, isPossibleMatch }: Analysi
       >
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="flex-1">
-            {isPossibleMatch && (
-              <div className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
-                Possible heritage match
-              </div>
-            )}
-            <div className="flex items-center gap-3 mb-1">
+              <div className="flex items-center gap-3 mb-1">
               <MapPin className="w-5 h-5 text-primary shrink-0" />
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
                 {monument.name}

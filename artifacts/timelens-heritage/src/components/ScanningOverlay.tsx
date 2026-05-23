@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
 const STEPS = [
-  { label: "Scanning visual features...",         progress: 14 },
-  { label: "Detecting architectural elements...", progress: 32 },
-  { label: "Comparing with heritage database...", progress: 54 },
-  { label: "Searching historical archives...",    progress: 76 },
-  { label: "Generating historical interpretation...", progress: 94 },
+  { label: "Scanning visual features...",             progress: 10 },
+  { label: "Detecting architectural elements...",     progress: 26 },
+  { label: "Comparing with heritage database...",     progress: 45 },
+  { label: "Searching historical archives...",        progress: 63 },
+  { label: "Matching historical patterns...",         progress: 81 },
+  { label: "Generating historical interpretation...", progress: 95 },
 ];
 
-const STEP_DURATION = 800;
+const STEP_DURATION = 750;
 
 interface ScanningOverlayProps {
   previewUrl?: string | null;

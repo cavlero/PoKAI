@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Monument } from "@/data/monuments";
 import { HISTORICAL_FIGURES, HistoricalFigure, getRecommendedFigure } from "@/data/historicalFigures";
 import { useSpeechVoice, VOICE_PROFILES, SpeakOptions } from "@/hooks/useSpeechVoice";
+import { generateResponse } from "@/lib/aiChat";
 
 interface Message {
   id:      string;
@@ -582,15 +583,8 @@ function FigureChat({
   }, [voiceEnabled, stopSpeaking]);
 
   const getResponse = useCallback((query: string): string => {
-    const lower = query.toLowerCase();
-    const keys  = Object.keys(figure.responses).filter((k) => k !== "default");
-    for (const key of keys) {
-      const clean = key.replace(/[^\w\s]/g, "").toLowerCase();
-      const words = clean.split(" ").filter((w) => w.length > 3);
-      if (words.some((w) => lower.includes(w)) || lower.includes(clean)) return figure.responses[key];
-    }
-    return figure.responses["default"];
-  }, [figure]);
+    return generateResponse(figure.id, query, messages.length);
+  }, [figure.id, messages.length]);
 
   const isAnimatingTyping = Boolean(typingState && !typingState.isFull);
   const isBusy = isTyping || isAnimatingTyping;
