@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FileText, Headphones, Globe, Compass, ExternalLink,
+  FileText, Headphones, Compass, ExternalLink,
   Play, Square, ArrowRight,
 } from "lucide-react";
 import { Monument } from "@/data/monuments";
-import { LEARNING, RecItem, AudioGuideItem, VirtualTourItem } from "@/data/recommendations";
+import { LEARNING, RecItem, AudioGuideItem } from "@/data/recommendations";
 
 interface ContinueExploringProps {
   monument: Monument;
 }
 
-type Tab = "articles" | "audioGuide" | "virtualTour";
+type Tab = "articles" | "audioGuide";
 
 // ─── Article Card ────────────────────────────────────────────────────────────
 function ArticleCard({ item }: { item: RecItem }) {
@@ -151,60 +151,6 @@ function AudioGuideCard({
   );
 }
 
-// ─── Virtual Tour Card ────────────────────────────────────────────────────────
-function VirtualTourCard({ item, index }: { item: VirtualTourItem; index: number }) {
-  return (
-    <motion.a
-      href={item.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.08, duration: 0.26 }}
-      className="group flex flex-col rounded-2xl border border-white/8 bg-card/40 overflow-hidden
-                 transition-all duration-300
-                 hover:-translate-y-1.5 hover:border-primary/40
-                 hover:shadow-xl hover:shadow-primary/15 hover:bg-card/60"
-    >
-      {/* Image */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/15 to-background/90 shrink-0">
-        <img
-          src={item.imageUrl}
-          alt={item.title}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/7 transition-colors duration-300" />
-        {/* Globe icon overlay */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-14 h-14 rounded-full bg-black/40 border border-white/20 group-hover:bg-primary/90 group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-xl">
-            <Globe className="w-6 h-6 text-white/70 group-hover:text-black transition-colors duration-300" />
-          </div>
-        </div>
-      </div>
-
-      {/* Body */}
-      <div className="flex flex-col flex-1 p-5 gap-3">
-        <div className="flex-1">
-          <h4 className="font-serif text-[15px] font-semibold text-foreground leading-snug mb-2 group-hover:text-primary/90 transition-colors duration-200">
-            {item.title}
-          </h4>
-          <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-3">
-            {item.description}
-          </p>
-        </div>
-        {/* CTA */}
-        <span className="w-full inline-flex items-center justify-center gap-2 text-[13px] font-semibold text-black bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-all duration-200 mt-1">
-          <Globe className="w-4 h-4" />
-          Open Virtual Tour
-          <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-        </span>
-      </div>
-    </motion.a>
-  );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function ContinueExploring({ monument }: ContinueExploringProps) {
   const [activeTab, setActiveTab] = useState<Tab>("articles");
@@ -245,9 +191,8 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
   if (!data) return null;
 
   const TABS: { id: Tab; label: string; Icon: React.FC<{ className?: string }> }[] = [
-    { id: "articles",    label: "Articles",     Icon: FileText   },
-    { id: "audioGuide",  label: "Audio Guide",  Icon: Headphones },
-    { id: "virtualTour", label: "Virtual Tour", Icon: Globe      },
+    { id: "articles",   label: "Articles",    Icon: FileText   },
+    { id: "audioGuide", label: "Audio Guide", Icon: Headphones },
   ];
 
   return (
@@ -329,14 +274,6 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
             </div>
           )}
 
-          {/* Virtual Tour */}
-          {activeTab === "virtualTour" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {data.virtualTour.map((item, i) => (
-                <VirtualTourCard key={item.title} item={item} index={i} />
-              ))}
-            </div>
-          )}
         </motion.div>
       </AnimatePresence>
 

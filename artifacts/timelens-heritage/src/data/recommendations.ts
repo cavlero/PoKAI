@@ -166,24 +166,24 @@ export const LEARNING: Record<string, MonumentLearning> = {
     articles: [
       {
         title: "Tsarevets Fortress",
-        description: "Wikipedia's detailed article on the fortress — its architecture, role as medieval Bulgarian capital, the 1393 Ottoman siege, and the modern Sound and Light show.",
+        description: "Wikipedia's detailed article on Tsarevets Fortress — its role as the medieval capital citadel of the Second Bulgarian Empire, its architecture, the 1393 Ottoman siege, and the famous Sound and Light show.",
         source: "Wikipedia",
         imageUrl: IMG.castle,
-        link: "https://en.wikipedia.org/wiki/Tsarevets_fortress",
-      },
-      {
-        title: "Second Bulgarian Empire",
-        description: "Britannica's overview of the medieval Bulgarian state from 1185 to 1396 — its dynasty, its church, and the Ottoman conquest that ended five centuries of Bulgarian statehood.",
-        source: "Britannica",
-        imageUrl: IMG.castle2,
-        link: "https://www.britannica.com/place/Bulgaria/The-second-Bulgarian-empire",
+        link: "https://en.wikipedia.org/wiki/Tsarevets_(fortress)",
       },
       {
         title: "Ivan Asen II of Bulgaria",
-        description: "The Wikipedia article on Bulgaria's greatest medieval tsar — his military campaigns, the Battle of Klokotnitsa, his establishment of an independent Patriarchate, and his lasting legacy.",
+        description: "Article about Tsar Ivan Asen II — one of the most powerful rulers of medieval Bulgaria, whose victory at the Battle of Klokotnitsa in 1230 made Bulgaria the dominant force across the Balkan Peninsula.",
+        source: "Wikipedia",
+        imageUrl: IMG.castle2,
+        link: "https://en.wikipedia.org/wiki/Ivan_Asen_II_of_Bulgaria",
+      },
+      {
+        title: "Second Bulgarian Empire",
+        description: "Overview of the medieval Bulgarian state (1185–1396) — its founding by the Asen dynasty, its rulers, cultural achievements, military power, and the Ottoman conquest that ended five centuries of Bulgarian statehood.",
         source: "Wikipedia",
         imageUrl: IMG.ruins,
-        link: "https://en.wikipedia.org/wiki/Ivan_Asen_II",
+        link: "https://en.wikipedia.org/wiki/Second_Bulgarian_Empire",
       },
     ],
     audioGuide: [

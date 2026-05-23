@@ -6,29 +6,12 @@ interface MonumentMapProps {
   monument: Monument;
 }
 
-const VIRTUAL_TOUR_URLS: Record<string, string> = {
-  novae:     "https://en.wikipedia.org/wiki/Novae_(city)",
-  tsarevets: "https://www.tsarevets.eu/en/page3.html",
-  rila:      "https://artsandculture.google.com/partner/rila-monastery",
-  nessebar:  "https://artsandculture.google.com/search?q=nessebar",
-  madara:    "https://whc.unesco.org/en/list/43",
-  buzludzha: "https://buzludzha.com/",
-};
-
 export function MonumentMap({ monument }: MonumentMapProps) {
   const { name, city, country, coordinates } = monument;
-
-  const virtualTourUrl = VIRTUAL_TOUR_URLS[monument.id];
 
   const openMaps = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${coordinates.lat},${coordinates.lng}`;
     window.open(url, "_blank", "noopener,noreferrer");
-  };
-
-  const openVirtualTour = () => {
-    if (virtualTourUrl) {
-      window.open(virtualTourUrl, "_blank", "noopener,noreferrer");
-    }
   };
 
   const mapEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${coordinates.lng - 0.05},${coordinates.lat - 0.04},${coordinates.lng + 0.05},${coordinates.lat + 0.04}&layer=mapnik&marker=${coordinates.lat},${coordinates.lng}`;
@@ -68,27 +51,14 @@ export function MonumentMap({ monument }: MonumentMapProps) {
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-2 flex-wrap shrink-0">
-            <button
-              onClick={openMaps}
-              data-testid="button-open-location"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/8 border border-white/15 hover:bg-white/12 text-foreground text-sm font-medium transition-all"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open in Google Maps
-            </button>
-
-            {virtualTourUrl && (
-              <button
-                onClick={openVirtualTour}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-all hover:shadow-[0_0_20px_rgba(201,162,39,0.3)]"
-              >
-                <Globe className="w-4 h-4" />
-                Open Virtual Tour
-              </button>
-            )}
-          </div>
+          <button
+            onClick={openMaps}
+            data-testid="button-open-location"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-all hover:shadow-[0_0_20px_rgba(201,162,39,0.3)] shrink-0"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Open in Google Maps
+          </button>
         </div>
 
         {/* Map embed */}

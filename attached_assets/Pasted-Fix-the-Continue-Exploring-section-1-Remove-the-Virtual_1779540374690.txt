@@ -1,0 +1,52 @@
+Fix the Continue Exploring section.
+
+1. Remove the "Virtual Tour" tab from Continue Exploring.
+Keep only:
+- Articles
+- Audio Guide
+
+Do not show "Virtual Tour" inside Continue Exploring.
+
+2. Fix the Articles for Tsarevets Fortress.
+
+Use these article cards:
+
+Article 1:
+Title: Tsarevets Fortress
+Source: Wikipedia
+Description: Detailed article about Tsarevets Fortress, its role as the medieval capital fortress of the Second Bulgarian Empire, and its history.
+Link: https://en.wikipedia.org/wiki/Tsarevets_(fortress)
+Thumbnail: use an image of Tsarevets Fortress, not a random animal or forest.
+
+Article 2:
+Title: Ivan Asen II of Bulgaria
+Source: Wikipedia
+Description: Article about Tsar Ivan Asen II, one of the most important rulers of medieval Bulgaria and a key figure connected with Tarnovo and the Second Bulgarian Empire.
+Link: https://en.wikipedia.org/wiki/Ivan_Asen_II_of_Bulgaria
+Thumbnail: use a historical portrait or medieval ruler image, not a random forest.
+
+Article 3:
+Title: Second Bulgarian Empire
+Source: Wikipedia
+Description: Overview of the medieval Bulgarian state, its rulers, culture, military power, and historical importance.
+Link: https://en.wikipedia.org/wiki/Second_Bulgarian_Empire
+Thumbnail: use a medieval Bulgaria / fortress / historical map image, not an empty or broken image.
+
+3. Replace all random thumbnails.
+Do not use cats, forests, microphones, or unrelated images.
+
+Use relevant thumbnails:
+- Tsarevets Fortress card: fortress photo
+- Ivan Asen II card: historical portrait / medieval ruler illustration
+- Second Bulgarian Empire card: medieval map / fortress / Bulgarian medieval artwork
+
+4. If a thumbnail cannot be loaded, use a clean historical placeholder with:
+- dark blue background
+- gold icon
+- correct title text
+Do not show broken images.
+
+5. Make every article card clickable.
+When clicked, open the correct link in a new tab.
+
+6. Keep the design elegant and consistent with the TimeLens style.
