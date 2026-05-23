@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Film, Clapperboard, BookOpen, Mic, ExternalLink, Compass } from "lucide-react";
+import { Play, Film, Clapperboard, BookOpen, Mic, Compass, ExternalLink } from "lucide-react";
 import { Monument } from "@/data/monuments";
 import { LEARNING, RecItem } from "@/data/recommendations";
 
@@ -10,42 +10,81 @@ interface ContinueExploringProps {
 
 type Tab = "videos" | "documentaries" | "movies" | "books" | "podcasts";
 
-const TABS: { id: Tab; label: string; Icon: React.FC<{ className?: string }> }[] = [
-  { id: "videos",        label: "Videos",         Icon: Play },
-  { id: "documentaries", label: "Documentaries",   Icon: Film },
-  { id: "movies",        label: "Movies",          Icon: Clapperboard },
-  { id: "books",         label: "Books",           Icon: BookOpen },
-  { id: "podcasts",      label: "Podcasts",        Icon: Mic },
+interface TabConfig {
+  id: Tab;
+  label: string;
+  Icon: React.FC<{ className?: string }>;
+  action: string;
+  showPlay: boolean;
+  badge: string;
+}
+
+const TABS: TabConfig[] = [
+  { id: "videos",        label: "Videos",        Icon: Play,        action: "Watch",  showPlay: true,  badge: "bg-red-600"    },
+  { id: "documentaries", label: "Documentaries",  Icon: Film,        action: "Watch",  showPlay: true,  badge: "bg-blue-600"   },
+  { id: "movies",        label: "Movies",         Icon: Clapperboard,action: "IMDb",   showPlay: false, badge: "bg-yellow-600" },
+  { id: "books",         label: "Books",          Icon: BookOpen,    action: "Read",   showPlay: false, badge: "bg-amber-600"  },
+  { id: "podcasts",      label: "Podcasts",       Icon: Mic,         action: "Listen", showPlay: false, badge: "bg-teal-600"   },
 ];
 
-function RecCard({ item, icon: Icon }: { item: RecItem; icon: React.FC<{ className?: string }> }) {
+function RecCard({ item, tab }: { item: RecItem; tab: TabConfig }) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.3 }}
-      className="group rounded-xl border border-white/8 bg-card/50 overflow-hidden hover:border-primary/30 hover:bg-card/80 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5 flex flex-col"
+    <a
+      href={item.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group rounded-xl border border-white/8 bg-card/50 overflow-hidden flex flex-col
+                 transition-all duration-300
+                 hover:-translate-y-1.5
+                 hover:border-primary/40
+                 hover:shadow-xl hover:shadow-primary/15
+                 cursor-pointer"
     >
       {/* Thumbnail */}
-      <div className={`bg-gradient-to-br ${item.color} relative h-28 flex items-center justify-center shrink-0`}>
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative z-10 flex flex-col items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-white/90" />
+      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/20 to-background/80 shrink-0">
+        <img
+          src={item.imageUrl}
+          alt={item.title}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+        {/* Gold overlay shimmer on hover */}
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/8 transition-colors duration-300" />
+
+        {/* Play button overlay for videos/documentaries */}
+        {tab.showPlay && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-11 h-11 rounded-full
+                            bg-black/50 group-hover:bg-white/95
+                            border border-white/40 group-hover:border-transparent
+                            flex items-center justify-center
+                            transition-all duration-300 shadow-lg">
+              <Play className="w-4 h-4 text-white/90 group-hover:text-black fill-current ml-0.5 transition-colors duration-300" />
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Bottom-left: duration/note */}
         {item.note && (
-          <span className="absolute bottom-2 right-2 z-10 text-[10px] text-white/70 bg-black/40 rounded px-1.5 py-0.5 font-mono">
+          <span className="absolute bottom-2.5 left-2.5 text-[11px] text-white/80 bg-black/60 rounded-md px-1.5 py-0.5 font-mono backdrop-blur-sm">
             {item.note}
           </span>
         )}
+
+        {/* Bottom-right: action badge */}
+        <span className={`absolute bottom-2.5 right-2.5 flex items-center gap-1 text-[11px] text-white font-medium ${tab.badge} rounded-md px-2 py-0.5`}>
+          <tab.Icon className="w-2.5 h-2.5" />
+          {tab.action}
+        </span>
       </div>
 
       {/* Body */}
       <div className="p-4 flex flex-col gap-2 flex-1">
-        <h4 className="font-serif text-sm font-semibold text-foreground leading-snug line-clamp-2">
+        <h4 className="font-serif text-sm font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-200">
           {item.title}
         </h4>
         <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 flex-1">
@@ -53,10 +92,13 @@ function RecCard({ item, icon: Icon }: { item: RecItem; icon: React.FC<{ classNa
         </p>
         <div className="flex items-center justify-between gap-2 pt-1 mt-auto">
           <span className="text-[11px] text-primary/60 truncate">{item.creator}</span>
-          <span className="text-[11px] text-muted-foreground/50 shrink-0">{item.year}</span>
+          <div className="flex items-center gap-1 text-[11px] text-muted-foreground/50 shrink-0">
+            <span>{item.year}</span>
+            <ExternalLink className="w-2.5 h-2.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+          </div>
         </div>
       </div>
-    </motion.div>
+    </a>
   );
 }
 
@@ -74,7 +116,7 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
   };
 
   const activeItems = tabData[activeTab];
-  const activeTabMeta = TABS.find((t) => t.id === activeTab)!;
+  const activeTabConfig = TABS.find((t) => t.id === activeTab)!;
 
   return (
     <motion.section
@@ -96,7 +138,7 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
         </div>
       </div>
 
-      {/* Tab Pills */}
+      {/* Tab pills */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {TABS.map(({ id, label, Icon }) => (
           <button
@@ -114,14 +156,14 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
         ))}
       </div>
 
-      {/* Cards Grid */}
+      {/* Cards grid */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
           initial={{ opacity: 0, x: 12 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -12 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.22 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
           {activeItems.map((item, i) => (
@@ -129,18 +171,18 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
               key={item.title}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.3 }}
+              transition={{ delay: i * 0.07, duration: 0.28 }}
             >
-              <RecCard item={item} icon={activeTabMeta.Icon} />
+              <RecCard item={item} tab={activeTabConfig} />
             </motion.div>
           ))}
         </motion.div>
       </AnimatePresence>
 
-      {/* Footer note */}
+      {/* Footer */}
       <p className="text-[11px] text-muted-foreground/40 text-center flex items-center justify-center gap-1.5">
         <ExternalLink className="w-3 h-3" />
-        Search titles on your preferred platform to find them
+        Each card opens on your preferred platform in a new tab
       </p>
     </motion.section>
   );
