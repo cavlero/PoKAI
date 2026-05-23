@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Headphones, Compass, ExternalLink,
-  Play, Square, ArrowRight,
+  Play, Square, ArrowRight, Shield, Crown, Globe, BookOpen,
 } from "lucide-react";
 import { Monument } from "@/data/monuments";
 import { LEARNING, RecItem, AudioGuideItem } from "@/data/recommendations";
@@ -15,6 +15,21 @@ type Tab = "articles" | "audioGuide";
 
 // ─── Article Card ────────────────────────────────────────────────────────────
 function ArticleCard({ item }: { item: RecItem }) {
+  const [imgError, setImgError] = useState(false);
+
+  const getFallbackIcon = () => {
+    const t = item.title.toLowerCase();
+    if (t.includes("ivan") || t.includes("asen") || t.includes("tsar") || t.includes("king") || t.includes("ruler"))
+      return <Crown className="w-9 h-9 text-primary/60" />;
+    if (t.includes("fortress") || t.includes("tsarevets") || t.includes("novae") || t.includes("castle"))
+      return <Shield className="w-9 h-9 text-primary/60" />;
+    if (t.includes("empire") || t.includes("map") || t.includes("province") || t.includes("frontier"))
+      return <Globe className="w-9 h-9 text-primary/60" />;
+    if (t.includes("monastery") || t.includes("rila") || t.includes("church") || t.includes("saint"))
+      return <BookOpen className="w-9 h-9 text-primary/60" />;
+    return <FileText className="w-9 h-9 text-primary/60" />;
+  };
+
   return (
     <a
       href={item.link}
@@ -26,19 +41,43 @@ function ArticleCard({ item }: { item: RecItem }) {
                  hover:shadow-xl hover:shadow-primary/12 hover:bg-card/60"
     >
       {/* Thumbnail */}
-      <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/15 to-background/90 shrink-0">
-        <img
-          src={item.imageUrl}
-          alt={item.title}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/6 transition-colors duration-300" />
-        <span className="absolute bottom-2.5 right-2.5 text-[10px] font-semibold text-white bg-blue-600 rounded-md px-2 py-0.5 flex items-center gap-1">
+      <div className="relative h-44 overflow-hidden shrink-0 rounded-t-2xl bg-gradient-to-br from-[#0d1a3a] to-[#060e21]">
+        {!imgError && (
+          <img
+            src={item.imageUrl}
+            alt={item.title}
+            loading="lazy"
+            onError={() => setImgError(true)}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+
+        {/* Fallback — shown when image errors or while loading with error */}
+        {imgError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5">
+            <div className="w-14 h-14 rounded-full bg-primary/12 border border-primary/25 flex items-center justify-center">
+              {getFallbackIcon()}
+            </div>
+            <p className="font-serif text-[13px] text-primary/80 text-center leading-snug">
+              {item.title}
+            </p>
+          </div>
+        )}
+
+        {/* Gradient overlay — only over real image */}
+        {!imgError && (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/6 transition-colors duration-300" />
+          </>
+        )}
+
+        {/* Source badge */}
+        <span className="absolute bottom-2.5 right-2.5 text-[10px] font-semibold text-white bg-blue-600/90 rounded-md px-2 py-0.5 flex items-center gap-1 backdrop-blur-sm">
           <FileText className="w-2.5 h-2.5" /> Article
         </span>
       </div>
+
       {/* Body */}
       <div className="flex flex-col flex-1 p-4 gap-2.5">
         <h4 className="font-serif text-[14px] font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary/90 transition-colors duration-200">
