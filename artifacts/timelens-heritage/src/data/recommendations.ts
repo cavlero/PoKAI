@@ -6,6 +6,20 @@ export type RecItem = {
   link: string;
 };
 
+export type AudioGuideItem = {
+  title: string;
+  intro: string;
+  script: string;
+  duration: string;
+};
+
+export type VirtualTourItem = {
+  title: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+};
+
 export type QuizQuestion = {
   question: string;
   options: [string, string, string, string];
@@ -20,9 +34,9 @@ export type BadgeLevel = {
 };
 
 export type MonumentLearning = {
-  videos: RecItem[];
-  books: RecItem[];
   articles: RecItem[];
+  audioGuide: AudioGuideItem[];
+  virtualTour: VirtualTourItem[];
   quiz: QuizQuestion[];
   badges: [BadgeLevel, BadgeLevel, BadgeLevel, BadgeLevel];
 };
@@ -41,80 +55,71 @@ const IMG = {
   steppe:    u("1505118380757-91f5f5632de0"),
   oldcity:   u("1553614731-4d5fd4a08bff"),
   ruins2:    u("1555993539-1732b0258235"),
-  books:     u("1521587760476-6c12a4b040da"),
-  library:   u("1481627834876-b7833e8f5570"),
-  stacked:   u("1544947950-fa07a98d237f"),
 };
 
 export const LEARNING: Record<string, MonumentLearning> = {
   novae: {
-    videos: [
-      {
-        title: "Inside a Roman Legionary Fortress",
-        description: "A full reconstruction of daily life inside a 2nd-century Roman legionary fortress — drills, feasts, religion, and the constant watch over the Danube.",
-        source: "YouTube · Invicta",
-        imageUrl: IMG.colosseum,
-        link: "https://www.youtube.com/results?search_query=roman+legionary+fortress+daily+life+invicta",
-      },
-      {
-        title: "Rome's Danube Frontier — The Limes",
-        description: "How the Roman Empire built and manned its longest land border: watchtowers, patrol boats, and the legions that held the line for three centuries.",
-        source: "YouTube · Kings and Generals",
-        imageUrl: IMG.arch,
-        link: "https://www.youtube.com/results?search_query=roman+danube+frontier+limes+kings+and+generals",
-      },
-      {
-        title: "Legio I Italica: Novae's Permanent Legion",
-        description: "The history of the First Italian Legion, raised by Nero and permanently stationed at Novae — one of the best-documented legions of the imperial frontier.",
-        source: "YouTube · HistoryMarche",
-        imageUrl: IMG.ruins,
-        link: "https://www.youtube.com/results?search_query=legio+i+italica+roman+legion+danube",
-      },
-    ],
-    books: [
-      {
-        title: "SPQR: A History of Ancient Rome",
-        description: "Mary Beard's landmark popular history of Rome — who Romans really were, how they lived, and what their empire actually meant for the people inside it.",
-        source: "Goodreads · Mary Beard, 2015",
-        imageUrl: IMG.books,
-        link: "https://www.goodreads.com/book/show/23330137-spqr",
-      },
-      {
-        title: "The Complete Roman Army",
-        description: "Adrian Goldsworthy's comprehensive illustrated guide to the structure, equipment, tactics, and daily life of the Roman military from Republic to Late Empire.",
-        source: "Google Books · Adrian Goldsworthy",
-        imageUrl: IMG.library,
-        link: "https://books.google.com/books?q=complete+roman+army+goldsworthy+thames+hudson",
-      },
-      {
-        title: "The Fall of the Roman Empire",
-        description: "Peter Heather traces Rome's final century — the barbarian migrations across the very Danubian frontier that Novae was built to defend.",
-        source: "Goodreads · Peter Heather, 2006",
-        imageUrl: IMG.stacked,
-        link: "https://www.goodreads.com/book/show/60684.The_Fall_of_the_Roman_Empire",
-      },
-    ],
     articles: [
       {
         title: "Novae — Roman Legionary Fortress",
-        description: "Wikipedia's comprehensive article on the archaeological site, its excavation history, and the remains that make Novae one of the best-studied Roman fortresses in Bulgaria.",
+        description: "Wikipedia's comprehensive article covering the site's archaeological history, the legions that served here, and what excavations have revealed about life on the Danubian frontier.",
         source: "Wikipedia",
         imageUrl: IMG.colosseum,
         link: "https://en.wikipedia.org/wiki/Novae_(city)",
       },
       {
-        title: "Legio I Italica",
-        description: "The full history and movements of the First Italian Legion — its founding by Nero, its long tenure at Novae, and its role defending the Danube frontier for over two centuries.",
+        title: "Legio I Italica — The First Italian Legion",
+        description: "The full history and movements of the legion permanently stationed at Novae — its founding by Nero, its long Danubian tenure, and its role defending Rome's most important land border.",
         source: "Wikipedia",
-        imageUrl: IMG.ruins,
+        imageUrl: IMG.arch,
         link: "https://en.wikipedia.org/wiki/Legio_I_Italica",
       },
       {
         title: "Moesia — Roman Province on the Danube",
-        description: "Britannica's detailed overview of the Roman province of Moesia, its strategic importance, its governors, and the military campaigns fought along its borders.",
+        description: "Britannica's detailed overview of the Roman province of Moesia, its strategic importance for the empire, and the military campaigns fought to defend it across three centuries.",
         source: "Britannica",
-        imageUrl: IMG.arch,
+        imageUrl: IMG.ruins,
         link: "https://www.britannica.com/place/Moesia",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to Novae Fortress",
+        intro: "An introduction to the Roman legionary fortress on the Danube.",
+        duration: "~1 min",
+        script: "Welcome to Novae, a Roman legionary fortress on the southern bank of the Danube River. You are standing where six thousand soldiers of the First Italian Legion once lived and served. Founded in the first century after Christ, this site contained stone walls, headquarters buildings, bathhouses, and temples. Beyond the military camp, a civilian town grew outside — home to merchants, craftsmen, and the families of soldiers who had come from Syria, Thrace, and even Britain. As you explore, imagine the morning trumpet calling troops to formation, the ring of the smithy, and the steady rhythm of the Danube flowing north beyond the fortress walls.",
+      },
+      {
+        title: "The Roman Danube Frontier",
+        intro: "How Rome defended its greatest border along the Danube River.",
+        duration: "~1 min",
+        script: "The Danube was Rome's most important land frontier — four thousand kilometres of river patrolled by legions, watchtowers, and river fleets. Novae was one of the key fortresses holding this line. Soldiers here maintained patrol boats on the river, manned signal towers, and kept cavalry ready to respond within hours to any crossing. During peaceful decades, life was routine. But when Gothic raiding parties crossed in the third century, Novae found itself at the heart of one of Rome's greatest crises. In two-fifty-one, Emperor Decius was killed fighting the Goths near this region — the first Roman emperor to fall in battle against a foreign enemy.",
+      },
+      {
+        title: "Life in the Legion",
+        intro: "The daily routines, rituals, and rewards of a Roman soldier at Novae.",
+        duration: "~1 min",
+        script: "A Roman legionary's day began at dawn. Sword drills, formation exercises, and equipment maintenance filled the morning. Engineering work — repairing walls, building roads — occupied the afternoon. The bathhouse was the social centre of the fortress, open each evening to soldiers from a dozen different nations. Religion was everywhere: shrines to Jupiter, to the Persian god Mithras, and to the local Thracian horseman deity. Many soldiers served twenty-five years before retirement, building lives so deeply rooted here that their children and grandchildren stayed beside the Danube long after the legions had gone.",
+      },
+      {
+        title: "The Legacy of Novae",
+        intro: "What happened after Rome and what today's excavations are uncovering.",
+        duration: "~1 min",
+        script: "Novae did not vanish when the Roman legions withdrew. Civilian life continued for generations. Byzantine soldiers later reoccupied parts of the fortress. Slavic settlers built homes among the ruins. And today, Bulgarian and Polish archaeologists have been carefully excavating the site since nineteen-sixty, revealing extraordinary finds — inscriptions naming soldiers from across the empire, surgical instruments from the fortress hospital, and luxury goods imported from the farthest reaches of the Roman world. Every excavation season adds new pages to the story of this place where Roman power met the edge of the known world.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "Novae Fortress — Satellite View",
+        description: "Explore the archaeological footprint of Novae from above — the outline of the legionary fortress, the civilian settlement, and the Danube River that defined its existence.",
+        imageUrl: IMG.colosseum,
+        link: "https://www.google.com/maps/@43.6167,25.3833,17z/data=!3m1!1e3",
+      },
+      {
+        title: "Novae on Wikipedia",
+        description: "Explore plans, photographs, and reconstruction drawings of the Roman fortress alongside the detailed Wikipedia article on its history and ongoing excavations.",
+        imageUrl: IMG.arch,
+        link: "https://en.wikipedia.org/wiki/Novae_(city)",
       },
     ],
     quiz: [
@@ -122,7 +127,7 @@ export const LEARNING: Record<string, MonumentLearning> = {
         question: "Which Roman legion was permanently stationed at Novae as its primary garrison?",
         options: ["Legio VII Claudia", "Legio V Macedonica", "Legio I Italica", "Legio XI Claudia"],
         correctIndex: 2,
-        explanation: "Legio I Italica (the First Italian Legion) was raised by Emperor Nero from Italian citizens and became the permanent garrison of Novae. Its soldiers were later joined by recruits from across the empire — Syrians, Thracians, and men from Britain.",
+        explanation: "Legio I Italica — the First Italian Legion — was raised by Nero and became the permanent garrison of Novae. Its soldiers came from across the empire: Syrians, Thracians, and even men from Britain.",
       },
       {
         question: "Novae was located in which Roman province?",
@@ -134,13 +139,13 @@ export const LEARNING: Record<string, MonumentLearning> = {
         question: "Which Germanic people posed the greatest military threat to Novae during the 3rd century?",
         options: ["The Franks", "The Vandals", "The Goths", "The Saxons"],
         correctIndex: 2,
-        explanation: "The Goths mounted devastating incursions across the Danube throughout the 3rd century. In 251 AD, Emperor Decius was killed fighting them near this region — the first Roman emperor to fall in battle against a foreign enemy.",
+        explanation: "The Goths mounted devastating raids across the Danube throughout the 3rd century. In 251 AD, Emperor Decius was killed fighting them near this region — the first Roman emperor to fall in battle against a foreign enemy.",
       },
       {
         question: "What was the approximate size of a fully-staffed Roman legion like those stationed at Novae?",
         options: ["1,000–2,000 soldiers", "5,000–6,000 soldiers", "12,000–15,000 soldiers", "500 elite soldiers"],
         correctIndex: 1,
-        explanation: "A standard imperial Roman legion consisted of approximately 5,000 to 6,000 men, organized into 10 cohorts. The first cohort was double-strength — making it the most prestigious unit.",
+        explanation: "A standard imperial Roman legion consisted of approximately 5,000 to 6,000 men, organized into 10 cohorts. The first cohort was double-strength — the most prestigious unit.",
       },
       {
         question: "Which famous physician influenced the military hospitals found at fortresses like Novae?",
@@ -158,73 +163,67 @@ export const LEARNING: Record<string, MonumentLearning> = {
   },
 
   tsarevets: {
-    videos: [
-      {
-        title: "Tsarevets Fortress — Medieval Bulgarian Capital",
-        description: "A full tour of Bulgaria's most dramatic medieval fortress — the royal palace, the Patriarchal Cathedral, and the story of how a hill above the Yantra River became the centre of an empire.",
-        source: "YouTube · Visit Bulgaria",
-        imageUrl: IMG.castle,
-        link: "https://www.youtube.com/results?search_query=tsarevets+fortress+tour+veliko+tarnovo",
-      },
-      {
-        title: "The Second Bulgarian Empire: Rise and Fall",
-        description: "From the 1185 rebellion of Brothers Asen and Peter to the Ottoman siege of 1393 — the full arc of medieval Bulgaria's greatest age, told through its fortresses and tsars.",
-        source: "YouTube · Kings and Generals",
-        imageUrl: IMG.castle2,
-        link: "https://www.youtube.com/results?search_query=second+bulgarian+empire+rise+fall+history",
-      },
-      {
-        title: "Ivan Asen II: Bulgaria's Most Powerful Tsar",
-        description: "The life and campaigns of the tsar who made Bulgaria the dominant Balkan power — his victory at Klokotnitsa, his religious diplomacy, and his legacy.",
-        source: "YouTube · HistoryMarche",
-        imageUrl: IMG.castle,
-        link: "https://www.youtube.com/results?search_query=ivan+asen+ii+medieval+bulgaria+history",
-      },
-    ],
-    books: [
-      {
-        title: "The Medieval Balkans",
-        description: "The definitive English-language history of the Balkans from 500 to 1500 — Bulgaria, Serbia, Byzantium, and the Ottoman advance, by the leading Western scholar of the region.",
-        source: "Goodreads · John V.A. Fine Jr., 1987",
-        imageUrl: IMG.books,
-        link: "https://www.goodreads.com/book/show/776126.The_Medieval_Balkans",
-      },
-      {
-        title: "A History of the First Bulgarian Empire",
-        description: "Steven Runciman's classic account from Asparuh's founding to the Byzantine conquest — the definitive English work on early and medieval Bulgarian history.",
-        source: "Internet Archive · Steven Runciman",
-        imageUrl: IMG.library,
-        link: "https://archive.org/search?query=runciman+history+first+bulgarian+empire",
-      },
-      {
-        title: "Byzantium: The Surprising Life of a Medieval Empire",
-        description: "Judith Herrin's brilliant overview of Byzantium — the empire that Bulgaria both rivalled and was shaped by throughout its medieval golden age.",
-        source: "Goodreads · Judith Herrin, 2007",
-        imageUrl: IMG.stacked,
-        link: "https://www.goodreads.com/book/show/2294553.Byzantium",
-      },
-    ],
     articles: [
       {
         title: "Tsarevets Fortress",
-        description: "Wikipedia's detailed article covering the fortress's architecture, its role as the medieval Bulgarian capital, the 1393 Ottoman siege, and the modern Sound and Light show.",
+        description: "Wikipedia's detailed article on the fortress — its architecture, role as medieval Bulgarian capital, the 1393 Ottoman siege, and the modern Sound and Light show.",
         source: "Wikipedia",
         imageUrl: IMG.castle,
         link: "https://en.wikipedia.org/wiki/Tsarevets_fortress",
       },
       {
         title: "Second Bulgarian Empire",
-        description: "Britannica's overview of the medieval Bulgarian state from 1185 to 1396 — its dynasty, its culture, its church, and the Ottoman conquest that ended five centuries of Bulgarian statehood.",
+        description: "Britannica's overview of the medieval Bulgarian state from 1185 to 1396 — its dynasty, its church, and the Ottoman conquest that ended five centuries of Bulgarian statehood.",
         source: "Britannica",
         imageUrl: IMG.castle2,
         link: "https://www.britannica.com/place/Bulgaria/The-second-Bulgarian-empire",
       },
       {
         title: "Ivan Asen II of Bulgaria",
-        description: "The Wikipedia entry on Bulgaria's greatest medieval tsar — his military victories, his expansion of Bulgarian territory across the Balkans, and his ecclesiastical achievements.",
+        description: "The Wikipedia article on Bulgaria's greatest medieval tsar — his military campaigns, the Battle of Klokotnitsa, his establishment of an independent Patriarchate, and his lasting legacy.",
         source: "Wikipedia",
         imageUrl: IMG.ruins,
         link: "https://en.wikipedia.org/wiki/Ivan_Asen_II",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to Tsarevets Fortress",
+        intro: "An introduction to the medieval Bulgarian capital and its hill above the Yantra River.",
+        duration: "~1 min",
+        script: "Welcome to Tsarevets Fortress — for two centuries the seat of the Bulgarian Tsars and the political heart of a Balkan empire. You are standing on a hill surrounded on three sides by the Yantra River, a natural fortress that made this site nearly impregnable. Inside these walls lived thousands of people — the Tsar and his court, the Patriarch and his clergy, soldiers, servants, and merchants. The citadel fell only once in its history: to the Ottoman armies of Sultan Bayezid the First, after a three-month siege in thirteen ninety-three — one of the most dramatic moments in Bulgarian history.",
+      },
+      {
+        title: "The Second Bulgarian Empire",
+        intro: "How brothers Asen and Peter founded an empire that dominated the Balkans.",
+        duration: "~1 min",
+        script: "The Second Bulgarian Empire began in eleven eighty-five, when brothers Asen and Peter led a successful uprising against Byzantine rule and proclaimed independence at the Church of Saint Demetrius in Tarnovo. From this fortress, Bulgarian Tsars would rule for two centuries, at times commanding territory from the Black Sea to the Adriatic. The empire reached its greatest height under Tsar Ivan Asen the Second in the thirteenth century. After his stunning victory at the Battle of Klokotnitsa in twelve-thirty, Bulgaria became the dominant power across the entire Balkan Peninsula — a moment of national greatness remembered to this day.",
+      },
+      {
+        title: "The Royal Palace",
+        intro: "The ceremonial heart of Bulgarian medieval power at the top of Tsarevets Hill.",
+        duration: "~1 min",
+        script: "At the highest point of Tsarevets stood the Royal Palace — a complex of ceremonial halls, private chambers, treasury rooms, and gardens befitting a great medieval empire. Bulgarian Tsars received foreign ambassadors here, issued decrees, and dispensed justice. The palace was connected to the Patriarchal Cathedral by a processional path, emphasizing the unity of royal and religious power. Today, the foundations of the palace are clearly visible, and ongoing archaeological work continues to reveal fine Byzantine-influenced mosaics, imported pottery, and the wax seals of royal documents that once governed the affairs of the Balkan Peninsula.",
+      },
+      {
+        title: "The Patriarchal Church",
+        intro: "Bulgaria's highest spiritual authority on the summit of the fortress hill.",
+        duration: "~1 min",
+        script: "Dominating the summit of Tsarevets stands the Patriarchal Church of the Holy Ascension — rebuilt in the nineteen-eighties with frescoes by artist Teofan Sokerov, painted in a bold style that blends medieval Bulgarian and modern artistic traditions. In the medieval period, the Patriarch of Tarnovo administered the Bulgarian Orthodox Church from this hilltop, making Tsarevets not only Bulgaria's political capital but its spiritual one. Every summer evening, the fortress is illuminated by a dramatic sound and light show set to Beethoven's Ninth Symphony — one of Eastern Europe's most spectacular heritage performances.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "Tsarevets Virtual Tour",
+        description: "Explore Tsarevets Fortress through the official interactive online tour — walk the walls, enter the towers, and discover the Royal Palace and Patriarchal Church from anywhere in the world.",
+        imageUrl: IMG.castle,
+        link: "https://www.tsarevets.eu/en/page3.html",
+      },
+      {
+        title: "Tsarevets on Google Maps",
+        description: "Explore the fortress hill from the air — the full outline of the citadel walls, the Yantra River bends, and the city of Veliko Tarnovo spread across the surrounding hills.",
+        imageUrl: IMG.castle2,
+        link: "https://www.google.com/maps/@43.0849,25.6539,17z/data=!3m1!1e3",
       },
     ],
     quiz: [
@@ -232,7 +231,7 @@ export const LEARNING: Record<string, MonumentLearning> = {
         question: "What was the name of Ivan Asen II's most decisive military victory, fought in 1230 AD?",
         options: ["Battle of Anchialos", "Battle of Adrianople", "Battle of Klokotnitsa", "Battle of the Maritsa"],
         correctIndex: 2,
-        explanation: "At the Battle of Klokotnitsa (March 1230), Ivan Asen II utterly defeated Theodore Komnenos of Epirus, who had claimed the title of Emperor. Theodore was captured and blinded. In one afternoon, Bulgaria became the dominant Balkan power.",
+        explanation: "At the Battle of Klokotnitsa (March 1230), Ivan Asen II utterly defeated Theodore Komnenos of Epirus. Theodore was captured and blinded. In one afternoon, Bulgaria became the dominant Balkan power.",
       },
       {
         question: "The Second Bulgarian Empire was founded in 1185 following a rebellion against which empire?",
@@ -268,73 +267,67 @@ export const LEARNING: Record<string, MonumentLearning> = {
   },
 
   rila: {
-    videos: [
-      {
-        title: "Rila Monastery — Bulgaria's Spiritual Heart",
-        description: "A beautiful visual tour of the monastery complex — its frescoed cloisters, the Tower of Hrelyu, the icon museum, and the mountain wilderness that surrounds it.",
-        source: "YouTube · National Geographic",
-        imageUrl: IMG.mountain,
-        link: "https://www.youtube.com/results?search_query=rila+monastery+tour+national+geographic",
-      },
-      {
-        title: "Saint Ivan of Rila: The Hermit Who Started It All",
-        description: "The life of the 10th-century monk who withdrew to the Rila Mountains, lived in a cave, and whose solitary example inspired the monastery that has stood for over 1,000 years.",
-        source: "YouTube · Orthodox History",
-        imageUrl: IMG.peaks,
-        link: "https://www.youtube.com/results?search_query=saint+ivan+rila+hermit+monastery+history",
-      },
-      {
-        title: "The Frescoes of Rila Monastery",
-        description: "An art history deep dive into the monastery's extraordinary 19th-century frescoes — over 1,200 scenes covering every surface of the arcade, painted by National Revival masters.",
-        source: "YouTube · Khan Academy",
-        imageUrl: IMG.mountain,
-        link: "https://www.youtube.com/results?search_query=rila+monastery+frescoes+art+history",
-      },
-    ],
-    books: [
-      {
-        title: "The Desert Fathers: Sayings of the Early Christian Monks",
-        description: "The foundational texts of Christian monasticism — the wisdom of Egypt's hermit saints whose tradition directly inspired Ivan of Rila's way of life in the Bulgarian mountains.",
-        source: "Project Gutenberg · Trans. Benedicta Ward",
-        imageUrl: IMG.books,
-        link: "https://www.gutenberg.org/ebooks/search/?query=desert+fathers+monks",
-      },
-      {
-        title: "A History of the Orthodox Church",
-        description: "Timothy Ware's classic introduction to Eastern Orthodox Christianity — its theology, its history, and its monastic tradition that produced saints like Ivan of Rila.",
-        source: "Goodreads · Timothy Ware",
-        imageUrl: IMG.library,
-        link: "https://www.goodreads.com/book/show/481604.The_Orthodox_Church",
-      },
-      {
-        title: "Bulgaria: Portrait of a Country",
-        description: "A rich cultural and historical portrait of Bulgaria — its landscapes, its Orthodox heritage, its monasteries, and the centuries of history that shaped the nation.",
-        source: "Google Books",
-        imageUrl: IMG.stacked,
-        link: "https://books.google.com/books?q=bulgaria+history+orthodox+heritage",
-      },
-    ],
     articles: [
       {
         title: "Rila Monastery — UNESCO World Heritage",
-        description: "The official UNESCO World Heritage listing for Rila Monastery — explaining why this mountain complex was recognised as a site of outstanding universal value.",
+        description: "The official UNESCO World Heritage listing explaining why this mountain complex was recognised as a site of outstanding universal value to humanity.",
         source: "UNESCO",
         imageUrl: IMG.mountain,
         link: "https://whc.unesco.org/en/list/216",
       },
       {
         title: "Saint Ivan of Rila",
-        description: "Wikipedia's detailed article on the life, miracles, and legacy of Bulgaria's patron saint — the hermit whose cave in the Rila Mountains became a pilgrimage destination.",
+        description: "Wikipedia's detailed article on the life, miracles, and legacy of Bulgaria's patron saint — the hermit whose cave in the Rila Mountains became a pilgrimage destination for over a thousand years.",
         source: "Wikipedia",
         imageUrl: IMG.peaks,
         link: "https://en.wikipedia.org/wiki/Saint_Ivan_of_Rila",
       },
       {
         title: "Rila Monastery",
-        description: "Britannica's article covering the monastery's founding, its architectural history, its destruction and rebuilding, and its role as the spiritual centre of Bulgarian culture.",
+        description: "Britannica's article covering the monastery's founding, its architectural history, its destruction and rebuilding after 1833, and its enduring role as the spiritual centre of Bulgarian culture.",
         source: "Britannica",
         imageUrl: IMG.mountain,
         link: "https://www.britannica.com/topic/Rila-Monastery",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to Rila Monastery",
+        intro: "An introduction to Bulgaria's most sacred place in its mountain valley.",
+        duration: "~1 min",
+        script: "Welcome to Rila Monastery, nestled in a valley of the Rila Mountains at over a thousand metres altitude. This is Bulgaria's most sacred place — a monastery founded more than a thousand years ago that has served as the spiritual heart of the Bulgarian nation ever since. The buildings you see today were built primarily in the nineteenth century after a devastating fire. But the monastery's soul is much older, stretching back to the tenth century when a hermit named Ivan came to these mountains seeking silence, and found instead a calling that would shape Bulgarian history forever.",
+      },
+      {
+        title: "Saint Ivan of Rila",
+        intro: "The hermit monk who founded the monastery and became Bulgaria's patron saint.",
+        duration: "~1 min",
+        script: "Saint Ivan of Rila was born around the year eight hundred seventy-six. Drawn to solitary prayer, he gave away his possessions and walked into these mountains, eventually settling in a cave high above this valley. Word of his holiness spread, and disciples came to live nearby, building the first monastic community around him. Even Tsar Peter the First, ruler of Bulgaria, sought his counsel. Ivan's relics are preserved in the monastery to this day, and millions of pilgrims have come to pray at his tomb over eleven centuries. His is one of the longest and most continuous threads of Bulgarian spiritual life.",
+      },
+      {
+        title: "The Great Frescoes",
+        intro: "Over twelve hundred painted scenes covering every surface of the arcade.",
+        duration: "~1 min",
+        script: "The monastery's famous frescoes cover every surface of the outer arcade — more than twelve hundred individual scenes painted between eighteen-forty and eighteen-forty-eight by master artists of the Bulgarian National Revival. These are not merely decorations. They are a complete visual theology — the life of Christ, the lives of the saints, visions of heaven and the torments of hell — designed to teach and inspire every visitor who passed through the gates. Dozens of painters worked simultaneously on surfaces above their heads, matching colours across sections, maintaining theological consistency across the entire arcade. The result is considered one of the greatest achievements of Bulgarian visual art.",
+      },
+      {
+        title: "Rila as a Cultural Fortress",
+        intro: "How the monastery preserved Bulgarian identity through five centuries of Ottoman rule.",
+        duration: "~1 min",
+        script: "During nearly five centuries of Ottoman rule, Rila Monastery was a rare place of safety for Bulgarian culture. While the Bulgarian language was suppressed in public life, monks here copied manuscripts in the Cyrillic alphabet. While Bulgarian history was erased from official records, scribes in these cells preserved the memory of the Bulgarian Tsars. The monastery ran one of Bulgaria's first Bulgarian-language schools. When Paisii Hilendarski wrote his Slavo-Bulgarian History in seventeen-sixty-two — the text that ignited the Bulgarian national awakening — it was in this monastic world that his work found its earliest readers and copyists.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "Rila Monastery — Google Arts & Culture",
+        description: "High-resolution photography, detailed cultural history, and an immersive visual experience of one of the world's great Orthodox monasteries — from the frescoes to the mountain landscape.",
+        imageUrl: IMG.mountain,
+        link: "https://artsandculture.google.com/partner/rila-monastery",
+      },
+      {
+        title: "Rila Monastery — UNESCO Listing",
+        description: "The official UNESCO World Heritage entry with photographs, maps, and the full statement of outstanding universal value for Rila Monastery.",
+        imageUrl: IMG.peaks,
+        link: "https://whc.unesco.org/en/list/216",
       },
     ],
     quiz: [
@@ -378,56 +371,10 @@ export const LEARNING: Record<string, MonumentLearning> = {
   },
 
   nessebar: {
-    videos: [
-      {
-        title: "Ancient Nessebar — 3,000 Years of History",
-        description: "A panoramic history of the UNESCO World Heritage city — from Thracian founders and Greek colonists through Byzantine churches, Bulgarian tsars, and Ottoman merchants.",
-        source: "YouTube · National Geographic",
-        imageUrl: IMG.arch,
-        link: "https://www.youtube.com/results?search_query=nessebar+ancient+city+history+3000+years",
-      },
-      {
-        title: "The Byzantine Churches of Nessebar",
-        description: "A walking tour of the city's extraordinary concentration of medieval churches — their architectural styles, their frescoes, and why this tiny peninsula holds so many.",
-        source: "YouTube · Byzantine Heritage",
-        imageUrl: IMG.ruins,
-        link: "https://www.youtube.com/results?search_query=nessebar+byzantine+churches+tour+black+sea",
-      },
-      {
-        title: "Messembria: Ancient Greek Colony on the Black Sea",
-        description: "The story of the Megarian colonists who founded Messembria around 510 BC — how they built a prosperous city and left coins, pottery, and architecture that survive to this day.",
-        source: "YouTube · HistoryMarche",
-        imageUrl: IMG.colosseum,
-        link: "https://www.youtube.com/results?search_query=messembria+ancient+greek+colony+black+sea",
-      },
-    ],
-    books: [
-      {
-        title: "Byzantium: The Surprising Life of a Medieval Empire",
-        description: "Judith Herrin's essential introduction to Byzantine civilization — the empire that built most of Nessebar's churches and shaped the Black Sea coast for a thousand years.",
-        source: "Goodreads · Judith Herrin, 2007",
-        imageUrl: IMG.books,
-        link: "https://www.goodreads.com/book/show/2294553.Byzantium",
-      },
-      {
-        title: "The Black Sea: A History",
-        description: "Neal Ascherson's brilliant history of the Black Sea world — the civilizations, trade routes, and cultural encounters along the shore where Messembria has watched for 3,000 years.",
-        source: "Goodreads · Neal Ascherson, 1995",
-        imageUrl: IMG.library,
-        link: "https://www.goodreads.com/book/show/185613.Black_Sea",
-      },
-      {
-        title: "The Thracians",
-        description: "R.F. Hoddinott's definitive account of Thracian civilization — the people who founded Messembria and left a cultural imprint on the city long before Greek colonists arrived.",
-        source: "Goodreads · R.F. Hoddinott",
-        imageUrl: IMG.stacked,
-        link: "https://www.goodreads.com/book/show/3228456.The_Thracians",
-      },
-    ],
     articles: [
       {
         title: "Old Nessebar — UNESCO World Heritage Site",
-        description: "The official UNESCO listing for Nessebar — explaining how this tiny Black Sea peninsula earned World Heritage status for its extraordinary concentration of monuments from multiple civilizations.",
+        description: "The official UNESCO World Heritage listing explaining how a tiny Black Sea peninsula earned recognition for its extraordinary concentration of monuments from multiple civilizations across 3,000 years.",
         source: "UNESCO",
         imageUrl: IMG.arch,
         link: "https://whc.unesco.org/en/list/217",
@@ -441,10 +388,50 @@ export const LEARNING: Record<string, MonumentLearning> = {
       },
       {
         title: "Mesembria — Ancient Greek City on the Black Sea",
-        description: "Britannica's article on the ancient city, covering its founding, its role in Black Sea trade, and its transition through Roman, Byzantine, and Bulgarian rule over three millennia.",
+        description: "Britannica's article on the ancient city, covering its founding, its role in Black Sea trade, and its long transition through Roman, Byzantine, and Bulgarian rule.",
         source: "Britannica",
         imageUrl: IMG.colosseum,
         link: "https://www.britannica.com/place/Nessebar",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to Ancient Nessebar",
+        intro: "An introduction to three thousand years of history on a tiny Black Sea peninsula.",
+        duration: "~1 min",
+        script: "Welcome to Ancient Nessebar — a tiny rocky peninsula where human beings have lived, traded, prayed, and built for more than three thousand years. You could walk from one end to the other in fifteen minutes. Yet in that small space you will encounter Thracian foundations, Greek city walls, Roman columns, Byzantine churches, Bulgarian fortifications, and Ottoman wooden houses. This is one of the most densely layered archaeological sites in all of Europe. UNESCO recognized it in nineteen eighty-three not for any single monument, but for the extraordinary concentration of human history packed into its few hundred metres of wind-swept rock.",
+      },
+      {
+        title: "Three Thousand Years of History",
+        intro: "From Thracian settlers to Greek colonists, Byzantines, Bulgarians, and Ottomans.",
+        duration: "~1 min",
+        script: "The story of Nessebar begins with the Thracian tribe called the Mendi, who settled this natural harbour over three thousand years ago. Greek colonists from Megara arrived around five hundred and ten before Christ and founded the city of Messembria. Romans conquered it in seventy-two before Christ. Byzantine emperors fortified it and built churches. Bulgarian Khan Krum captured it in eight-twelve after defeating a Byzantine Emperor in battle. The Ottoman Turks arrived in the fifteenth century. Through each transition, the city's remarkable stone churches somehow survived — protected by their sheer number and the city's enduring value as a trading port.",
+      },
+      {
+        title: "The Byzantine Churches",
+        intro: "Why this tiny peninsula holds more medieval churches than almost anywhere in the world.",
+        duration: "~1 min",
+        script: "At its medieval height, Nessebar contained more than forty churches for a population of perhaps a few thousand people. Today more than twenty remain standing in various states of preservation. Some are still active Orthodox churches. Others are romantic ruins, their walls open to the sky. The Church of the New Metropolitan is the finest — a masterpiece of Byzantine brickwork and ceramic decoration. The Church of Saint John the Baptist may be the oldest, dating to the fifth century. Walking among them is to move through twelve centuries of Christian artistic tradition in the span of a single afternoon.",
+      },
+      {
+        title: "Life on the Peninsula",
+        intro: "Daily life in a city defined by the sea, trade, and centuries of changing rulers.",
+        duration: "~1 min",
+        script: "What was daily life like in medieval Nessebar? The city was above all a place of trade. Fishermen, merchants, craftsmen, and sailors from across the Black Sea world passed through its harbour. The smell of salt and pitch mixed with incense from the many churches. Greek, Bulgarian, and later Turkish could all be heard in the narrow streets. Through all the changes of ruler and religion, the rhythm of life on this small peninsula remained tied to the sea — to its storms, its trade winds, and its abundance. Nessebar was never merely a place of history. It was always, first and last, a living city.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "Nessebar — Google Arts & Culture",
+        description: "Explore the UNESCO World Heritage city of Nessebar through high-resolution photography and curated cultural history — the churches, the ancient walls, and the Black Sea coastline.",
+        imageUrl: IMG.arch,
+        link: "https://artsandculture.google.com/search?q=nessebar",
+      },
+      {
+        title: "Nessebar from Above — Satellite View",
+        description: "See the remarkable peninsula from above — the narrow isthmus connecting old Nessebar to the mainland, the cluster of church ruins, and the Black Sea surrounding it on three sides.",
+        imageUrl: IMG.ruins,
+        link: "https://www.google.com/maps/@42.6589,27.7372,17z/data=!3m1!1e3",
       },
     ],
     quiz: [
@@ -488,63 +475,17 @@ export const LEARNING: Record<string, MonumentLearning> = {
   },
 
   madara: {
-    videos: [
-      {
-        title: "The Madara Horseman — UNESCO Rock Relief",
-        description: "The remarkable 23-metre cliff carving explained — its iconography, its Greek inscriptions, and why a stone relief carved in 710 AD became one of Bulgaria's most iconic symbols.",
-        source: "YouTube · UNESCO Heritage",
-        imageUrl: IMG.steppe,
-        link: "https://www.youtube.com/results?search_query=madara+horseman+UNESCO+rock+relief+bulgaria",
-      },
-      {
-        title: "Khan Asparuh and the Founding of Bulgaria",
-        description: "The crossing of the Danube, the alliance with Slavic tribes, and the defeat of Byzantium — how a steppe warrior founded the Bulgarian state that has endured for 1,344 years.",
-        source: "YouTube · Kings and Generals",
-        imageUrl: IMG.ruins2,
-        link: "https://www.youtube.com/results?search_query=khan+asparuh+founding+bulgaria+681+AD",
-      },
-      {
-        title: "The Migration Period: Bulgars Across the Danube",
-        description: "The great steppe migration that brought the Bulgars to the Balkans — the Hunnic pressure, the dissolution of Old Great Bulgaria, and Asparuh's search for a new homeland.",
-        source: "YouTube · HistoryMarche",
-        imageUrl: IMG.steppe,
-        link: "https://www.youtube.com/results?search_query=bulgars+migration+period+danube+history",
-      },
-    ],
-    books: [
-      {
-        title: "A History of the First Bulgarian Empire",
-        description: "Steven Runciman's classic and meticulously researched history from Asparuh's founding to the Byzantine conquest of 1018 — the standard English-language work on early Bulgaria.",
-        source: "Internet Archive · Steven Runciman",
-        imageUrl: IMG.books,
-        link: "https://archive.org/search?query=runciman+history+first+bulgarian+empire",
-      },
-      {
-        title: "The Avars: A Steppe Empire in Central Europe",
-        description: "Walter Pohl's authoritative account of the Avar Empire — whose collapse created the conditions that allowed Khan Asparuh to lead his people across the Danube.",
-        source: "Goodreads · Walter Pohl, 2019",
-        imageUrl: IMG.library,
-        link: "https://www.goodreads.com/book/show/44595540-the-avars",
-      },
-      {
-        title: "Europe's Barbarians 400–600 AD",
-        description: "Edward James' accessible study of the peoples who reshaped Europe in the Migration Period — the archaeological evidence for how Bulgars and Slavs transformed the Balkans.",
-        source: "Goodreads · Edward James, 2009",
-        imageUrl: IMG.stacked,
-        link: "https://www.goodreads.com/book/show/6512516-europe-s-barbarians-400-600-ad",
-      },
-    ],
     articles: [
       {
         title: "Madara Horseman — UNESCO World Heritage",
-        description: "The official UNESCO listing for the Madara Horseman, detailing the monument's historical significance and its status as one of the earliest examples of monumental Bulgarian art.",
+        description: "The official UNESCO World Heritage listing for the Madara Horseman, detailing its historical significance as the only large-scale early medieval rock relief in Europe.",
         source: "UNESCO",
         imageUrl: IMG.steppe,
         link: "https://whc.unesco.org/en/list/43",
       },
       {
         title: "Madara Horseman",
-        description: "Wikipedia's detailed article on the rock relief — its dating, its iconography, the Greek inscriptions carved around it by successive Bulgarian rulers, and its modern conservation.",
+        description: "Wikipedia's detailed article on the rock relief — its dating, its iconography, the Greek inscriptions carved by Bulgarian rulers, and modern conservation efforts.",
         source: "Wikipedia",
         imageUrl: IMG.ruins2,
         link: "https://en.wikipedia.org/wiki/Madara_Horseman",
@@ -555,6 +496,46 @@ export const LEARNING: Record<string, MonumentLearning> = {
         source: "Wikipedia",
         imageUrl: IMG.steppe,
         link: "https://en.wikipedia.org/wiki/Asparuh_of_Bulgaria",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to the Madara Horseman",
+        intro: "An introduction to Europe's only early medieval rock relief.",
+        duration: "~1 min",
+        script: "Welcome to the Madara Horseman — Europe's only large-scale early medieval rock relief, and one of Bulgaria's most powerful national symbols. You are looking at an image carved into a sheer cliff face twenty-three metres above the ground, created sometime between seven-oh-five and eight-oh-one. The relief shows a triumphant horseman thrusting a spear through a prostrated lion, with an eagle flying overhead and a dog running at his side. Surrounding the image are Greek inscriptions — royal proclamations carved by Bulgarian Khans over nearly a century — making this cliff face a kind of stone chronicle of Bulgaria's founding era.",
+      },
+      {
+        title: "Khan Asparuh and the Founding of Bulgaria",
+        intro: "How a steppe migration led to the birth of the Bulgarian state in 681 AD.",
+        duration: "~1 min",
+        script: "The story of the Madara Horseman begins with a migration. Around six-eighty-one, Khan Asparuh led his Bulgar people across the Danube River into territory already settled by Slavic tribes. By defeating Byzantine Emperor Constantine the Fourth in battle and signing a peace treaty, Asparuh created the Bulgarian state — the first new nation to emerge from the ruins of Roman civilization in the Balkans. The treaty obliged the Byzantine Emperor to pay annual tribute to Bulgaria — an extraordinary humiliation for the heirs of Rome, and a clear signal that a powerful new force had arrived in the Balkans.",
+      },
+      {
+        title: "Reading the Inscriptions",
+        intro: "The Greek proclamations of Bulgarian Khans carved into the rock over a century.",
+        duration: "~1 min",
+        script: "The Greek inscriptions carved around the Madara Horseman are among the most valuable historical documents of early Bulgaria. Written in Greek — the diplomatic language of the Byzantine world — they record treaties, victories, and royal decrees of Khans Tervel, Kormesiy, and Omurtag. Khan Tervel's inscription mentions his military alliance with Byzantine Emperor Justinian the Second in seven-oh-five, when Bulgarian cavalry helped Justinian reclaim his throne. The inscriptions span nearly a century of Bulgarian history, from the period when the new Bulgarian state was still consolidating its power and identity on the edge of the Byzantine world.",
+      },
+      {
+        title: "Legacy of the Madara Horseman",
+        intro: "How a 1,300-year-old carving became one of Bulgaria's most important national symbols.",
+        duration: "~1 min",
+        script: "The image on the Madara cliff has outlasted the empire that created it. Bulgaria adopted the Madara Horseman as one of its most important national symbols — so significant that it appears on Bulgarian euro coins. The mountain plateau above the carving contains evidence of earlier Thracian sacred sites, suggesting this place held spiritual importance for thousands of years before the Bulgarian Khans chose it for their proclamations. Standing here, you feel the weight of those centuries — the Thracian rituals, the Bulgarian triumphs, the slow weathering of stone. Conservation work today uses careful laser cleaning and monitoring to preserve the image for future generations.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "Madara Horseman — UNESCO Listing",
+        description: "The official UNESCO World Heritage page with photographs, maps, and the full statement of outstanding universal value for the Madara Horseman rock relief.",
+        imageUrl: IMG.steppe,
+        link: "https://whc.unesco.org/en/list/43",
+      },
+      {
+        title: "Madara — Satellite View",
+        description: "Explore the Madara Plateau from above — the cliff face, the archaeological plateau, and the surrounding landscape that has been sacred to successive civilizations for thousands of years.",
+        imageUrl: IMG.ruins2,
+        link: "https://www.google.com/maps/@43.2836,27.1158,17z/data=!3m1!1e3",
       },
     ],
     quiz: [
@@ -598,73 +579,67 @@ export const LEARNING: Record<string, MonumentLearning> = {
   },
 
   buzludzha: {
-    videos: [
-      {
-        title: "Buzludzha — Europe's Most Dramatic Ruin",
-        description: "The extraordinary flying-saucer monument atop a Bulgarian peak — its Communist-era construction, its abandoned grandeur, and the global debate about whether to restore it.",
-        source: "YouTube · Abandoned Spaces",
-        imageUrl: IMG.ruins2,
-        link: "https://www.youtube.com/results?search_query=buzludzha+abandoned+monument+bulgaria",
-      },
-      {
-        title: "Paisii Hilendarski and the Bulgarian Awakening",
-        description: "The monk who in 1762 wrote the history that woke a nation — how one handwritten book, copied and passed in secret under Ottoman rule, ignited Bulgaria's national revival.",
-        source: "YouTube · Khan Academy",
-        imageUrl: IMG.oldcity,
-        link: "https://www.youtube.com/results?search_query=paisii+hilendarski+bulgarian+national+revival+history",
-      },
-      {
-        title: "The April Uprising and Bulgarian Liberation",
-        description: "The 1876 April Uprising, the role of Vasil Levski and Hristo Botev, the Russo-Turkish War of 1877–78, and how Bulgaria emerged from 500 years of Ottoman rule.",
-        source: "YouTube · Kings and Generals",
-        imageUrl: IMG.oldcity,
-        link: "https://www.youtube.com/results?search_query=bulgarian+april+uprising+1876+liberation",
-      },
-    ],
-    books: [
-      {
-        title: "Slavo-Bulgarian History",
-        description: "Paisii Hilendarski's 1762 text — the founding document of Bulgarian national consciousness, available in modern translation. The book that started a revolution without weapons.",
-        source: "Goodreads · Paisii Hilendarski",
-        imageUrl: IMG.books,
-        link: "https://www.goodreads.com/book/show/2388476.Slavo-Bulgarian_History",
-      },
-      {
-        title: "The Balkans: Nationalism, War and the Great Powers",
-        description: "Misha Glenny's essential history of the Balkans from 1804 to the present — the rise of national movements, Bulgarian liberation, the Balkan Wars, and everything that followed.",
-        source: "Goodreads · Misha Glenny, 1999",
-        imageUrl: IMG.library,
-        link: "https://www.goodreads.com/book/show/139350.The_Balkans",
-      },
-      {
-        title: "The Ottoman Centuries",
-        description: "Lord Kinross's sweeping narrative of the Ottoman Empire from its founding to its dissolution — the 500-year framework within which Paisii lived, researched, and wrote.",
-        source: "Goodreads · Lord Kinross",
-        imageUrl: IMG.stacked,
-        link: "https://www.goodreads.com/book/show/136543.The_Ottoman_Centuries",
-      },
-    ],
     articles: [
       {
         title: "Buzludzha Monument",
-        description: "Wikipedia's detailed article on the Soviet-era monument — its construction, its extravagant interior mosaics, its abandonment after 1989, and the international campaign to save it.",
+        description: "Wikipedia's detailed article on the Soviet-era monument — its construction, its extraordinary interior mosaics, its abandonment after 1989, and the international campaign to save it.",
         source: "Wikipedia",
         imageUrl: IMG.ruins2,
         link: "https://en.wikipedia.org/wiki/Buzludzha_(monument)",
       },
       {
         title: "Paisiy Hilendarski",
-        description: "The Wikipedia entry on the monk who wrote the Slavo-Bulgarian History — his life at Hilendar Monastery, his historical research, and his extraordinary impact on Bulgarian identity.",
+        description: "The Wikipedia entry on the monk who wrote the Slavo-Bulgarian History — his research at Mount Athos, the extraordinary impact of his 1762 text, and his place in Bulgarian national memory.",
         source: "Wikipedia",
         imageUrl: IMG.oldcity,
         link: "https://en.wikipedia.org/wiki/Paisiy_Hilendarski",
       },
       {
         title: "Bulgarian National Revival",
-        description: "Britannica's overview of the 19th-century Bulgarian cultural and political awakening — the schools, the writers, the revolutionaries, and the liberation that Paisii's work helped make possible.",
+        description: "Britannica's overview of the 19th-century Bulgarian cultural and political awakening — the schools, writers, revolutionaries, and liberation that Paisii's work helped make possible.",
         source: "Britannica",
         imageUrl: IMG.oldcity,
         link: "https://www.britannica.com/place/Bulgaria/The-national-revival",
+      },
+    ],
+    audioGuide: [
+      {
+        title: "Welcome to Buzludzha",
+        intro: "An introduction to the most dramatic abandoned monument in Eastern Europe.",
+        duration: "~1 min",
+        script: "Welcome to Buzludzha — one of the most extraordinary abandoned monuments in Europe. You are at fourteen hundred and forty-one metres altitude in the heart of the Balkan Mountains, looking at a massive concrete structure that resembles, from the outside, a flying saucer that has landed on a mountain peak. Built between nineteen-seventy-four and nineteen-eighty-one to serve as the ceremonial headquarters of the Bulgarian Communist Party, it required six thousand workers over seven years to construct. Just eight years after its opening, the Communist regime collapsed. Buzludzha has stood empty ever since — a spectacular monument to ambition, ideology, and the relentless passage of time.",
+      },
+      {
+        title: "Paisii Hilendarski's Legacy",
+        intro: "The monk whose handwritten book ignited Bulgaria's national awakening.",
+        duration: "~1 min",
+        script: "The Buzludzha peak was chosen for this monument because of what happened here in eighteen-ninety-one, when socialist activists secretly founded the Bulgarian Social Democratic Party on this remote summit. But the spiritual history of this mountain runs deeper. The national awakening that eventually led to Bulgarian liberation began in seventeen-sixty-two, when the monk Paisii Hilendarski completed his Slavo-Bulgarian History at Hilendar Monastery on Mount Athos — a handwritten book that documented Bulgarian royal history, challenged the prevailing Greek cultural dominance, and asked Bulgarians to remember who they were. His question echoed across the generations that followed.",
+      },
+      {
+        title: "Building the Monument",
+        intro: "The extraordinary construction effort that raised a palace on a mountain peak.",
+        duration: "~1 min",
+        script: "The construction of Buzludzha was a remarkable feat. Workers and volunteers dragged building materials up a mountain road specially built for the project. The circular main hall, sixty metres in diameter, was decorated with more than seven thousand square metres of mosaic artwork depicting Bulgarian history and communist visions of the future. The mosaics required years of work by dozens of artists. Inside the tower, an enormous red star was lit — visible from the valleys far below. When it was inaugurated on August twenty-third, nineteen-eighty-one, it stood as the most ambitious monument the Bulgarian Communist regime had ever created.",
+      },
+      {
+        title: "After the Fall",
+        intro: "The monument's abandonment, decay, and the fight to save it.",
+        duration: "~1 min",
+        script: "When communism collapsed in Bulgaria in nineteen-eighty-nine, Buzludzha was stripped of its valuables, abandoned, and left to the mountain winters. Roof sections collapsed. The interior mosaics, which had survived construction and decades of ceremonies, were vandalized and stripped. Today the building is officially off-limits, though it draws thousands of visitors annually — photographers, urban explorers, architects, and the curious — who come to experience one of Europe's most haunting ruins. A preservation campaign called the Buzludzha Project has been working to stabilize the structure. Whatever you think of its political origins, the building itself is a masterpiece of brutalist architecture that deserves to survive.",
+      },
+    ],
+    virtualTour: [
+      {
+        title: "The Buzludzha Project",
+        description: "The official preservation campaign website — with drone photography, documentation of the monument's condition, and the ongoing international effort to save Buzludzha for future generations.",
+        imageUrl: IMG.ruins2,
+        link: "https://buzludzha.com/",
+      },
+      {
+        title: "Buzludzha — Satellite View",
+        description: "The full Buzludzha peak from above — the circular monument, the entrance tower, the mountain road, and the extraordinary Balkan mountain landscape surrounding it.",
+        imageUrl: IMG.oldcity,
+        link: "https://www.google.com/maps/@42.7356,25.3948,17z/data=!3m1!1e3",
       },
     ],
     quiz: [
@@ -681,7 +656,7 @@ export const LEARNING: Record<string, MonumentLearning> = {
         explanation: "Hilendar (Chilandar) is the Serbian-Bulgarian monastery on Mount Athos, founded in 1198. Its archives contained the historical documents about Bulgarian tsars and saints that Paisii used as primary sources.",
       },
       {
-        question: "Bulgaria was liberated from Ottoman rule following the Russo-Turkish War. In which year was Bulgarian independence established?",
+        question: "Bulgaria was liberated from Ottoman rule following the Russo-Turkish War. In which year?",
         options: ["1844", "1878", "1908", "1944"],
         correctIndex: 1,
         explanation: "Bulgaria was liberated in 1878 following the Russo-Turkish War of 1877-78. The Treaty of San Stefano established a Bulgarian state — 116 years after Paisii wrote his history.",
@@ -693,10 +668,10 @@ export const LEARNING: Record<string, MonumentLearning> = {
         explanation: "The Buzludzha Peak was where Dimitar Blagoev founded the Bulgarian Social Democratic Party in 1891. The monument, designed by Georgi Stoilov, commemorated this founding.",
       },
       {
-        question: "Vasil Levski, organizer of Bulgarian revolutionary cells in the 1860s–70s, was known by which title?",
+        question: "Vasil Levski, organizer of Bulgarian revolutionary cells, was known by which title?",
         options: ["The Father of Bulgaria", "The Apostle of Freedom", "The Lion of Bulgaria", "The Spirit of the Balkans"],
         correctIndex: 1,
-        explanation: "Vasil Levski earned the epithet 'Apostol na svobodata' (Apostle of Freedom) for his tireless organization of revolutionary committees throughout Bulgaria. He was executed in Sofia on February 19, 1873.",
+        explanation: "Vasil Levski earned the epithet 'Apostol na svobodata' (Apostle of Freedom) for his tireless organization of revolutionary committees. He was executed in Sofia on February 19, 1873.",
       },
     ],
     badges: [

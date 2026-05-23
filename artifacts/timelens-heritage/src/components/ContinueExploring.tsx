@@ -1,58 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Play, BookOpen, FileText, Compass, ExternalLink, ArrowRight,
+  FileText, Headphones, Globe, Compass, ExternalLink,
+  Play, Square, ArrowRight,
 } from "lucide-react";
 import { Monument } from "@/data/monuments";
-import { LEARNING, RecItem } from "@/data/recommendations";
+import { LEARNING, RecItem, AudioGuideItem, VirtualTourItem } from "@/data/recommendations";
 
 interface ContinueExploringProps {
   monument: Monument;
 }
 
-type Tab = "videos" | "books" | "articles";
+type Tab = "articles" | "audioGuide" | "virtualTour";
 
-interface TabConfig {
-  id: Tab;
-  label: string;
-  Icon: React.FC<{ className?: string }>;
-  buttonLabel: string;
-  buttonColor: string;
-}
-
-const TABS: TabConfig[] = [
-  {
-    id: "videos",
-    label: "Videos",
-    Icon: Play,
-    buttonLabel: "Watch Video",
-    buttonColor: "bg-red-600 hover:bg-red-500",
-  },
-  {
-    id: "books",
-    label: "Books",
-    Icon: BookOpen,
-    buttonLabel: "Read Book",
-    buttonColor: "bg-amber-600 hover:bg-amber-500",
-  },
-  {
-    id: "articles",
-    label: "Articles",
-    Icon: FileText,
-    buttonLabel: "Read Article",
-    buttonColor: "bg-blue-600 hover:bg-blue-500",
-  },
-];
-
-function SourceBadge({ source }: { source: string }) {
-  return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground/70 bg-white/5 border border-white/8 rounded-full px-2 py-0.5">
-      {source}
-    </span>
-  );
-}
-
-function RecCard({ item, tab }: { item: RecItem; tab: TabConfig }) {
+// ─── Article Card ────────────────────────────────────────────────────────────
+function ArticleCard({ item }: { item: RecItem }) {
   return (
     <a
       href={item.link}
@@ -60,61 +22,39 @@ function RecCard({ item, tab }: { item: RecItem; tab: TabConfig }) {
       rel="noopener noreferrer"
       className="group flex flex-col rounded-2xl border border-white/8 bg-card/40 overflow-hidden
                  transition-all duration-300
-                 hover:-translate-y-1.5
-                 hover:border-primary/35
-                 hover:shadow-xl hover:shadow-primary/12
-                 hover:bg-card/60"
+                 hover:-translate-y-1.5 hover:border-primary/35
+                 hover:shadow-xl hover:shadow-primary/12 hover:bg-card/60"
     >
       {/* Thumbnail */}
-      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary/15 to-background/90 shrink-0">
+      <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/15 to-background/90 shrink-0">
         <img
           src={item.imageUrl}
           alt={item.title}
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover
-                     transition-transform duration-500 group-hover:scale-107"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
-        {/* Gold shimmer on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
         <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/6 transition-colors duration-300" />
-
-        {/* Play button for videos */}
-        {tab.id === "videos" && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center
-                         bg-black/50 border border-white/30
-                         group-hover:bg-white group-hover:border-transparent
-                         transition-all duration-300 shadow-xl"
-            >
-              <Play className="w-5 h-5 text-white/90 group-hover:text-black fill-current ml-0.5 transition-colors duration-300" />
-            </div>
-          </div>
-        )}
+        <span className="absolute bottom-2.5 right-2.5 text-[10px] font-semibold text-white bg-blue-600 rounded-md px-2 py-0.5 flex items-center gap-1">
+          <FileText className="w-2.5 h-2.5" /> Article
+        </span>
       </div>
-
       {/* Body */}
-      <div className="flex flex-col flex-1 p-5 gap-3">
-        <div className="flex flex-col gap-1.5 flex-1">
-          <h4 className="font-serif text-[15px] font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary/90 transition-colors duration-200">
-            {item.title}
-          </h4>
-          <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-3">
-            {item.description}
-          </p>
-        </div>
-
+      <div className="flex flex-col flex-1 p-4 gap-2.5">
+        <h4 className="font-serif text-[14px] font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary/90 transition-colors duration-200">
+          {item.title}
+        </h4>
+        <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-3 flex-1">
+          {item.description}
+        </p>
         <div className="flex items-center justify-between gap-3 pt-1">
-          <SourceBadge source={item.source} />
-
-          {/* CTA button */}
-          <span
-            className={`inline-flex items-center gap-1.5 text-[12px] font-semibold text-white rounded-full px-3.5 py-1.5 transition-all duration-200 shrink-0 ${tab.buttonColor}`}
-          >
-            <tab.Icon className="w-3 h-3" />
-            {tab.buttonLabel}
-            <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+          <span className="text-[10px] font-medium text-muted-foreground/60 bg-white/5 border border-white/8 rounded-full px-2 py-0.5">
+            {item.source}
+          </span>
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-full px-3 py-1 transition-colors shrink-0">
+            <FileText className="w-2.5 h-2.5" />
+            Read Article
+            <ArrowRight className="w-2.5 h-2.5 opacity-0 -translate-x-0.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
           </span>
         </div>
       </div>
@@ -122,19 +62,193 @@ function RecCard({ item, tab }: { item: RecItem; tab: TabConfig }) {
   );
 }
 
+// ─── Audio Waveform ───────────────────────────────────────────────────────────
+function AudioWaveform() {
+  const bars = Array.from({ length: 24 });
+  return (
+    <div className="flex items-end gap-0.5 h-7 mt-3 px-1">
+      {bars.map((_, i) => (
+        <motion.div
+          key={i}
+          className="flex-1 bg-primary/70 rounded-full"
+          animate={{ height: ["3px", `${8 + Math.random() * 16}px`, "3px"] }}
+          transition={{
+            duration: 0.5 + Math.random() * 0.4,
+            repeat: Infinity,
+            delay: i * 0.04,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Audio Guide Card ─────────────────────────────────────────────────────────
+function AudioGuideCard({
+  item,
+  isPlaying,
+  onToggle,
+  index,
+}: {
+  item: AudioGuideItem;
+  isPlaying: boolean;
+  onToggle: () => void;
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.26 }}
+      className={`rounded-2xl border p-5 transition-all duration-300 ${
+        isPlaying
+          ? "border-primary/50 bg-primary/10 shadow-lg shadow-primary/15"
+          : "border-white/8 bg-card/40 hover:border-primary/25 hover:bg-card/60"
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        {/* Play / Stop button */}
+        <button
+          onClick={onToggle}
+          aria-label={isPlaying ? "Stop audio" : "Play audio"}
+          className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+            isPlaying
+              ? "bg-primary text-black shadow-[0_0_16px_rgba(201,162,39,0.5)] hover:scale-95"
+              : "bg-primary/20 border border-primary/40 text-primary hover:bg-primary hover:text-black hover:scale-105"
+          }`}
+        >
+          {isPlaying ? (
+            <Square className="w-4 h-4 fill-current" />
+          ) : (
+            <Play className="w-4 h-4 fill-current ml-0.5" />
+          )}
+        </button>
+
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] text-primary/50 font-mono uppercase tracking-widest">
+              {item.duration}
+            </span>
+            {isPlaying && (
+              <span className="text-[10px] text-primary font-medium animate-pulse">
+                ● Now playing
+              </span>
+            )}
+          </div>
+          <h4 className="font-serif text-[14px] font-semibold text-foreground leading-snug">
+            {item.title}
+          </h4>
+          <p className="text-[12px] text-muted-foreground mt-1 leading-relaxed">
+            {item.intro}
+          </p>
+        </div>
+      </div>
+
+      {isPlaying && <AudioWaveform />}
+    </motion.div>
+  );
+}
+
+// ─── Virtual Tour Card ────────────────────────────────────────────────────────
+function VirtualTourCard({ item, index }: { item: VirtualTourItem; index: number }) {
+  return (
+    <motion.a
+      href={item.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.26 }}
+      className="group flex flex-col rounded-2xl border border-white/8 bg-card/40 overflow-hidden
+                 transition-all duration-300
+                 hover:-translate-y-1.5 hover:border-primary/40
+                 hover:shadow-xl hover:shadow-primary/15 hover:bg-card/60"
+    >
+      {/* Image */}
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/15 to-background/90 shrink-0">
+        <img
+          src={item.imageUrl}
+          alt={item.title}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/7 transition-colors duration-300" />
+        {/* Globe icon overlay */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full bg-black/40 border border-white/20 group-hover:bg-primary/90 group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-xl">
+            <Globe className="w-6 h-6 text-white/70 group-hover:text-black transition-colors duration-300" />
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-col flex-1 p-5 gap-3">
+        <div className="flex-1">
+          <h4 className="font-serif text-[15px] font-semibold text-foreground leading-snug mb-2 group-hover:text-primary/90 transition-colors duration-200">
+            {item.title}
+          </h4>
+          <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-3">
+            {item.description}
+          </p>
+        </div>
+        {/* CTA */}
+        <span className="w-full inline-flex items-center justify-center gap-2 text-[13px] font-semibold text-black bg-primary hover:bg-primary/90 rounded-xl py-2.5 transition-all duration-200 mt-1">
+          <Globe className="w-4 h-4" />
+          Open Virtual Tour
+          <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+        </span>
+      </div>
+    </motion.a>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export function ContinueExploring({ monument }: ContinueExploringProps) {
-  const [activeTab, setActiveTab] = useState<Tab>("videos");
+  const [activeTab, setActiveTab] = useState<Tab>("articles");
+  const [playing, setPlaying] = useState<string | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Cleanup TTS on unmount
+  useEffect(() => {
+    return () => { window.speechSynthesis.cancel(); };
+  }, []);
+
+  // Stop TTS when leaving audio tab
+  useEffect(() => {
+    if (activeTab !== "audioGuide") {
+      window.speechSynthesis.cancel();
+      setPlaying(null);
+    }
+  }, [activeTab]);
+
+  function togglePlay(title: string, script: string) {
+    if (playing === title) {
+      window.speechSynthesis.cancel();
+      setPlaying(null);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(script);
+    utt.rate = 0.88;
+    utt.pitch = 1.05;
+    utt.onend = () => setPlaying(null);
+    utt.onerror = () => setPlaying(null);
+    utteranceRef.current = utt;
+    setPlaying(title);
+    window.speechSynthesis.speak(utt);
+  }
+
   const data = LEARNING[monument.id];
   if (!data) return null;
 
-  const tabData: Record<Tab, RecItem[]> = {
-    videos:   data.videos,
-    books:    data.books,
-    articles: data.articles,
-  };
-
-  const activeItems = tabData[activeTab];
-  const activeTabConfig = TABS.find((t) => t.id === activeTab)!;
+  const TABS: { id: Tab; label: string; Icon: React.FC<{ className?: string }> }[] = [
+    { id: "articles",    label: "Articles",     Icon: FileText   },
+    { id: "audioGuide",  label: "Audio Guide",  Icon: Headphones },
+    { id: "virtualTour", label: "Virtual Tour", Icon: Globe      },
+  ];
 
   return (
     <motion.section
@@ -144,14 +258,18 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
       className="space-y-6"
     >
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
           <Compass className="w-4 h-4 text-primary" />
         </div>
         <div>
           <h2 className="font-serif text-xl font-bold text-foreground">Continue Exploring</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Deepen your understanding of {monument.name} through videos, books, and articles
+          <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
+            <span className="text-primary/60">Read</span>
+            <span className="text-white/20">·</span>
+            <span className="text-primary/60">Listen</span>
+            <span className="text-white/20">·</span>
+            <span className="text-primary/60">Explore</span>
           </p>
         </div>
       </div>
@@ -174,7 +292,7 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
         ))}
       </div>
 
-      {/* Cards */}
+      {/* Content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
@@ -182,22 +300,47 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -10 }}
           transition={{ duration: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
         >
-          {activeItems.map((item, i) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07, duration: 0.26 }}
-            >
-              <RecCard item={item} tab={activeTabConfig} />
-            </motion.div>
-          ))}
+          {/* Articles */}
+          {activeTab === "articles" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {data.articles.map((item) => (
+                <ArticleCard key={item.title} item={item} />
+              ))}
+            </div>
+          )}
+
+          {/* Audio Guide */}
+          {activeTab === "audioGuide" && (
+            <div className="space-y-3">
+              <p className="text-[12px] text-muted-foreground/60 flex items-center gap-1.5 pb-1">
+                <Headphones className="w-3.5 h-3.5" />
+                Museum-style narration using your device's built-in voice. Press play on any track.
+              </p>
+              {data.audioGuide.map((item, i) => (
+                <AudioGuideCard
+                  key={item.title}
+                  item={item}
+                  isPlaying={playing === item.title}
+                  onToggle={() => togglePlay(item.title, item.script)}
+                  index={i}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Virtual Tour */}
+          {activeTab === "virtualTour" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {data.virtualTour.map((item, i) => (
+                <VirtualTourCard key={item.title} item={item} index={i} />
+              ))}
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
 
-      <p className="text-[11px] text-muted-foreground/40 text-center flex items-center justify-center gap-1.5">
+      <p className="text-[11px] text-muted-foreground/35 text-center flex items-center justify-center gap-1.5">
         <ExternalLink className="w-3 h-3" />
         All links open in a new tab
       </p>
