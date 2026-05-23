@@ -10,6 +10,8 @@ import { AnalysisPanel } from "@/components/AnalysisPanel";
 import { TimeMachine } from "@/components/TimeMachine";
 import { TalkToHistory } from "@/components/TalkToHistory";
 import { MonumentMap } from "@/components/MonumentMap";
+import { ContinueExploring } from "@/components/ContinueExploring";
+import { HistoricalQuiz } from "@/components/HistoricalQuiz";
 
 import { MONUMENTS, Monument } from "@/data/monuments";
 import { saveToGallery } from "@/pages/Gallery";
@@ -177,6 +179,14 @@ export default function Explore() {
 
               <div ref={guideRef} className="pt-8 border-t border-white/5 scroll-mt-20">
                 <TalkToHistory monument={result.monument} />
+              </div>
+
+              <div className="pt-8 border-t border-white/5">
+                <ContinueExploring monument={result.monument} />
+              </div>
+
+              <div className="pt-8 border-t border-white/5 pb-8">
+                <HistoricalQuiz monument={result.monument} />
               </div>
             </motion.div>
           )}
