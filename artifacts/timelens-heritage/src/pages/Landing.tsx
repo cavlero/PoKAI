@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, History, ScanEye, BookOpen,
-  Map, MessageSquare, UploadCloud,
+  Map, MessageSquare, UploadCloud, Languages,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -12,32 +12,43 @@ const FEATURES = [
     icon: <ScanEye className="w-7 h-7 text-primary" />,
     title: "AI Heritage Recognition",
     desc: "Upload any photo of a monument, ruin, or heritage object. The AI identifies it and pulls rich historical context instantly.",
+    href: "/explore",
   },
   {
     icon: <History className="w-7 h-7 text-primary" />,
     title: "Time Machine Slider",
     desc: "Drag the slider to reveal a historical reconstruction of the site at its peak — side by side with what it looks like today.",
+    href: null,
   },
   {
     icon: <MessageSquare className="w-7 h-7 text-primary" />,
     title: "Talk to History",
     desc: "Choose a historical figure and hold a real conversation. Hear their voice, ask questions, and experience history firsthand.",
+    href: null,
+  },
+  {
+    icon: <Languages className="w-7 h-7 text-primary" />,
+    title: "Scan & Translate",
+    desc: "Point your camera at any Bulgarian museum sign, historical board, or book page — and read it in English in seconds.",
+    href: "/scan-translate",
   },
   {
     icon: <Map className="w-7 h-7 text-primary" />,
     title: "Interactive Map",
     desc: "Pinpoint the exact location of every identified monument. Open it directly in your map application with one tap.",
+    href: null,
   },
   {
     icon: <BookOpen className="w-7 h-7 text-primary" />,
     title: "Gallery of Discoveries",
     desc: "Every heritage object you analyze is saved automatically to your personal historical gallery — your own digital museum.",
+    href: "/gallery",
   },
 ];
 
 function FeatureCard({ feat, i }: { feat: (typeof FEATURES)[0]; i: number }) {
   const [hovered, setHovered] = useState(false);
-  return (
+  const card = (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -46,17 +57,24 @@ function FeatureCard({ feat, i }: { feat: (typeof FEATURES)[0]; i: number }) {
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
       animate={hovered ? { y: -10, scale: 1.02 } : { y: 0, scale: 1 }}
-      className={`relative bg-background/50 border rounded-2xl p-8 backdrop-blur-sm transition-shadow cursor-default ${
-        hovered ? "border-primary/40 shadow-[0_0_40px_rgba(201,162,39,0.15)]" : "border-white/5"
-      }`}
+      className={`relative bg-background/50 border rounded-2xl p-8 backdrop-blur-sm transition-shadow ${
+        feat.href ? "cursor-pointer" : "cursor-default"
+      } ${hovered ? "border-primary/40 shadow-[0_0_40px_rgba(201,162,39,0.15)]" : "border-white/5"}`}
     >
       <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5 border border-primary/20">
         {feat.icon}
       </div>
       <h3 className="text-xl font-serif text-foreground mb-3">{feat.title}</h3>
       <p className="text-muted-foreground leading-relaxed text-sm">{feat.desc}</p>
+      {feat.href && (
+        <div className={`flex items-center gap-1 mt-4 text-xs font-medium transition-colors ${hovered ? "text-primary" : "text-muted-foreground/40"}`}>
+          <span>Open</span>
+          <ArrowRight className="w-3 h-3" />
+        </div>
+      )}
     </motion.div>
   );
+  return feat.href ? <Link href={feat.href}>{card}</Link> : card;
 }
 
 export default function Landing() {
@@ -79,6 +97,12 @@ export default function Landing() {
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary text-sm">
                 <BookOpen className="w-4 h-4 mr-1.5" />
                 Gallery
+              </Button>
+            </Link>
+            <Link href="/scan-translate">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary text-sm hidden sm:flex">
+                <Languages className="w-4 h-4 mr-1.5" />
+                Scan & Translate
               </Button>
             </Link>
             <Link href="/explore">
