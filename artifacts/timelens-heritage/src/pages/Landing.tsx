@@ -5,6 +5,7 @@ import {
   ArrowRight, History, ScanEye, BookOpen,
   Map, MessageSquare, UploadCloud, Languages,
 } from "lucide-react";
+import { HistoricalMediaCard } from "@/components/HistoricalMediaCard";
 import { motion } from "framer-motion";
 
 const FEATURES = [
@@ -168,6 +169,29 @@ export default function Landing() {
               <FeatureCard key={feat.title} feat={feat} i={i} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Bring History to Life */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[120%] rounded-full bg-primary/5 blur-[140px]" />
+        </div>
+        <div className="max-w-3xl mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <p className="text-[11px] text-primary/60 uppercase tracking-[0.3em] font-semibold mb-3">Historical Archive</p>
+            <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-4">Bring History to Life</h2>
+            <p className="text-muted-foreground text-sm max-w-md mx-auto">
+              Hover over the card to see history animate. Click to open the full archive with description.
+            </p>
+            <div className="w-16 h-0.5 bg-primary mx-auto rounded-full mt-6" />
+          </motion.div>
+          <HistoricalMediaCard />
         </div>
       </section>
 
