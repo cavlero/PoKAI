@@ -3,14 +3,15 @@ import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, BookOpen, Upload, ScanText, Languages,
-  Headphones, CheckCircle2, Loader2, Copy, Volume2,
+  CheckCircle2, Loader2, Copy, Volume2,
   VolumeX, Save, RotateCcw, Info, FileImage, Sparkles,
-  Flag,
+  Flag, AlertCircle, Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createWorker } from "tesseract.js";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Phase = "upload" | "scanning" | "results";
+type Phase = "upload" | "scanning" | "results" | "error";
 
 type TranslationResult = {
   detectedLanguage: string;
@@ -21,140 +22,120 @@ type TranslationResult = {
   confidence: number;
 };
 
-// ─── Demo Data ────────────────────────────────────────────────────────────────
-const DEMO_SAMPLES: TranslationResult[] = [
-  {
-    detectedLanguage: "Bulgarian (bg)",
-    sourceType: "Museum information board",
-    subject: "Tsarevets Fortress, Veliko Tarnovo",
-    confidence: 96,
-    originalText: `ЦАРЕВЕЦ — СРЕДНОВЕКОВНА КРЕПОСТ
-Велико Търново, България
+// ─── Language name map ────────────────────────────────────────────────────────
+const LANG_NAMES: Record<string, string> = {
+  bg: "Bulgarian", ru: "Russian", en: "English", el: "Greek",
+  sr: "Serbian",   mk: "Macedonian", de: "German", fr: "French",
+  it: "Italian",   la: "Latin",  tr: "Turkish",  uk: "Ukrainian",
+  ro: "Romanian",  pl: "Polish",  cs: "Czech",    ar: "Arabic",
+};
 
-Крепостта Царевец е издигната на скалист хълм с площ от 4.2 хектара, заобиколен от три страни от река Янтра. По времето на Второто Българско царство (1185–1393) тя е служела за резиденция на царя и патриарха.
-
-Укреплението е имало 4 входни порти, от които 2 са запазени до днес. На върха на хълма се издига Патриаршеската катедрала, разрушена от турците и реставрирана в периода 1930–1981 г.
-
-Осветителното шоу „Звук и Светлина" се провежда всяко лято.`,
-    translatedText: `TSAREVETS — MEDIEVAL FORTRESS
-Veliko Tarnovo, Bulgaria
-
-The Tsarevets Fortress is built on a rocky hill covering 4.2 hectares, surrounded on three sides by the Yantra River. During the Second Bulgarian Empire (1185–1393), it served as the residence of the tsar and the patriarch.
-
-The fortification had 4 entrance gates, of which 2 survive to this day. At the top of the hill stands the Patriarchal Cathedral, destroyed by the Ottomans and restored between 1930 and 1981.
-
-The "Sound and Light" illumination show takes place every summer.`,
-  },
-  {
-    detectedLanguage: "Bulgarian (bg)",
-    sourceType: "Heritage site marker",
-    subject: "Madara Rider, UNESCO Heritage",
-    confidence: 94,
-    originalText: `МАДАРСКИ КОННИК
-Национален историко-археологически резерват
-
-Мадарският конник е уникален скален барелеф, изсечен в отвесна скала на около 23 метра над земята. Барелефът изобразява победоносен конник, пронизващ лъв с копие, с орел, летящ отпред.
-
-Паметникът се датира от края на VII — началото на IX в. и е включен в Списъка на световното наследство на ЮНЕСКО от 1979 г.
-
-Гравираните надписи в близост са на старогръцки и документират ранната история на Първото Българско царство.`,
-    translatedText: `THE MADARA RIDER
-National Historical-Archaeological Reserve
-
-The Madara Rider is a unique rock relief carved into a sheer cliff face approximately 23 meters above ground. The relief depicts a victorious horseman piercing a lion with a spear, with an eagle flying ahead of him.
-
-The monument dates from the late 7th to early 9th century and has been included on the UNESCO World Heritage List since 1979.
-
-The engraved inscriptions nearby are in Ancient Greek and document the early history of the First Bulgarian Empire.`,
-  },
-  {
-    detectedLanguage: "Bulgarian (bg)",
-    sourceType: "Monastery information board",
-    subject: "Rila Monastery, UNESCO Heritage",
-    confidence: 97,
-    originalText: `РИЛСКИ МАНАСТИР
-Основан от свети Иван Рилски (876–946 г.)
-
-Рилският манастир е най-голямото православно монашеско средище в България и едно от най-значимите на Балканския полуостров. Основан е от свети Иван Рилски в X в.
-
-Сегашният архитектурен ансамбъл датира от периода 1834–1837 г. и е дело на майстори от различни краища на страната. Централната черква носи името „Рождество Христово".
-
-От 1983 г. Рилският манастир е вписан в Списъка на световното наследство на ЮНЕСКО.`,
-    translatedText: `RILA MONASTERY
-Founded by Saint Ivan of Rila (876–946 AD)
-
-The Rila Monastery is the largest Orthodox monastic centre in Bulgaria and one of the most significant on the Balkan Peninsula. It was founded by Saint Ivan of Rila in the 10th century.
-
-The current architectural ensemble dates from 1834–1837 and was created by master craftsmen from across the country. The central church bears the name "Nativity of Christ."
-
-Since 1983, the Rila Monastery has been inscribed on the UNESCO World Heritage List.`,
-  },
-  {
-    detectedLanguage: "Bulgarian (bg)",
-    sourceType: "Historical manuscript / book page",
-    subject: "Medieval Bulgarian Chronicle",
-    confidence: 89,
-    originalText: `ЗА ОСНОВАВАНЕТО НА ВЕЛИКО ТЪРНОВО
-(Из „История на Търново", XIV в.)
-
-И в лето 1185, в деня Свети Димитър Солунски, братята Асен и Петър въстанаха против ромейското иго. Стъпиха на земята на предците си и провъзгласиха: „Тази земя е наша по право и по кръв."
-
-Събраха войска и настъпиха към Преслав. Царят ромейски, Исак Ангел, изпрати армии, но те бяха отбити три пъти.
-
-Търново стана столица на новото царство и славата на България се възроди.`,
-    translatedText: `ON THE FOUNDING OF VELIKO TARNOVO
-(From "History of Tarnovo," 14th century)
-
-And in the year 1185, on the feast of Saint Demetrius of Thessaloniki, the brothers Asen and Peter rose up against Byzantine rule. They stood on the land of their ancestors and proclaimed: "This land is ours by right and by blood."
-
-They gathered an army and advanced toward Preslav. The Byzantine emperor, Isaac Angelos, sent armies, but they were repelled three times.
-
-Tarnovo became the capital of the new kingdom and the glory of Bulgaria was reborn.`,
-  },
+// ─── Scan steps ───────────────────────────────────────────────────────────────
+type StepDef = { label: string; subLabel?: string; Icon: typeof ScanText };
+const SCAN_STEPS: StepDef[] = [
+  { label: "Loading OCR engine",       subLabel: "Downloading language models…", Icon: ScanText    },
+  { label: "Reading text from image",  subLabel: "Recognizing characters…",       Icon: BookOpen    },
+  { label: "Translating into English", subLabel: "Contacting translation service…", Icon: Languages },
+  { label: "Preparing result",         subLabel: "Almost done…",                  Icon: Upload      },
 ];
 
-const SCAN_STEPS: { label: string; Icon: typeof ScanText }[] = [
-  { label: "Detecting text in image...",     Icon: ScanText    },
-  { label: "Reading historical content...",  Icon: BookOpen    },
-  { label: "Translating into English...",    Icon: Languages   },
-  { label: "Preparing audio guide...",       Icon: Headphones  },
-];
-
-const STEP_DURATIONS = [900, 750, 850, 600];
-
-// ─── Future-ready OCR + Translation pipeline ──────────────────────────────────
-//
-// Currently: simulated demo using filename-based detection.
-//
-// To connect to a real API, replace this function with one of:
-//   - Google Cloud Vision API (text detection) + Google Translate API
-//   - OpenAI GPT-4o Vision: send imageDataUrl as a base64 message and ask to
-//     detect + translate text
-//   - Azure Computer Vision + Azure Translator
-//
-// The function signature and TranslationResult type are already API-ready.
-//
-async function performOCRAndTranslation(
-  _imageDataUrl: string,
-  fileName: string
-): Promise<TranslationResult> {
-  const lower = fileName.toLowerCase();
-  if (lower.includes("tsarevets") || lower.includes("tarnov") || lower.includes("царевец"))
-    return DEMO_SAMPLES[0];
-  if (lower.includes("madara") || lower.includes("мадара") || lower.includes("rider"))
-    return DEMO_SAMPLES[1];
-  if (lower.includes("rila") || lower.includes("рила") || lower.includes("monastery"))
-    return DEMO_SAMPLES[2];
-  if (lower.includes("chronicle") || lower.includes("aseni") || lower.includes("asen"))
-    return DEMO_SAMPLES[3];
-  return DEMO_SAMPLES[Math.floor(Math.random() * DEMO_SAMPLES.length)];
+// ─── Google Translate (unofficial, CORS-safe, no key needed) ──────────────────
+async function translateText(
+  text: string,
+): Promise<{ translated: string; langCode: string }> {
+  const url =
+    "https://translate.googleapis.com/translate_a/single" +
+    "?client=gtx&sl=auto&tl=en&dt=t&q=" +
+    encodeURIComponent(text);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Translation request failed");
+  const data = (await res.json()) as [[string, string][], unknown, string];
+  const translated = data[0].map((chunk) => chunk[0]).join("");
+  const langCode   = data[2] ?? "und";
+  return { translated, langCode };
 }
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
-function ScanProgress({ step }: { step: number }) {
+// ─── Real OCR + Translation pipeline ─────────────────────────────────────────
+async function runOCRAndTranslate(
+  imageDataUrl: string,
+  fileName: string,
+  onStep: (step: number) => void,
+  onOCRProgress: (pct: number) => void,
+): Promise<TranslationResult> {
+  // Step 0 — initialise Tesseract worker (downloads language packs if needed)
+  onStep(0);
+  const worker = await createWorker(["bul", "rus", "eng"], 1, {
+    logger: (m: { status: string; progress: number }) => {
+      if (
+        m.status === "loading tesseract core" ||
+        m.status === "initializing tesseract" ||
+        m.status === "loading language traineddata" ||
+        m.status === "initializing api"
+      ) {
+        onStep(0);
+      }
+      if (m.status === "recognizing text") {
+        onStep(1);
+        onOCRProgress(Math.round(m.progress * 100));
+      }
+    },
+  });
+
+  // Step 1 — run OCR (progress driven by logger above)
+  onStep(1);
+  const { data } = await worker.recognize(imageDataUrl);
+  await worker.terminate();
+
+  const rawText = data.text ?? "";
+  const originalText = rawText.trim().replace(/\n{3,}/g, "\n\n");
+  const confidence   = Math.round(data.confidence ?? 0);
+
+  if (originalText.length < 4) {
+    throw new Error(
+      "No readable text found in this image. " +
+      "Try a higher-resolution photo with clear, printed text.",
+    );
+  }
+
+  // Step 2 — translate
+  onStep(2);
+  let translatedText  = originalText;
+  let detectedLanguage = "Unknown";
+
+  try {
+    const { translated, langCode } = await translateText(originalText);
+    translatedText   = translated.trim().replace(/\n{3,}/g, "\n\n");
+    detectedLanguage = LANG_NAMES[langCode] ?? langCode.toUpperCase();
+    if (langCode === "en" || langCode === "und") {
+      translatedText = originalText;
+      detectedLanguage = "English";
+    }
+  } catch {
+    translatedText   = "(Translation unavailable — check your connection and try again.)";
+    detectedLanguage = "Unknown";
+  }
+
+  // Step 3 — wrap up
+  onStep(3);
+  await new Promise((r) => setTimeout(r, 400));
+
+  const subject = fileName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") || "Historical document";
+
+  return {
+    detectedLanguage,
+    originalText,
+    translatedText,
+    sourceType: "Uploaded document",
+    subject,
+    confidence,
+  };
+}
+
+// ─── ScanProgress ─────────────────────────────────────────────────────────────
+function ScanProgress({ step, ocrProgress }: { step: number; ocrProgress: number }) {
   return (
     <div className="w-full max-w-sm mx-auto space-y-2.5">
-      {SCAN_STEPS.map(({ label, Icon }, i) => {
+      {SCAN_STEPS.map(({ label, subLabel, Icon }, i) => {
         const isDone   = i < step;
         const isActive = i === step;
         return (
@@ -163,54 +144,79 @@ function ScanProgress({ step }: { step: number }) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.08 * i }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-400 ${
+            className={`flex flex-col gap-2 px-4 py-3 rounded-xl border transition-all duration-400 ${
               isActive ? "border-primary/40 bg-primary/8 shadow-[0_0_14px_rgba(201,162,39,0.12)]"
               : isDone  ? "border-green-500/25 bg-green-500/6"
               : "border-white/6 bg-white/2"
             }`}
           >
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border ${
-              isActive ? "bg-primary/15 border-primary/35"
-              : isDone  ? "bg-green-500/15 border-green-500/30"
-              : "bg-white/4 border-white/8"
-            }`}>
-              {isDone
-                ? <CheckCircle2 className="w-4 h-4 text-green-400" />
-                : <Icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-white/20"}`} />
-              }
+            <div className="flex items-center gap-3">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border ${
+                isActive ? "bg-primary/15 border-primary/35"
+                : isDone  ? "bg-green-500/15 border-green-500/30"
+                : "bg-white/4 border-white/8"
+              }`}>
+                {isDone
+                  ? <CheckCircle2 className="w-4 h-4 text-green-400" />
+                  : <Icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-white/20"}`} />
+                }
+              </div>
+              <span className={`text-sm flex-1 ${
+                isActive ? "text-foreground font-medium"
+                : isDone  ? "text-muted-foreground/50"
+                : "text-white/20"
+              }`}>{label}</span>
+              {isActive && (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <Loader2 className="w-4 h-4 text-primary/60" />
+                </motion.div>
+              )}
             </div>
-            <span className={`text-sm flex-1 ${
-              isActive ? "text-foreground font-medium"
-              : isDone  ? "text-muted-foreground/50"
-              : "text-white/20"
-            }`}>
-              {label}
-            </span>
-            {isActive && (
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              >
-                <Loader2 className="w-4 h-4 text-primary/60" />
-              </motion.div>
+
+            {/* OCR sub-progress bar */}
+            {isActive && i === 1 && ocrProgress > 0 && (
+              <div className="ml-11">
+                <div className="h-1 rounded-full bg-white/8 overflow-hidden">
+                  <motion.div
+                    className="h-full bg-primary/70 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${ocrProgress}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+                <p className="text-[10px] text-primary/50 mt-1">{ocrProgress}% recognized</p>
+              </div>
+            )}
+
+            {isActive && subLabel && !(i === 1 && ocrProgress > 0) && (
+              <p className="ml-11 text-[10px] text-muted-foreground/50">{subLabel}</p>
             )}
           </motion.div>
         );
       })}
+
+      <p className="text-center text-[10px] text-muted-foreground/35 pt-1">
+        First scan may take 20–30 s while language models download.
+      </p>
     </div>
   );
 }
 
+// ─── TextColumn ───────────────────────────────────────────────────────────────
 function TextColumn({
-  label, langBadge, text, dimmed,
+  label, langBadge, text, dimmed, actions,
 }: {
   label: string; langBadge: string; text: string; dimmed?: boolean;
+  actions?: React.ReactNode;
 }) {
   return (
     <div className={`flex flex-col gap-3 rounded-2xl border p-5 ${
       dimmed ? "border-white/8 bg-card/30" : "border-primary/20 bg-primary/4"
     }`}>
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{label}</span>
         <span className={`text-[10px] font-medium border rounded-full px-2 py-0.5 flex items-center gap-1 ${
           dimmed ? "border-white/12 text-muted-foreground/60 bg-white/4"
@@ -221,27 +227,31 @@ function TextColumn({
         </span>
       </div>
       <div className="h-px bg-white/6" />
-      <div className="overflow-y-auto max-h-72 pr-1 scrollbar-thin">
-        <p className="font-serif text-[13.5px] leading-[1.85] whitespace-pre-wrap text-foreground/85">
+      <div className="overflow-y-auto max-h-64 pr-1">
+        <p className="font-serif text-[13.5px] leading-[1.85] whitespace-pre-wrap text-foreground/85 break-words">
           {text}
         </p>
       </div>
+      {actions && <div className="pt-1 border-t border-white/6">{actions}</div>}
     </div>
   );
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function ScanTranslate() {
-  const [phase, setPhase]               = useState<Phase>("upload");
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [fileName, setFileName]         = useState("");
-  const [scanStep, setScanStep]         = useState(0);
-  const [result, setResult]             = useState<TranslationResult | null>(null);
-  const [isSpeaking, setIsSpeaking]     = useState(false);
-  const [copied, setCopied]             = useState(false);
-  const [saved, setSaved]               = useState(false);
-  const [isDragging, setIsDragging]     = useState(false);
-  const fileRef                         = useRef<HTMLInputElement>(null);
+  const [phase,          setPhase]          = useState<Phase>("upload");
+  const [uploadedImage,  setUploadedImage]  = useState<string | null>(null);
+  const [fileName,       setFileName]       = useState("");
+  const [scanStep,       setScanStep]       = useState(0);
+  const [ocrProgress,    setOCRProgress]    = useState(0);
+  const [result,         setResult]         = useState<TranslationResult | null>(null);
+  const [errorMsg,       setErrorMsg]       = useState("");
+  const [isSpeaking,     setIsSpeaking]     = useState(false);
+  const [copiedOrig,     setCopiedOrig]     = useState(false);
+  const [copiedTrans,    setCopiedTrans]     = useState(false);
+  const [saved,          setSaved]          = useState(false);
+  const [isDragging,     setIsDragging]     = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const processFile = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) return;
@@ -269,17 +279,25 @@ export default function ScanTranslate() {
     if (!uploadedImage) return;
     setPhase("scanning");
     setScanStep(0);
+    setOCRProgress(0);
+    setErrorMsg("");
 
-    for (let i = 0; i < SCAN_STEPS.length; i++) {
-      setScanStep(i);
-      await new Promise((r) => setTimeout(r, STEP_DURATIONS[i]));
+    try {
+      const ocr = await runOCRAndTranslate(
+        uploadedImage,
+        fileName,
+        setScanStep,
+        setOCRProgress,
+      );
+      setScanStep(SCAN_STEPS.length);
+      setResult(ocr);
+      await new Promise((r) => setTimeout(r, 300));
+      setPhase("results");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setErrorMsg(msg);
+      setPhase("error");
     }
-
-    const ocr = await performOCRAndTranslation(uploadedImage, fileName);
-    setScanStep(SCAN_STEPS.length);
-    setResult(ocr);
-    await new Promise((r) => setTimeout(r, 300));
-    setPhase("results");
   };
 
   const handleReadAloud = () => {
@@ -299,9 +317,8 @@ export default function ScanTranslate() {
     setIsSpeaking(true);
   };
 
-  const handleCopy = () => {
-    if (!result) return;
-    navigator.clipboard.writeText(result.translatedText).then(() => {
+  const copyText = (text: string, setCopied: (v: boolean) => void) => {
+    navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     });
@@ -327,15 +344,42 @@ export default function ScanTranslate() {
     setTimeout(() => setSaved(false), 2500);
   };
 
+  const handleExportTXT = () => {
+    if (!result) return;
+    const content = [
+      `TimeLens Heritage — Scan & Translate`,
+      `Document: ${result.subject}`,
+      `Detected language: ${result.detectedLanguage}`,
+      `OCR confidence: ${result.confidence}%`,
+      `Exported: ${new Date().toLocaleString()}`,
+      "",
+      "═══ ORIGINAL TEXT ═══",
+      result.originalText,
+      "",
+      "═══ ENGLISH TRANSLATION ═══",
+      result.translatedText,
+    ].join("\n");
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `${result.subject.replace(/\s+/g, "_")}_translation.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleReset = () => {
     speechSynthesis.cancel();
     setPhase("upload");
     setUploadedImage(null);
     setFileName("");
     setScanStep(0);
+    setOCRProgress(0);
     setResult(null);
+    setErrorMsg("");
     setIsSpeaking(false);
-    setCopied(false);
+    setCopiedOrig(false);
+    setCopiedTrans(false);
     setSaved(false);
   };
 
@@ -387,7 +431,7 @@ export default function ScanTranslate() {
               </motion.div>
               <h1 className="font-serif text-3xl font-bold text-foreground">Scan & Translate</h1>
               <p className="text-muted-foreground text-sm max-w-md mx-auto leading-relaxed">
-                Upload a photo of a museum sign, historical information board, book page, or ancient inscription — and read it in English instantly.
+                Upload a photo of a museum sign, historical board, book page, or inscription — the app reads the text and translates it to English, entirely in your browser.
               </p>
             </div>
 
@@ -409,6 +453,7 @@ export default function ScanTranslate() {
                 ref={fileRef}
                 type="file"
                 accept="image/*"
+                capture="environment"
                 className="sr-only"
                 onChange={handleFileInput}
               />
@@ -437,7 +482,7 @@ export default function ScanTranslate() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground/70">
-                      Drop a photo here, or click to browse
+                      Drop a photo here, or tap to browse / take a photo
                     </p>
                     <p className="text-xs text-muted-foreground/50 mt-1">
                       Museum signs · Information boards · Book pages · Inscriptions
@@ -446,6 +491,14 @@ export default function ScanTranslate() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Tips */}
+            <div className="rounded-xl border border-white/8 bg-white/2 p-4 flex gap-3 items-start">
+              <Info className="w-4 h-4 text-primary/50 shrink-0 mt-0.5" />
+              <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                <strong className="text-muted-foreground/80">Tips for best results:</strong> Use a well-lit, straight-on photo. Text should be at least 20px tall in the image. Avoid glare and motion blur. Supports Bulgarian, Russian, and English text.
+              </p>
             </div>
 
             {/* Start button */}
@@ -462,15 +515,15 @@ export default function ScanTranslate() {
                     className="h-14 px-12 text-lg rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_40px_rgba(201,162,39,0.30)] hover:shadow-[0_0_55px_rgba(201,162,39,0.45)] font-serif hover:scale-105 transition-all gap-3"
                   >
                     <ScanText className="w-5 h-5" />
-                    Start Translation
+                    Extract & Translate
                   </Button>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Info chips */}
+            {/* Capability chips */}
             <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground/50">
-              {["Bulgarian · Greek · Latin · Cyrillic", "Museum signs & plaques", "Book pages & manuscripts", "Instant English translation"].map((t) => (
+              {["Bulgarian · Russian · English", "Museum signs & plaques", "Book pages & manuscripts", "Runs fully in browser"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5 border border-white/8 rounded-full px-3 py-1 bg-white/3">
                   <Sparkles className="w-2.5 h-2.5 text-primary/40" />
                   {t}
@@ -491,142 +544,188 @@ export default function ScanTranslate() {
           >
             {/* Image with scan line */}
             {uploadedImage && (
-              <div className="relative w-48 h-32 rounded-xl overflow-hidden border border-primary/20 shrink-0">
+              <div className="relative w-48 h-36 rounded-xl overflow-hidden border border-primary/20 shrink-0">
                 <img src={uploadedImage} alt="Scanning" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
+                {/* scan line */}
                 <motion.div
-                  className="absolute left-0 right-0 h-0.5 bg-primary shadow-[0_0_10px_rgba(201,162,39,0.9)]"
-                  animate={{ top: ["0%", "100%", "0%"] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+                  className="absolute left-0 right-0 h-0.5 bg-primary/60 shadow-[0_0_8px_rgba(201,162,39,0.8)]"
+                  animate={{ top: ["10%", "90%", "10%"] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
                 />
-                <div className="absolute inset-0 border border-primary/20 rounded-xl" />
+                {/* corner brackets */}
+                {[["top-2 left-2","border-t-2 border-l-2"],["top-2 right-2","border-t-2 border-r-2"],
+                  ["bottom-2 left-2","border-b-2 border-l-2"],["bottom-2 right-2","border-b-2 border-r-2"]].map(([pos,brd]) => (
+                  <div key={pos} className={`absolute w-4 h-4 border-primary/60 ${pos} ${brd}`} />
+                ))}
               </div>
             )}
 
-            <div className="text-center space-y-2">
-              <p className="font-serif text-lg text-foreground">Scanning your image</p>
-              <p className="text-xs text-muted-foreground/50">Please wait while we process the text</p>
+            <div className="text-center space-y-1">
+              <h2 className="font-serif text-xl font-semibold text-foreground">Scanning Document</h2>
+              <p className="text-xs text-muted-foreground/60">Please wait — this runs entirely in your browser</p>
             </div>
 
-            <ScanProgress step={scanStep} />
-
-            {/* Progress bar */}
-            <div className="w-full max-w-sm">
-              <div className="h-1 bg-white/6 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-primary rounded-full"
-                  animate={{ width: `${Math.min(((scanStep) / SCAN_STEPS.length) * 100, 96)}%` }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                />
-              </div>
-            </div>
+            <ScanProgress step={scanStep} ocrProgress={ocrProgress} />
           </motion.div>
         )}
 
-        {/* ══ RESULTS ═════════════════════════════════════════════════════════ */}
+        {/* ══ ERROR ════════════════════════════════════════════════════════ */}
+        {phase === "error" && (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="max-w-lg mx-auto px-5 py-20 flex flex-col items-center gap-8 text-center"
+          >
+            <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/25 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-red-400" />
+            </div>
+            <div>
+              <h2 className="font-serif text-xl font-semibold text-foreground mb-3">Scan Failed</h2>
+              <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-sm">{errorMsg}</p>
+            </div>
+            <Button
+              onClick={handleReset}
+              className="rounded-full px-8 gap-2 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Try Another Image
+            </Button>
+          </motion.div>
+        )}
+
+        {/* ══ RESULTS ══════════════════════════════════════════════════════ */}
         {phase === "results" && result && (
           <motion.div
             key="results"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-5xl mx-auto px-5 py-10 space-y-8"
+            exit={{ opacity: 0 }}
+            className="max-w-5xl mx-auto px-5 py-10 flex flex-col gap-7"
           >
-            {/* Result header */}
-            <div className="flex flex-col sm:flex-row sm:items-start gap-5">
-              {uploadedImage && (
-                <div className="w-20 h-14 rounded-lg overflow-hidden border border-white/10 shrink-0">
-                  <img src={uploadedImage} alt="Source" className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-green-400" />
-                  <span className="text-sm font-semibold text-green-400">Translation Complete</span>
-                  <span className="text-[10px] border border-primary/25 text-primary/70 bg-primary/8 rounded-full px-2 py-0.5">
-                    {result.confidence}% confidence
-                  </span>
-                </div>
-                <h2 className="font-serif text-xl text-foreground font-bold">{result.subject}</h2>
-                <p className="text-xs text-muted-foreground mt-1">{result.sourceType}</p>
+            {/* Header row */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-[10px] text-primary/50 uppercase tracking-widest font-semibold mb-1">Scan complete</p>
+                <h2 className="font-serif text-xl font-bold text-foreground capitalize">{result.subject}</h2>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-[11px] border border-white/12 bg-white/4 rounded-full px-3 py-1 text-muted-foreground flex items-center gap-1.5">
+                  <Flag className="w-3 h-3 text-primary/50" />
+                  {result.detectedLanguage}
+                </span>
+                <span className="text-[11px] border border-white/12 bg-white/4 rounded-full px-3 py-1 text-muted-foreground">
+                  {result.confidence}% confidence
+                </span>
+                <span className="text-[11px] border border-white/12 bg-white/4 rounded-full px-3 py-1 text-muted-foreground">
+                  {result.sourceType}
+                </span>
               </div>
             </div>
 
-            {/* Two-column text */}
+            {/* Uploaded image thumbnail */}
+            {uploadedImage && (
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-card/30">
+                <div className="w-20 h-14 rounded-lg overflow-hidden shrink-0 border border-white/10">
+                  <img src={uploadedImage} alt="Source" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-foreground/80 truncate max-w-xs">{fileName}</p>
+                  <p className="text-[11px] text-muted-foreground/50 mt-0.5">Source image</p>
+                </div>
+              </div>
+            )}
+
+            {/* Two-column text results */}
             <div className="grid md:grid-cols-2 gap-5">
               <TextColumn
-                label="Detected Text"
+                label="Original text"
                 langBadge={result.detectedLanguage}
                 text={result.originalText}
                 dimmed
+                actions={
+                  <button
+                    onClick={() => copyText(result.originalText, setCopiedOrig)}
+                    className="flex items-center gap-1.5 text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                  >
+                    {copiedOrig
+                      ? <><CheckCircle2 className="w-3.5 h-3.5 text-green-400" /> Copied!</>
+                      : <><Copy className="w-3.5 h-3.5" /> Copy original</>
+                    }
+                  </button>
+                }
               />
               <TextColumn
-                label="English Translation"
-                langBadge="English (en)"
+                label="English translation"
+                langBadge="English"
                 text={result.translatedText}
+                actions={
+                  <button
+                    onClick={() => copyText(result.translatedText, setCopiedTrans)}
+                    className="flex items-center gap-1.5 text-[11px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                  >
+                    {copiedTrans
+                      ? <><CheckCircle2 className="w-3.5 h-3.5 text-green-400" /> Copied!</>
+                      : <><Copy className="w-3.5 h-3.5" /> Copy translation</>
+                    }
+                  </button>
+                }
               />
             </div>
 
-            {/* Action buttons */}
-            <div className="flex flex-wrap gap-3">
+            {/* Action bar */}
+            <div className="flex flex-wrap gap-3 pt-1">
               <Button
                 onClick={handleReadAloud}
-                className={`rounded-full gap-2 ${
-                  isSpeaking
-                    ? "bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                }`}
+                variant="outline"
+                size="sm"
+                className="rounded-full gap-2 border-white/12 hover:border-primary/30 hover:bg-primary/6 text-sm"
               >
-                {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                {isSpeaking ? "Stop Reading" : "Read Aloud"}
+                {isSpeaking
+                  ? <><VolumeX className="w-4 h-4" /> Stop</>
+                  : <><Volume2 className="w-4 h-4" /> Read Aloud</>
+                }
               </Button>
 
               <Button
-                variant="outline"
-                onClick={handleCopy}
-                className={`rounded-full gap-2 transition-all ${
-                  copied ? "border-green-500/40 text-green-400 bg-green-500/8" : "border-white/15 hover:bg-white/5"
-                }`}
-              >
-                {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? "Copied!" : "Copy Translation"}
-              </Button>
-
-              <Button
-                variant="outline"
                 onClick={handleSave}
-                className={`rounded-full gap-2 transition-all ${
-                  saved ? "border-green-500/40 text-green-400 bg-green-500/8" : "border-white/15 hover:bg-white/5"
-                }`}
-              >
-                {saved ? <CheckCircle2 className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-                {saved ? "Saved!" : "Save to Gallery"}
-              </Button>
-            </div>
-
-            {/* Future-ready notice */}
-            <div className="rounded-xl border border-white/8 bg-white/3 p-4 flex items-start gap-3">
-              <Info className="w-4 h-4 text-primary/50 shrink-0 mt-0.5" />
-              <div className="text-xs text-muted-foreground/60 leading-relaxed">
-                <span className="font-semibold text-muted-foreground/80 block mb-0.5">Demo mode</span>
-                This prototype uses simulated OCR. To enable live translation of any image, connect a
-                vision API such as <span className="text-primary/60">Google Cloud Vision + Translate</span> or{" "}
-                <span className="text-primary/60">OpenAI GPT-4o Vision</span> to the{" "}
-                <code className="text-primary/60">performOCRAndTranslation</code> function in{" "}
-                <code className="text-primary/60">ScanTranslate.tsx</code>.
-              </div>
-            </div>
-
-            {/* Translate another */}
-            <div className="flex justify-center pt-2">
-              <Button
                 variant="outline"
-                onClick={handleReset}
-                className="border-white/15 hover:bg-white/5 rounded-full gap-2 text-muted-foreground"
+                size="sm"
+                className="rounded-full gap-2 border-white/12 hover:border-primary/30 hover:bg-primary/6 text-sm"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                Translate Another Image
+                {saved
+                  ? <><CheckCircle2 className="w-4 h-4 text-green-400" /> Saved!</>
+                  : <><Save className="w-4 h-4" /> Save as Draft</>
+                }
               </Button>
+
+              <Button
+                onClick={handleExportTXT}
+                variant="outline"
+                size="sm"
+                className="rounded-full gap-2 border-white/12 hover:border-primary/30 hover:bg-primary/6 text-sm"
+              >
+                <Download className="w-4 h-4" />
+                Export as TXT
+              </Button>
+
+              <Button
+                onClick={handleReset}
+                variant="ghost"
+                size="sm"
+                className="rounded-full gap-2 text-muted-foreground/60 hover:text-muted-foreground text-sm ml-auto"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Scan Another
+              </Button>
+            </div>
+
+            {/* Footer note */}
+            <div className="flex items-start gap-2 text-[11px] text-muted-foreground/35 pt-2 border-t border-white/5">
+              <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              <span>OCR powered by Tesseract.js · Translation by Google Translate · All processing runs in your browser — no data is sent to our servers.</span>
             </div>
           </motion.div>
         )}
