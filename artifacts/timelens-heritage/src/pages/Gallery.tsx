@@ -122,7 +122,7 @@ export default function Gallery() {
                   Your Discoveries
                 </h2>
                 <p className="text-muted-foreground mt-1">
-                  {entries.length} monument{entries.length !== 1 ? "s" : ""} explored
+                  {entries.length} text{entries.length !== 1 ? "s" : ""} added
                 </p>
               </div>
               <Link href="/explore">

@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle } from "lucide-react";
 
 const STEPS = [
-  { label: "Scanning visual features...",             progress: 10 },
-  { label: "Detecting architectural elements...",     progress: 26 },
-  { label: "Comparing with heritage database...",     progress: 45 },
-  { label: "Searching historical archives...",        progress: 63 },
-  { label: "Matching historical patterns...",         progress: 81 },
-  { label: "Generating historical interpretation...", progress: 95 },
+  { label: "Reading image...",              progress: 12 },
+  { label: "Detecting Cyrillic script...",  progress: 28 },
+  { label: "Extracting text...",            progress: 46 },
+  { label: "Sending to Gemini AI...",       progress: 62 },
+  { label: "Translating to English...",     progress: 80 },
+  { label: "Indexing document...",          progress: 92 },
 ];
 
 const STEP_DURATION = 750;
@@ -86,14 +85,12 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
             }}
           />
 
-          {/* Scan beam */}
-          {!complete && (
-            <motion.div
-              animate={{ top: ["0%", "100%", "0%"] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
-              className="absolute left-0 right-0 h-0.5 bg-primary shadow-[0_0_18px_5px_rgba(201,162,39,0.55)] z-20"
-            />
-          )}
+          {/* Scan beam — always visible while overlay is mounted */}
+          <motion.div
+            animate={{ top: ["0%", "100%", "0%"] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+            className="absolute left-0 right-0 h-0.5 bg-primary shadow-[0_0_18px_5px_rgba(201,162,39,0.55)] z-20"
+          />
 
           {/* Corner brackets */}
           {(["top-2 left-2", "top-2 right-2", "bottom-2 left-2", "bottom-2 right-2"] as const).map((pos, i) => (
@@ -108,24 +105,6 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
             />
           ))}
 
-          {/* Completion flash */}
-          <AnimatePresence>
-            {complete && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="absolute inset-0 flex items-center justify-center bg-black/40"
-              >
-                <motion.div
-                  initial={{ scale: 0.4, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                >
-                  <CheckCircle className="w-16 h-16 text-primary drop-shadow-[0_0_20px_rgba(201,162,39,0.9)]" />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Step list — all steps visible, active one highlighted */}
@@ -167,21 +146,21 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
           })}
         </div>
 
-        {/* Status / completion message */}
+        {/* Status message */}
         <div className="text-center min-h-[2.5rem] flex flex-col items-center justify-center">
           <AnimatePresence mode="wait">
             {complete ? (
               <motion.div
-                key="complete"
-                initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                className="flex flex-col items-center gap-1"
+                key="waiting"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center gap-1.5"
               >
-                <p className="text-xl md:text-2xl font-serif text-primary">
-                  Heritage object identified.
+                <p className="text-base font-serif text-primary">
+                  Gemini is processing your document…
                 </p>
-                <p className="text-xs text-primary/60 uppercase tracking-widest">
-                  Opening historical record...
+                <p className="text-xs text-primary/50 uppercase tracking-widest">
+                  OCR &amp; translation can take 15–30 s
                 </p>
               </motion.div>
             ) : (
@@ -191,7 +170,7 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
                 animate={{ opacity: 1 }}
                 className="text-xs text-muted-foreground/40 uppercase tracking-widest"
               >
-                PokAI Heritage AI · Visual Recognition Engine
+                PokAI Heritage AI · Document Processing Engine
               </motion.p>
             )}
           </AnimatePresence>

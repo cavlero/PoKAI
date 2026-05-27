@@ -11,9 +11,6 @@ import { motion } from "framer-motion";
 
 const FEATURES = [
   { icon: <ScanEye className="w-6 h-6 text-primary" />,       titleKey: "f1_title", descKey: "f1_desc", href: "/explore" },
-  { icon: <History className="w-6 h-6 text-primary" />,       titleKey: "f2_title", descKey: "f2_desc", href: null },
-  { icon: <MessageSquare className="w-6 h-6 text-primary" />, titleKey: "f3_title", descKey: "f3_desc", href: null },
-  { icon: <Map className="w-6 h-6 text-primary" />,           titleKey: "f4_title", descKey: "f4_desc", href: null },
   { icon: <BookOpen className="w-6 h-6 text-primary" />,      titleKey: "f5_title", descKey: "f5_desc", href: "/gallery" },
 ];
 

@@ -80,7 +80,7 @@ export function PokaiChat() {
     setPending((prev) => prev.filter((a) => a.id !== id));
 
   const send = useCallback(
-    (override?: string) => {
+    async (override?: string) => {
       const text = (override ?? inputValue).trim();
       if (!text && pending.length === 0) return;
       if (isTyping) return;
@@ -101,17 +101,36 @@ export function PokaiChat() {
       setPending([]);
       setIsTyping(true);
 
-      setTimeout(() => {
+      if (!text) {
+        // Image-only — no text query endpoint; direct user to Explore
         setMessages((prev) => [
           ...prev,
-          {
-            id: `${Date.now()}-a`,
-            role: "assistant",
-            content: hasImage ? t("chat_reply_image") : t("chat_reply_text"),
-          },
+          { id: `${Date.now()}-a`, role: "assistant", content: t("chat_reply_image") },
         ]);
         setIsTyping(false);
-      }, 1400);
+        return;
+      }
+
+      try {
+        const res = await fetch("/query", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: text, top_k: 5 }),
+        });
+        if (!res.ok) throw new Error("query failed");
+        const data = await res.json();
+        setMessages((prev) => [
+          ...prev,
+          { id: `${Date.now()}-a`, role: "assistant", content: data.answer },
+        ]);
+      } catch {
+        setMessages((prev) => [
+          ...prev,
+          { id: `${Date.now()}-a`, role: "assistant", content: t("chat_error") },
+        ]);
+      } finally {
+        setIsTyping(false);
+      }
     },
     [inputValue, pending, isTyping, t]
   );

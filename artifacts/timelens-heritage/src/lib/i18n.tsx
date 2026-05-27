@@ -18,22 +18,22 @@ const en: Dict = {
   hero_beta: "Beta",
   hero_tagline: "See the Past. Talk to History.",
   hero_subtitle:
-    "Ask anything or drop a photo of a monument, ruin, or heritage object — and step into its history.",
-  stat_sites: "10 heritage sites",
+    "Discover Svishtov's Hidden Cultural Heritage.",
+  stat_sites: "Svishtov's Hidden History",
   stat_recon: "AI reconstructions",
   stat_talk: "Talk to history",
   scroll: "Scroll to discover",
   archive_eyebrow: "Historical Archive",
-  archive_title: "Bring History to Life",
+  archive_title: "The Past, Restored.",
   archive_subtitle:
-    "Ten heritage sites in one archive. Hover to watch each one rise from its ruins — then open it to see it today.",
+    "Upload images from historical books and let AI reveal what time obscured.",
   features_eyebrow: "Capabilities",
   features_title: "A Portal into the Past",
   features_subtitle:
     "Every photo tells a story waiting to be uncovered. Here is what happens after you share one.",
   f1_title: "AI Heritage Recognition",
   f1_desc:
-    "Upload any photo of a monument, ruin, or heritage object. The AI identifies it and pulls rich historical context instantly.",
+    "Upload any photo of a written heritage object from Svishtov. The AI identifies it and pulls rich historical context instantly.",
   f2_title: "Time Machine Slider",
   f2_desc:
     "Drag the slider to reveal a historical reconstruction of the site at its peak — side by side with what it looks like today.",
@@ -54,15 +54,17 @@ const en: Dict = {
   cta_subtitle:
     "Start a conversation with PokAI — ask a question or drop a photo and let it reconstruct the story.",
   cta_button: "Start a Conversation",
-  chat_placeholder: "Ask about any monument, or drop a photo...",
+  chat_placeholder: "Ask anything about Svishtov...",
   chat_drop: "Drop your heritage photo",
-  chat_prompt1: "What is this monument?",
-  chat_prompt2: "Tell me its history",
-  chat_prompt3: "When was it built?",
+  chat_prompt1: "How was the funding for the high school distributed?",
+  chat_prompt2: "When was the journey of Wolfgang?",
+  chat_prompt3: "Who were the teachers in 1888?",
   chat_reply_image:
-    "Beautiful — I can see your photo. Visual recognition is being connected right now. Once the AI is live, I'll identify the monument, reconstruct how it looked at its peak, and tell you its full story.",
+    "I can see your photo! To analyse a heritage image, head to the Explore page — upload it there and I'll OCR, translate, and index it so you can query it here.",
   chat_reply_text:
     "Thanks for your message! I'm PokAI, your heritage guide. My AI brain is being connected — very soon I'll answer in depth and bring history to life. For now, try dropping a photo of a monument or ruin.",
+  chat_error:
+    "Sorry, I couldn't reach the knowledge base right now. Please check that the API server is running and try again.",
 };
 
 const bg: Dict = {
@@ -72,22 +74,22 @@ const bg: Dict = {
   hero_beta: "Бета",
   hero_tagline: "Виж миналото. Говори с историята.",
   hero_subtitle:
-    "Попитай каквото искаш или пусни снимка на паметник, руина или обект на наследството — и пристъпи в неговата история.",
-  stat_sites: "10 обекта на наследството",
+    "Открийте скритото културно наследство на Свищов.",
+  stat_sites: "Скритата история на Свищов",
   stat_recon: "AI реконструкции",
   stat_talk: "Говори с историята",
   scroll: "Превърти, за да откриеш",
   archive_eyebrow: "Исторически архив",
-  archive_title: "Съживи историята",
+  archive_title: "Миналото, възстановено.",
   archive_subtitle:
-    "Десет обекта на наследството в един архив. Посочи с мишката, за да видиш как всеки се въздига от руините — после го отвори, за да го видиш днес.",
+    "Качи снимки от исторически книги и нека AI разкрие онова, което времето е скрило.",
   features_eyebrow: "Възможности",
   features_title: "Портал към миналото",
   features_subtitle:
     "Всяка снимка крие история, чакаща да бъде разкрита. Ето какво се случва, след като споделиш една.",
   f1_title: "AI разпознаване на наследство",
   f1_desc:
-    "Качи снимка на паметник, руина или обект на наследството. AI го разпознава и веднага извлича богат исторически контекст.",
+    "Качи снимка на написан обект от наследството на Свищов. AI го разпознава и веднага извлича богат исторически контекст.",
   f2_title: "Плъзгач машина на времето",
   f2_desc:
     "Плъзни, за да разкриеш историческа реконструкция на обекта в разцвета му — едно до друго с това как изглежда днес.",
@@ -108,15 +110,17 @@ const bg: Dict = {
   cta_subtitle:
     "Започни разговор с PokAI — задай въпрос или пусни снимка и остави го да възстанови историята.",
   cta_button: "Започни разговор",
-  chat_placeholder: "Попитай за паметник или пусни снимка...",
+  chat_placeholder: "Питай за Свищов...",
   chat_drop: "Пусни снимка на наследството",
-  chat_prompt1: "Какъв е този паметник?",
-  chat_prompt2: "Разкажи историята му",
-  chat_prompt3: "Кога е построен?",
+  chat_prompt1: "Как беше разпределено финансирането за гимназията?",
+  chat_prompt2: "Кога беше пътуването на Волфганг?",
+  chat_prompt3: "Кои бяха учителите през 1888 г.?",
   chat_reply_image:
-    "Прекрасно — виждам снимката ти. Визуалното разпознаване се свързва точно сега. Щом AI заработи, ще разпозная паметника, ще възстановя как е изглеждал в разцвета си и ще ти разкажа цялата му история.",
+    "Виждам снимката ти! За да анализирам изображение, отиди на страницата Разгледай — качи го там и ще го OCR, преведа и индексирам, за да можеш да го потърсиш тук.",
   chat_reply_text:
-    "Благодаря за съобщението! Аз съм PokAI, твоят водач за наследството. Свързвам AI мозъка си — съвсем скоро ще отговарям задълбочено и ще съживявам историята. Засега опитай да пуснеш снимка на паметник или руина.",
+    "Благодаря за съобщението! Аз съм PokAI, твоят водач за наследството на Свищов. Скоро ще отговарям задълбочено и ще съживявам историята. Засега опитай да зададеш въпрос за Свищов.",
+  chat_error:
+    "Съжалявам, не успях да се свържа с базата знания. Провери дали API сървърът работи и опитай отново.",
 };
 
 const pl: Dict = {
@@ -126,22 +130,22 @@ const pl: Dict = {
   hero_beta: "Beta",
   hero_tagline: "Zobacz przeszłość. Porozmawiaj z historią.",
   hero_subtitle:
-    "Zapytaj o cokolwiek lub wrzuć zdjęcie zabytku, ruiny czy obiektu dziedzictwa — i wejdź w jego historię.",
-  stat_sites: "10 obiektów dziedzictwa",
+    "Odkryj ukryte dziedzictwo kulturowe Svishtova.",
+  stat_sites: "Ukryta historia Svishtova",
   stat_recon: "Rekonstrukcje AI",
   stat_talk: "Rozmowa z historią",
   scroll: "Przewiń, aby odkryć",
   archive_eyebrow: "Archiwum historyczne",
-  archive_title: "Ożyw historię",
+  archive_title: "Przeszłość przywrócona.",
   archive_subtitle:
-    "Dziesięć obiektów dziedzictwa w jednym archiwum. Najedź, aby zobaczyć, jak każdy powstaje z ruin — a potem otwórz, by zobaczyć go dziś.",
+    "Prześlij zdjęcia z historycznych ksiąg i pozwól AI odkryć to, co czas zakrył.",
   features_eyebrow: "Możliwości",
   features_title: "Portal do przeszłości",
   features_subtitle:
     "Każde zdjęcie kryje historię czekającą na odkrycie. Oto, co dzieje się, gdy je udostępnisz.",
   f1_title: "Rozpoznawanie dziedzictwa AI",
   f1_desc:
-    "Prześlij zdjęcie zabytku, ruiny lub obiektu dziedzictwa. AI rozpozna go i natychmiast przywoła bogaty kontekst historyczny.",
+    "Prześlij zdjęcie pisanego obiektu dziedzictwa ze Svishtova. AI rozpozna go i natychmiast przywoła bogaty kontekst historyczny.",
   f2_title: "Suwak wehikułu czasu",
   f2_desc:
     "Przesuń suwak, aby odsłonić historyczną rekonstrukcję obiektu u szczytu jego świetności — obok tego, jak wygląda dziś.",
@@ -162,15 +166,17 @@ const pl: Dict = {
   cta_subtitle:
     "Rozpocznij rozmowę z PokAI — zadaj pytanie lub wrzuć zdjęcie i pozwól mu odtworzyć tę historię.",
   cta_button: "Rozpocznij rozmowę",
-  chat_placeholder: "Zapytaj o zabytek lub wrzuć zdjęcie...",
+  chat_placeholder: "Zapytaj o cokolwiek związanego ze Svishtovem...",
   chat_drop: "Wrzuć zdjęcie dziedzictwa",
-  chat_prompt1: "Co to za zabytek?",
-  chat_prompt2: "Opowiedz jego historię",
-  chat_prompt3: "Kiedy go zbudowano?",
+  chat_prompt1: "Jak rozdzielono fundusze na szkołę średnią?",
+  chat_prompt2: "Kiedy odbyła się podróż Wolfganga?",
+  chat_prompt3: "Kim byli nauczyciele w 1888 roku?",
   chat_reply_image:
-    "Pięknie — widzę Twoje zdjęcie. Rozpoznawanie obrazu jest właśnie podłączane. Gdy AI ruszy, rozpoznam zabytek, odtworzę, jak wyglądał u szczytu świetności, i opowiem całą jego historię.",
+    "Widzę Twoje zdjęcie! Aby przeanalizować obraz dziedzictwa, przejdź do strony Odkryj — prześlij go tam, a ja go OCR, przetłumaczę i zindeksuję, żebyś mógł zapytać o niego tutaj.",
   chat_reply_text:
-    "Dziękuję za wiadomość! Jestem PokAI, Twój przewodnik po dziedzictwie. Mój mózg AI jest właśnie podłączany — już wkrótce odpowiem szczegółowo i ożywię historię. Na razie spróbuj wrzucić zdjęcie zabytku lub ruiny.",
+    "Dziękuję za wiadomość! Jestem PokAI, Twój przewodnik po dziedzictwie Svishtova. Wkrótce będę odpowiadał szczegółowo i ożywiał historię. Na razie spróbuj zadać pytanie o Svishtov.",
+  chat_error:
+    "Przepraszam, nie mogłem teraz dotrzeć do bazy wiedzy. Sprawdź, czy serwer API działa, i spróbuj ponownie.",
 };
 
 const TRANSLATIONS: Record<Lang, Dict> = { en, bg, pl };

@@ -66,6 +66,12 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    proxy: {
+      "/query":  { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/upload": { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/image":  { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/health": { target: "http://127.0.0.1:8000", changeOrigin: true },
+    },
   },
   preview: {
     port,
