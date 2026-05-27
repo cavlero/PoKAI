@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Monument } from "@/data/monuments";
 import { LEARNING, BadgeLevel, QuizQuestion } from "@/data/recommendations";
+import { useLang } from "@/lib/i18n";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type Difficulty = "easy" | "medium" | "expert";
@@ -247,6 +248,7 @@ function CertificateCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
+  const { t } = useLang();
   const data = LEARNING[monument.id];
   if (!data) return null;
 
@@ -324,8 +326,8 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
           <GraduationCap className="w-4 h-4 text-primary" />
         </div>
         <div>
-          <h2 className="font-serif text-xl font-bold text-foreground">Historical Quiz</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Test your knowledge · Earn your rank · Unlock your badge</p>
+          <h2 className="font-serif text-xl font-bold text-foreground">{t("quiz_title")}</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("quiz_subtitle")}</p>
         </div>
       </div>
 
@@ -369,7 +371,7 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
 
             {/* Difficulty selector */}
             <div>
-              <p className="text-xs text-muted-foreground/60 text-center uppercase tracking-widest mb-3">Choose Difficulty</p>
+              <p className="text-xs text-muted-foreground/60 text-center uppercase tracking-widest mb-3">{t("quiz_choose_difficulty")}</p>
               <div className="grid grid-cols-3 gap-3">
                 {(["easy", "medium", "expert"] as Difficulty[]).map((d) => {
                   const cfg = DIFFICULTY_CONFIG[d];
@@ -537,8 +539,8 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
                       }`}
                     >
                       {selected === q.correctIndex
-                        ? <><CheckCircle className="w-4 h-4" /><span className="text-sm font-semibold">Correct!</span></>
-                        : <><XCircle className="w-4 h-4" /><span className="text-sm font-semibold">Not quite — the correct answer was: <span className="text-foreground">{q.options[q.correctIndex]}</span></span></>
+                        ? <><CheckCircle className="w-4 h-4" /><span className="text-sm font-semibold">{t("quiz_correct")}</span></>
+                        : <><XCircle className="w-4 h-4" /><span className="text-sm font-semibold">{t("quiz_not_quite")} <span className="text-foreground">{q.options[q.correctIndex]}</span></span></>
                       }
                     </motion.div>
 
@@ -551,7 +553,7 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <Lightbulb className="w-4 h-4 text-primary shrink-0" />
-                        <span className="text-xs font-semibold text-primary uppercase tracking-wider">Did you know?</span>
+                        <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t("quiz_did_you_know")}</span>
                       </div>
                       <p className="text-sm text-foreground/80 leading-relaxed">{q.explanation}</p>
                     </motion.div>
@@ -610,7 +612,7 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
               transition={{ delay: 0.6, duration: 0.5, type: "spring", damping: 12 }}
               className={`rounded-2xl border ${tierStyle.border} ${tierStyle.bg} p-5 flex flex-col items-center gap-3 shadow-xl ${tierStyle.glow} text-center`}
             >
-              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">Achievement Unlocked</p>
+              <p className="text-[10px] uppercase tracking-widest text-muted-foreground/50">{t("quiz_achievement")}</p>
               <div className={`w-12 h-12 rounded-full ${tierStyle.bg} border ${tierStyle.border} flex items-center justify-center`}>
                 <Trophy className={`w-6 h-6 ${tierStyle.text}`} />
               </div>

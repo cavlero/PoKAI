@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { UploadCloud, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 export interface DocumentMetadata {
   title: string;
@@ -39,12 +40,10 @@ const inputCls =
   "w-full rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/40 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors";
 
 export function UploadZone({ onAnalyze }: UploadZoneProps) {
-  const [dragActive,    setDragActive]    = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedFile,  setSelectedFile]  = useState<File | null>(null);
-  const [meta, setMeta] = useState<DocumentMetadata>({
-    title: "", author: "", year: "", distributor: "", notes: "",
-  });
+  const { t } = useLang();
+  const [dragActive,     setDragActive]     = useState(false);
+  const [selectedImage,  setSelectedImage]  = useState<string | null>(null);
+  const [fileName,       setFileName]       = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (file: File) => {
@@ -79,6 +78,19 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
+          <Search className="w-3.5 h-3.5" />
+          {t("upload_badge")}
+        </div>
+        <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-3">
+          {t("upload_title")}
+        </h2>
+        <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
+          {t("upload_subtitle")}
+        </p>
+      </div>
+
       <AnimatePresence mode="wait">
         {!selectedImage ? (
           <motion.div
@@ -110,26 +122,13 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               onClick={() => inputRef.current?.click()}
               data-testid="upload-dropzone"
             >
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/heic,image/heif"
-                onChange={(e) => { e.preventDefault(); if (e.target.files?.[0]) handleFile(e.target.files[0]); }}
-                className="hidden"
-                data-testid="input-file-upload"
-              />
-              <motion.div
-                animate={dragActive ? { scale: 1.15 } : { scale: 1 }}
-                className="bg-primary/10 border border-primary/30 p-5 rounded-full mb-5"
-              >
-                <UploadCloud className="w-10 h-10 text-primary" />
-              </motion.div>
-              <p className="text-lg font-medium text-foreground mb-1">
-                {dragActive ? "Release to upload" : "Drag and drop your scan here"}
-              </p>
-              <p className="text-sm text-muted-foreground">or click to browse files</p>
-              <p className="text-xs text-muted-foreground/40 mt-4">PNG, JPG, WEBP, HEIC</p>
-            </div>
+              <UploadCloud className="w-10 h-10 text-primary" />
+            </motion.div>
+            <p className="text-lg font-medium text-foreground mb-1">
+              {dragActive ? t("upload_release") : t("upload_drag")}
+            </p>
+            <p className="text-sm text-muted-foreground">{t("upload_browse")}</p>
+            <p className="text-xs text-muted-foreground/40 mt-4">{t("upload_formats")}</p>
           </motion.div>
         ) : (
           <motion.div
@@ -143,8 +142,8 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
             <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <img
                 src={selectedImage}
-                alt="Selected scan"
-                className="w-full max-h-64 object-contain bg-black/40"
+                alt={t("upload_alt")}
+                className="w-full h-full object-cover"
                 data-testid="img-upload-preview"
               />
               <button
@@ -153,7 +152,7 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
                 data-testid="button-change-image"
               >
                 <RefreshCw className="w-3 h-3" />
-                Change
+                {t("upload_change")}
               </button>
               <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-background/80 backdrop-blur px-3 py-1.5 rounded-full border border-white/10 max-w-[80%]">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
@@ -234,8 +233,12 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               data-testid="button-analyze"
             >
               <Search className="w-5 h-5 mr-2" />
-              Analyse &amp; Index Document
+              {t("upload_analyze")}
             </Button>
+
+            <p className="text-xs text-muted-foreground/40 text-center">
+              {t("upload_note")}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

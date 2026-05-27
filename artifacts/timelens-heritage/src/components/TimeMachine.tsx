@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MessageSquare, ChevronsLeftRight, Landmark } from "lucide-react";
 import { Monument } from "@/data/monuments";
+import { useLang } from "@/lib/i18n";
 
 interface TimeMachineProps {
   monument: Monument;
@@ -10,6 +11,7 @@ interface TimeMachineProps {
 }
 
 export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachineProps) {
+  const { t } = useLang();
   const [sliderPosition, setSliderPosition] = useState(25);
   const [isDragging, setIsDragging] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -72,11 +74,11 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
       {/* Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
-          Time Machine · Reconstruction Ready
+          {t("time_badge")}
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">See the Past</h2>
+        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">{t("time_title")}</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Drag the slider to compare the monument today against its historical reconstruction.
+          {t("time_subtitle")}
         </p>
       </div>
 
@@ -103,14 +105,14 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
               <Landmark className="w-16 h-16 text-primary/30" />
               <div className="text-center">
                 <p className="font-serif text-xl text-foreground/40">{monument.name}</p>
-                <p className="text-xs text-muted-foreground/30 mt-1 uppercase tracking-widest">Present Day</p>
+                <p className="text-xs text-muted-foreground/30 mt-1 uppercase tracking-widest">{t("time_present")}</p>
               </div>
             </div>
           )}
           {/* Today label */}
           <div className="absolute bottom-4 right-4 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs text-foreground/90 font-medium tracking-wide border border-white/10 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-            Today
+            {t("time_today")}
           </div>
         </div>
 
@@ -162,7 +164,7 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
 
           {/* "AI Reconstruction" badge */}
           <div className="absolute top-4 left-4 px-2.5 py-1 rounded bg-black/50 backdrop-blur-sm text-[10px] text-primary/80 uppercase tracking-widest border border-primary/20">
-            AI Reconstruction
+            {t("time_reconstruction")}
           </div>
         </div>
 
@@ -193,13 +195,13 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
             transition={{ delay: 1.8 }}
             className="absolute bottom-14 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full text-xs text-white/60 border border-white/10 pointer-events-none whitespace-nowrap z-10"
           >
-            Drag to compare
+            {t("time_drag_hint")}
           </motion.div>
         )}
       </motion.div>
 
       <p className="text-center text-xs text-muted-foreground/40 mt-3 tracking-wider uppercase">
-        Drag slider to travel through time · AI-generated historical reconstruction
+        {t("time_footer")}
       </p>
 
       {/* Talk to Historical Figure */}
@@ -216,7 +218,7 @@ export function TimeMachine({ monument, currentImage, onTalkToGuide }: TimeMachi
             className="group flex items-center gap-3 px-8 py-4 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/40 hover:border-primary/70 text-primary transition-all shadow-[0_0_30px_rgba(201,162,39,0.1)] hover:shadow-[0_0_40px_rgba(201,162,39,0.25)] font-serif text-lg"
           >
             <MessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            Talk to Historical Figure
+            {t("time_talk")}
           </button>
         </motion.div>
       )}

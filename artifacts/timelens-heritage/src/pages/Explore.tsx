@@ -9,6 +9,15 @@ import { Button } from "@/components/ui/button";
 
 import { UploadZone, type DocumentMetadata } from "@/components/UploadZone";
 import { ScanningOverlay } from "@/components/ScanningOverlay";
+import { AnalysisPanel } from "@/components/AnalysisPanel";
+import { TimeMachine } from "@/components/TimeMachine";
+import { TalkToHistory } from "@/components/TalkToHistory";
+import { MonumentMap } from "@/components/MonumentMap";
+import { ContinueExploring } from "@/components/ContinueExploring";
+import { HistoricalQuiz } from "@/components/HistoricalQuiz";
+import { useLang } from "@/lib/i18n";
+
+import { MONUMENTS, Monument } from "@/data/monuments";
 import { saveToGallery } from "@/pages/Gallery";
 
 interface UploadResult {
@@ -28,9 +37,8 @@ interface QueryMessage {
 }
 
 export default function Explore() {
-  const [analyzing,    setAnalyzing]    = useState(false);
-  const [uploadError,  setUploadError]  = useState<string | null>(null);
-  const [result,       setResult]       = useState<UploadResult | null>(null);
+  const { t } = useLang();
+  const [analyzing, setAnalyzing] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   // Query section state
@@ -142,14 +150,14 @@ export default function Explore() {
         <Link href="/">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            Home
+            {t("nav_home")}
           </Button>
         </Link>
         <h1 className="font-serif text-xl text-primary font-bold tracking-wider">PokAI</h1>
         <Link href="/gallery">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <BookOpen className="w-4 h-4 mr-1" />
-            Gallery
+            {t("nav_gallery")}
           </Button>
         </Link>
       </header>
@@ -189,12 +197,12 @@ export default function Explore() {
               <div className="flex flex-wrap gap-3 justify-between items-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                  Indexed &amp; Ready to Query
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={handleReset}
-                  className="border-white/20 hover:bg-white/5 rounded-full text-sm"
+                  {t("explore_reconstruction_complete")}
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
                   <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
                   New Document
@@ -348,10 +356,7 @@ export default function Explore() {
                     disabled={!queryInput.trim() || queryLoading}
                     className="h-10 w-10 shrink-0 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
                   >
-                    {queryLoading
-                      ? <Loader2 className="w-4 h-4 animate-spin" />
-                      : <Send className="w-4 h-4" />
-                    }
+                    {t("explore_new_analysis")}
                   </Button>
                 </form>
               </motion.div>

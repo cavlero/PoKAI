@@ -1,12 +1,14 @@
 import { MapPin, ExternalLink, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 import { Monument } from "@/data/monuments";
+import { useLang } from "@/lib/i18n";
 
 interface MonumentMapProps {
   monument: Monument;
 }
 
 export function MonumentMap({ monument }: MonumentMapProps) {
+  const { t } = useLang();
   const { name, city, country, coordinates } = monument;
 
   const openMaps = () => {
@@ -25,11 +27,11 @@ export function MonumentMap({ monument }: MonumentMapProps) {
     >
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
-          Location
+          {t("map_badge")}
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">Find It on the Map</h2>
+        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">{t("map_title")}</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Discover where this remarkable piece of history stands today.
+          {t("map_subtitle")}
         </p>
       </div>
 
@@ -57,7 +59,7 @@ export function MonumentMap({ monument }: MonumentMapProps) {
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium transition-all hover:shadow-[0_0_20px_rgba(201,162,39,0.3)] shrink-0"
           >
             <ExternalLink className="w-4 h-4" />
-            Open in Google Maps
+            {t("map_open")}
           </button>
         </div>
 

@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+import { useLang } from "@/lib/i18n";
 
 const STEPS = [
-  { label: "Reading image...",              progress: 12 },
-  { label: "Detecting Cyrillic script...",  progress: 28 },
-  { label: "Extracting text...",            progress: 46 },
-  { label: "Sending to Gemini AI...",       progress: 62 },
-  { label: "Translating to English...",     progress: 80 },
-  { label: "Indexing document...",          progress: 92 },
+  { labelKey: "scanning_s1", progress: 10 },
+  { labelKey: "scanning_s2", progress: 26 },
+  { labelKey: "scanning_s3", progress: 45 },
+  { labelKey: "scanning_s4", progress: 63 },
+  { labelKey: "scanning_s5", progress: 81 },
+  { labelKey: "scanning_s6", progress: 95 },
 ];
 
 const STEP_DURATION = 750;
@@ -17,6 +19,7 @@ interface ScanningOverlayProps {
 }
 
 export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
+  const { t } = useLang();
   const [stepIndex, setStepIndex] = useState(0);
   const [complete,  setComplete]  = useState(false);
 
@@ -131,14 +134,14 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
                   transition={isActive ? { duration: 0.7, repeat: Infinity } : {}}
                   className="w-2 h-2 rounded-full shrink-0"
                 />
-                <span>{s.label}</span>
+                <span>{t(s.labelKey)}</span>
                 {isDone && !isActive && (
                   <motion.span
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="ml-auto text-primary/50 text-xs"
                   >
-                    done
+                    {t("scanning_done")}
                   </motion.span>
                 )}
               </motion.div>
@@ -170,7 +173,7 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
                 animate={{ opacity: 1 }}
                 className="text-xs text-muted-foreground/40 uppercase tracking-widest"
               >
-                PokAI Heritage AI · Document Processing Engine
+                {t("scanning_engine")}
               </motion.p>
             )}
           </AnimatePresence>
@@ -179,7 +182,7 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
         {/* Progress bar */}
         <div className="w-full space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground/50">
-            <span>Analysis progress</span>
+            <span>{t("scanning_progress")}</span>
             <motion.span key={displayProgress} initial={{ opacity: 0.5 }} animate={{ opacity: 1 }}>
               {displayProgress}%
             </motion.span>
