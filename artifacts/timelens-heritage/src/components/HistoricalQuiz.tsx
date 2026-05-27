@@ -210,7 +210,7 @@ function CertificateCard({
 
       <div className="flex items-center justify-center gap-2 mb-1">
         <div className="h-px w-8 bg-primary/30" />
-        <span className="text-[9px] text-primary/50 uppercase tracking-[0.3em] font-semibold">TimeLens Heritage</span>
+        <span className="text-[9px] text-primary/50 uppercase tracking-[0.3em] font-semibold">PokAI Heritage</span>
         <div className="h-px w-8 bg-primary/30" />
       </div>
       <p className="text-[11px] text-muted-foreground/50 uppercase tracking-widest mb-3">Certificate of Achievement</p>
@@ -300,9 +300,9 @@ export function HistoricalQuiz({ monument }: HistoricalQuizProps) {
   }, [currentQ, questions.length]);
 
   const handleShare = useCallback(() => {
-    const text = `I just completed the TimeLens Heritage Quiz on ${monument.name}!\n\nRank earned: ${scoreRank.title}\nScore: ${scorePct}% (${score}/${questions.length} correct)\nAchievement: ${badge.title}\n\nDiscover Bulgarian heritage at TimeLens Heritage.`;
+    const text = `I just completed the PokAI Heritage Quiz on ${monument.name}!\n\nRank earned: ${scoreRank.title}\nScore: ${scorePct}% (${score}/${questions.length} correct)\nAchievement: ${badge.title}\n\nDiscover Bulgarian heritage at PokAI Heritage.`;
     if (navigator.share) {
-      navigator.share({ title: "TimeLens Heritage Quiz", text }).catch(() => null);
+      navigator.share({ title: "PokAI Heritage Quiz", text }).catch(() => null);
     } else {
       navigator.clipboard.writeText(text).then(() => {
         setShareMsg("Copied to clipboard!");

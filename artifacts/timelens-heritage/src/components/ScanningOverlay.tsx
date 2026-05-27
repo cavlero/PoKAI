@@ -191,7 +191,7 @@ export function ScanningOverlay({ previewUrl }: ScanningOverlayProps) {
                 animate={{ opacity: 1 }}
                 className="text-xs text-muted-foreground/40 uppercase tracking-widest"
               >
-                TimeLens Heritage AI · Visual Recognition Engine
+                PokAI Heritage AI · Visual Recognition Engine
               </motion.p>
             )}
           </AnimatePresence>

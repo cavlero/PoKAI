@@ -108,7 +108,7 @@ export default function Explore() {
             Home
           </Button>
         </Link>
-        <h1 className="font-serif text-xl text-primary font-bold tracking-wider">TimeLens</h1>
+        <h1 className="font-serif text-xl text-primary font-bold tracking-wider">PokAI</h1>
         <Link href="/gallery">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <BookOpen className="w-4 h-4 mr-1" />

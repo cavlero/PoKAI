@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..800;1,300..800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -111,8 +111,8 @@
   --sidebar-accent-foreground: 45 68% 47%;
   --sidebar-ring: 45 68% 47%;
 
-  --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: 'Cinzel', serif;
+  --app-font-sans: 'Montserrat', sans-serif;
+  --app-font-serif: 'Montserrat', sans-serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem; 
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.1); 
