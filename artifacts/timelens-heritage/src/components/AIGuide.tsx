@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 interface Message {
   id: string;
@@ -13,11 +14,12 @@ interface Message {
 }
 
 export function AIGuide({ monument }: { monument: Monument }) {
+  const { t } = useLang();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "bot",
-      content: `Hello! I am your historical guide. Ask me anything about this monument.`,
+      content: t("ai_guide_welcome"),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -62,12 +64,7 @@ export function AIGuide({ monument }: { monument: Monument }) {
     }, 1500);
   };
 
-  const quickQuestions = [
-    "Who built this monument?",
-    "When was it built?",
-    "Why is it important?",
-    "What historical events happened here?",
-  ];
+  const quickQuestions = [t("ai_guide_q1"), t("ai_guide_q2"), t("ai_guide_q3"), t("ai_guide_q4")];
 
   return (
     <div className="w-full max-w-3xl mx-auto">
@@ -78,10 +75,10 @@ export function AIGuide({ monument }: { monument: Monument }) {
             <Bot className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-serif text-lg text-foreground">AI Historical Guide</h3>
+            <h3 className="font-serif text-lg text-foreground">{t("ai_guide_title")}</h3>
             <p className="text-xs text-primary/80 flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              Online — Temporal Link Active
+              {t("ai_guide_status")}
             </p>
           </div>
         </div>
@@ -164,7 +161,7 @@ export function AIGuide({ monument }: { monument: Monument }) {
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask about the monument..."
+              placeholder={t("ai_guide_placeholder")}
               className="bg-background/60 border-white/10 focus-visible:ring-primary h-11 text-sm"
               disabled={isTyping}
               data-testid="input-guide-question"

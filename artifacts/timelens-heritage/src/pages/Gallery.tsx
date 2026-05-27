@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Trash2, BookOpen, MapPin, CalendarDays, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLang } from "@/lib/i18n";
 
 export type GalleryEntry = {
   id: string;
@@ -33,6 +34,7 @@ export function saveToGallery(entry: GalleryEntry): void {
 }
 
 export default function Gallery() {
+  const { t, lang } = useLang();
   const [entries, setEntries] = useState<GalleryEntry[]>([]);
   const [selected, setSelected] = useState<GalleryEntry | null>(null);
 
@@ -55,7 +57,8 @@ export default function Gallery() {
 
   const formatDate = (iso: string) => {
     try {
-      return new Date(iso).toLocaleDateString("en-GB", {
+      const locale = lang === "bg" ? "bg-BG" : lang === "pl" ? "pl-PL" : "en-GB";
+      return new Date(iso).toLocaleDateString(locale, {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -74,10 +77,10 @@ export default function Gallery() {
         <Link href="/">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            Home
+            {t("nav_home")}
           </Button>
         </Link>
-        <h1 className="font-serif text-xl text-primary font-bold tracking-wider">Gallery of Discoveries</h1>
+        <h1 className="font-serif text-xl text-primary font-bold tracking-wider">{t("gallery_title")}</h1>
         {entries.length > 0 ? (
           <Button
             variant="ghost"
@@ -87,7 +90,7 @@ export default function Gallery() {
             data-testid="button-clear-gallery"
           >
             <Trash2 className="w-4 h-4 mr-1" />
-            Clear All
+            {t("gallery_clear_all")}
           </Button>
         ) : (
           <div className="w-24" />
@@ -104,13 +107,13 @@ export default function Gallery() {
             <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <BookOpen className="w-9 h-9 text-muted-foreground/40" />
             </div>
-            <h2 className="text-2xl font-serif text-foreground/60 mb-3">No Discoveries Yet</h2>
+            <h2 className="text-2xl font-serif text-foreground/60 mb-3">{t("gallery_empty_title")}</h2>
             <p className="text-muted-foreground max-w-sm mb-8">
-              Upload and analyze a monument on the Explore page to begin building your personal gallery of historical discoveries.
+              {t("gallery_empty_text")}
             </p>
             <Link href="/explore">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 font-serif">
-                Start Exploring
+                {t("gallery_start")}
               </Button>
             </Link>
           </motion.div>
@@ -119,15 +122,15 @@ export default function Gallery() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-serif text-foreground">
-                  Your Discoveries
+                  {t("gallery_your_discoveries")}
                 </h2>
                 <p className="text-muted-foreground mt-1">
-                  {entries.length} monument{entries.length !== 1 ? "s" : ""} explored
+                  {entries.length} {entries.length === 1 ? t("gallery_monument_singular") : t("gallery_monument_plural")} {t("gallery_explored_suffix")}
                 </p>
               </div>
               <Link href="/explore">
                 <Button variant="outline" size="sm" className="border-white/20 hover:bg-white/5 rounded-full">
-                  Explore More
+                  {t("gallery_explore_more")}
                 </Button>
               </Link>
             </div>
@@ -248,11 +251,11 @@ export default function Gallery() {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground/60 text-sm mb-6">
                   <CalendarDays className="w-4 h-4" />
-                  <span>Analyzed on {formatDate(selected.analyzedAt)}</span>
+                  <span>{t("gallery_analyzed_on")} {formatDate(selected.analyzedAt)}</span>
                 </div>
                 <Link href="/explore">
                   <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-serif">
-                    Explore Again
+                    {t("gallery_explore_again")}
                   </Button>
                 </Link>
               </div>

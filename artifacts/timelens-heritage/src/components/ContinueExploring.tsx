@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Monument } from "@/data/monuments";
 import { LEARNING, RecItem, AudioGuideItem } from "@/data/recommendations";
+import { useLang } from "@/lib/i18n";
 
 interface ContinueExploringProps {
   monument: Monument;
@@ -192,6 +193,7 @@ function AudioGuideCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function ContinueExploring({ monument }: ContinueExploringProps) {
+  const { t } = useLang();
   const [activeTab, setActiveTab] = useState<Tab>("articles");
   const [playing, setPlaying] = useState<string | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -230,8 +232,8 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
   if (!data) return null;
 
   const TABS: { id: Tab; label: string; Icon: React.FC<{ className?: string }> }[] = [
-    { id: "articles",   label: "Articles",    Icon: FileText   },
-    { id: "audioGuide", label: "Audio Guide", Icon: Headphones },
+    { id: "articles",   label: t("continue_articles"), Icon: FileText   },
+    { id: "audioGuide", label: t("continue_audio"), Icon: Headphones },
   ];
 
   return (
@@ -247,13 +249,13 @@ export function ContinueExploring({ monument }: ContinueExploringProps) {
           <Compass className="w-4 h-4 text-primary" />
         </div>
         <div>
-          <h2 className="font-serif text-xl font-bold text-foreground">Continue Exploring</h2>
+          <h2 className="font-serif text-xl font-bold text-foreground">{t("continue_title")}</h2>
           <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
-            <span className="text-primary/60">Read</span>
+            <span className="text-primary/60">{t("continue_read")}</span>
             <span className="text-white/20">·</span>
-            <span className="text-primary/60">Listen</span>
+            <span className="text-primary/60">{t("continue_listen")}</span>
             <span className="text-white/20">·</span>
-            <span className="text-primary/60">Explore</span>
+            <span className="text-primary/60">{t("continue_explore")}</span>
           </p>
         </div>
       </div>

@@ -68,48 +68,49 @@
 }
 
 :root {
-  --background: 231 64% 11%;
-  --foreground: 37 30% 93%;
-  --border: 233 63% 16%;
-  --card: 233 63% 16%;
-  --card-foreground: 37 30% 93%;
-  --card-border: 231 64% 11%;
-  
-  --popover: 233 63% 16%;
-  --popover-foreground: 37 30% 93%;
-  --popover-border: 231 64% 11%;
-  
-  --primary: 45 68% 47%;
-  --primary-foreground: 231 64% 11%;
-  
-  --secondary: 46 76% 62%;
-  --secondary-foreground: 231 64% 11%;
-  
-  --muted: 233 63% 16%;
-  --muted-foreground: 225 20% 61%;
-  
-  --accent: 233 63% 16%;
-  --accent-foreground: 45 68% 47%;
-  
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 37 30% 93%;
-  
-  --input: 233 63% 16%;
-  --ring: 45 68% 47%;
-  --chart-1: 45 68% 47%;
-  --chart-2: 46 76% 62%;
-  --chart-3: 225 20% 61%;
-  --chart-4: 233 63% 16%;
-  --chart-5: 37 30% 93%;
-  
-  --sidebar: 233 63% 16%;
-  --sidebar-foreground: 37 30% 93%;
-  --sidebar-border: 231 64% 11%;
-  --sidebar-primary: 45 68% 47%;
-  --sidebar-primary-foreground: 231 64% 11%;
-  --sidebar-accent: 233 63% 16%;
-  --sidebar-accent-foreground: 45 68% 47%;
-  --sidebar-ring: 45 68% 47%;
+  /* Light theme (parchment) — dark theme lives in .dark below */
+  --background: 40 33% 96%;
+  --foreground: 230 35% 16%;
+  --border: 233 20% 86%;
+  --card: 0 0% 100%;
+  --card-foreground: 230 35% 16%;
+  --card-border: 233 20% 88%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 230 35% 16%;
+  --popover-border: 233 20% 88%;
+
+  --primary: 42 74% 40%;
+  --primary-foreground: 40 33% 98%;
+
+  --secondary: 42 60% 55%;
+  --secondary-foreground: 230 35% 16%;
+
+  --muted: 40 20% 91%;
+  --muted-foreground: 230 14% 40%;
+
+  --accent: 42 45% 88%;
+  --accent-foreground: 42 74% 32%;
+
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --input: 233 20% 86%;
+  --ring: 42 74% 40%;
+  --chart-1: 42 74% 40%;
+  --chart-2: 42 60% 55%;
+  --chart-3: 230 14% 45%;
+  --chart-4: 40 20% 85%;
+  --chart-5: 230 35% 20%;
+
+  --sidebar: 40 33% 98%;
+  --sidebar-foreground: 230 35% 16%;
+  --sidebar-border: 233 20% 88%;
+  --sidebar-primary: 42 74% 40%;
+  --sidebar-primary-foreground: 40 33% 98%;
+  --sidebar-accent: 42 45% 88%;
+  --sidebar-accent-foreground: 42 74% 32%;
+  --sidebar-ring: 42 74% 40%;
 
   --app-font-sans: 'Montserrat', sans-serif;
   --app-font-serif: 'Montserrat', sans-serif;
@@ -126,11 +127,11 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(0,0,0, .12);
+  --badge-outline: rgba(0,0,0, .06);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --elevate-1: rgba(0,0,0, .04);
+  --elevate-2: rgba(0,0,0, .08);
 
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-accent-border: hsl(var(--sidebar-accent));

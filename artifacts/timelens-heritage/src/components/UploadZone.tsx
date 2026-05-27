@@ -2,12 +2,14 @@ import { useState, useRef } from "react";
 import { UploadCloud, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 interface UploadZoneProps {
   onAnalyze: (imageUrl: string, fileName: string) => void;
 }
 
 export function UploadZone({ onAnalyze }: UploadZoneProps) {
+  const { t } = useLang();
   const [dragActive,     setDragActive]     = useState(false);
   const [selectedImage,  setSelectedImage]  = useState<string | null>(null);
   const [fileName,       setFileName]       = useState<string>("");
@@ -43,13 +45,13 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
           <Search className="w-3.5 h-3.5" />
-          AI Heritage Recognition
+          {t("upload_badge")}
         </div>
         <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-3">
-          Upload a Heritage Photo
+          {t("upload_title")}
         </h2>
         <p className="text-muted-foreground max-w-md mx-auto leading-relaxed">
-          Upload a photo of a monument, ruin, building, or heritage object — and let the AI research its history.
+          {t("upload_subtitle")}
         </p>
       </div>
 
@@ -87,10 +89,10 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               <UploadCloud className="w-10 h-10 text-primary" />
             </motion.div>
             <p className="text-lg font-medium text-foreground mb-1">
-              {dragActive ? "Release to upload" : "Drag and drop your image here"}
+              {dragActive ? t("upload_release") : t("upload_drag")}
             </p>
-            <p className="text-sm text-muted-foreground">or click to browse files from your computer</p>
-            <p className="text-xs text-muted-foreground/40 mt-4">PNG, JPG, WEBP · Any heritage photo works</p>
+            <p className="text-sm text-muted-foreground">{t("upload_browse")}</p>
+            <p className="text-xs text-muted-foreground/40 mt-4">{t("upload_formats")}</p>
           </motion.div>
         ) : (
           <motion.div
@@ -104,7 +106,7 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <img
                 src={selectedImage}
-                alt="Uploaded heritage photo"
+                alt={t("upload_alt")}
                 className="w-full h-full object-cover"
                 data-testid="img-upload-preview"
               />
@@ -122,7 +124,7 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
                 data-testid="button-change-image"
               >
                 <RefreshCw className="w-3 h-3" />
-                Change photo
+                {t("upload_change")}
               </button>
             </div>
 
@@ -134,11 +136,11 @@ export function UploadZone({ onAnalyze }: UploadZoneProps) {
               data-testid="button-analyze"
             >
               <Search className="w-5 h-5 mr-2" />
-              Analyze Heritage Object
+              {t("upload_analyze")}
             </Button>
 
             <p className="text-xs text-muted-foreground/40 text-center">
-              The AI will scan the image and search Bulgarian heritage archives
+              {t("upload_note")}
             </p>
           </motion.div>
         )}

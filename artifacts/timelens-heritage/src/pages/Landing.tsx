@@ -7,6 +7,7 @@ import {
 import { HistoricalMediaCard } from "@/components/HistoricalMediaCard";
 import { PokaiChat } from "@/components/PokaiChat";
 import { useLang, LANGUAGES } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
 import { motion } from "framer-motion";
 
 const FEATURES = [
@@ -114,6 +115,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function Landing() {
   const { t } = useLang();
+  const { theme, toggle } = useTheme();
   const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
@@ -139,14 +141,23 @@ export default function Landing() {
               {t("nav_gallery")}
             </Button>
           </Link>
-          <Button
-            size="sm"
-            onClick={scrollTop}
-            className="rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          {/* Theme switch */}
+          <button
+            onClick={toggle}
+            role="switch"
+            aria-checked={theme === "dark"}
+            aria-label={theme === "dark" ? t("theme_light") : t("theme_dark")}
+            title={theme === "dark" ? t("theme_light") : t("theme_dark")}
+            className="relative flex h-8 w-14 shrink-0 items-center rounded-full border border-white/15 bg-white/5 transition-colors hover:border-primary/40"
           >
-            {t("nav_try")}
-            <ArrowRight className="ml-1 h-3.5 w-3.5" />
-          </Button>
+            <span
+              className={`flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[11px] shadow-[0_0_10px_rgba(201,162,39,0.5)] transition-transform duration-300 ${
+                theme === "dark" ? "translate-x-[30px]" : "translate-x-[2px]"
+              }`}
+            >
+              {theme === "dark" ? "🌙" : "☀️"}
+            </span>
+          </button>
         </div>
       </motion.nav>
 

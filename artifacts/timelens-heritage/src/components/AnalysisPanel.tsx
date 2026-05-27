@@ -2,6 +2,7 @@ import { Monument } from "@/data/monuments";
 import { Card, CardContent } from "@/components/ui/card";
 import { Info, MapPin, Sparkles, Clock, ShieldCheck, Layers } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLang } from "@/lib/i18n";
 
 interface AnalysisPanelProps {
   monument: Monument;
@@ -9,6 +10,7 @@ interface AnalysisPanelProps {
 }
 
 export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
+  const { t } = useLang();
   const confidenceColor =
     confidence >= 90 ? "text-green-400" : confidence >= 80 ? "text-yellow-400" : "text-orange-400";
   const confidenceBg =
@@ -58,7 +60,7 @@ export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
             <ShieldCheck className={`w-5 h-5 ${confidenceColor}`} />
             <div>
               <p className="text-xs text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
-                AI Confidence
+                {t("analysis_ai_confidence")}
               </p>
               <p className={`text-2xl font-bold font-mono ${confidenceColor} leading-none`}>
                 {confidence}%
@@ -72,7 +74,7 @@ export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
         {/* Confidence bar */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs text-muted-foreground/50">
-            <span>Recognition confidence</span>
+            <span>{t("analysis_recognition_confidence")}</span>
             <span>{confidence}%</span>
           </div>
           <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
@@ -99,7 +101,7 @@ export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Info className="w-5 h-5 text-primary" />
-                <h3 className="text-xl font-serif text-primary">Historical Context</h3>
+                <h3 className="text-xl font-serif text-primary">{t("analysis_context")}</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed">{monument.description}</p>
             </CardContent>
@@ -115,7 +117,7 @@ export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
             <CardContent className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="w-5 h-5 text-primary" />
-                <h3 className="text-xl font-serif text-primary">Historical Importance</h3>
+                <h3 className="text-xl font-serif text-primary">{t("analysis_importance")}</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed">{monument.importance}</p>
             </CardContent>
@@ -134,7 +136,7 @@ export function AnalysisPanel({ monument, confidence }: AnalysisPanelProps) {
               <Sparkles className="w-7 h-7 text-primary" />
             </div>
             <div>
-              <h3 className="text-lg font-serif text-primary mb-2">Fascinating Fact</h3>
+              <h3 className="text-lg font-serif text-primary mb-2">{t("analysis_fact")}</h3>
               <p className="text-foreground/90 leading-relaxed italic">"{monument.funFact}"</p>
             </div>
           </CardContent>

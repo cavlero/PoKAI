@@ -13,6 +13,7 @@ import { Monument } from "@/data/monuments";
 import { HISTORICAL_FIGURES, HistoricalFigure, getRecommendedFigure } from "@/data/historicalFigures";
 import { useSpeechVoice, VOICE_PROFILES, SpeakOptions } from "@/hooks/useSpeechVoice";
 import { generateResponse } from "@/lib/aiChat";
+import { useLang } from "@/lib/i18n";
 
 interface Message {
   id:      string;
@@ -147,6 +148,7 @@ function VoiceSettingsPanel({
   canReplay:     boolean;
   isSpeaking:    boolean;
 }) {
+  const { t } = useLang();
   const [open, setOpen] = useState(false);
   const profile = VOICE_PROFILES[figure.id];
 
@@ -186,7 +188,7 @@ function VoiceSettingsPanel({
               data-testid="button-replay"
             >
               <RotateCcw className="w-3 h-3" />
-              <span className="hidden sm:inline">Replay</span>
+              <span className="hidden sm:inline">{t("talk_replay")}</span>
             </button>
 
             {/* Expand/collapse sliders */}
@@ -199,7 +201,7 @@ function VoiceSettingsPanel({
               }`}
             >
               <Settings2 className="w-3 h-3" />
-              <span className="hidden sm:inline">Adjust</span>
+              <span className="hidden sm:inline">{t("talk_adjust")}</span>
               <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
                 <ChevronDown className="w-3 h-3" />
               </motion.span>
@@ -221,7 +223,7 @@ function VoiceSettingsPanel({
             <div className="px-4 pb-3 flex flex-wrap gap-x-8 gap-y-2.5 items-center">
               {/* Speed */}
               <div className="flex items-center gap-2.5">
-                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider w-9">Speed</span>
+                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider w-9">{t("talk_speed")}</span>
                 <input
                   type="range"
                   min={0.5} max={2.0} step={0.1}
@@ -234,7 +236,7 @@ function VoiceSettingsPanel({
 
               {/* Pitch */}
               <div className="flex items-center gap-2.5">
-                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider w-9">Pitch</span>
+                <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider w-9">{t("talk_pitch")}</span>
                 <input
                   type="range"
                   min={0.5} max={2.0} step={0.1}
@@ -430,16 +432,17 @@ function FigureSelector({
   monument: Monument;
   onSelect: (f: HistoricalFigure) => void;
 }) {
+  const { t } = useLang();
   const recommended = getRecommendedFigure(monument.id);
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs uppercase tracking-widest mb-4">
-          Talk to History
+          {t("talk_badge")}
         </div>
-        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">Choose Your Historical Guide</h2>
+        <h2 className="text-3xl md:text-4xl font-serif text-primary mb-3">{t("talk_title")}</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Select a historical figure to begin your conversation. You are not reading history — you are talking to it.
+          {t("talk_subtitle")}
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -515,6 +518,7 @@ function FigureChat({
   figure: HistoricalFigure;
   onBack: () => void;
 }) {
+  const { t } = useLang();
   const [messages,       setMessages]       = useState<Message[]>([
     { id: "intro", role: "figure", content: figure.intro },
   ]);
@@ -684,7 +688,7 @@ function FigureChat({
               data-testid="button-talk-live"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Talk Live</span>
+              <span className="hidden sm:inline">{t("talk_live")}</span>
             </button>
           </div>
 

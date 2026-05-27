@@ -12,6 +12,7 @@ import { TalkToHistory } from "@/components/TalkToHistory";
 import { MonumentMap } from "@/components/MonumentMap";
 import { ContinueExploring } from "@/components/ContinueExploring";
 import { HistoricalQuiz } from "@/components/HistoricalQuiz";
+import { useLang } from "@/lib/i18n";
 
 import { MONUMENTS, Monument } from "@/data/monuments";
 import { saveToGallery } from "@/pages/Gallery";
@@ -49,6 +50,7 @@ function recognize(fileName: string): RecognitionResult {
 }
 
 export default function Explore() {
+  const { t } = useLang();
   const [analyzing, setAnalyzing] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [result, setResult] = useState<RecognitionResult | null>(null);
@@ -105,14 +107,14 @@ export default function Explore() {
         <Link href="/">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <ChevronLeft className="w-4 h-4 mr-1" />
-            Home
+            {t("nav_home")}
           </Button>
         </Link>
         <h1 className="font-serif text-xl text-primary font-bold tracking-wider">PokAI</h1>
         <Link href="/gallery">
           <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
             <BookOpen className="w-4 h-4 mr-1" />
-            Gallery
+            {t("nav_gallery")}
           </Button>
         </Link>
       </header>
@@ -145,7 +147,7 @@ export default function Explore() {
                   className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                  Reconstruction Complete
+                  {t("explore_reconstruction_complete")}
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: 10 }}
@@ -157,7 +159,7 @@ export default function Explore() {
                     onClick={handleReset}
                     className="border-white/20 hover:bg-white/5 rounded-full text-sm"
                   >
-                    New Analysis
+                    {t("explore_new_analysis")}
                   </Button>
                 </motion.div>
               </div>
